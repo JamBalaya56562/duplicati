@@ -1,0 +1,36 @@
+{
+  "copytotemp": {
+    "tags": [
+      "Duplicati.Server"
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "destination",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CreateBackupDto"
+            }
+          }
+        }
+      }
+    }
+  }
+}

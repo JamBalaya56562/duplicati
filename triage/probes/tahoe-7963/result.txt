@@ -1,0 +1,42 @@
+tahoe-lafs/1.20.0
+"connection_status": "connected"
+dircap: URI:DIR2:mj37p...
+== put a file
+HTTP 201
+URI:LIT:mnxw45dfnz2a
+== delete an existing file
+HTTP 200
+URI:LIT:mnxw45dfnz2a
+== delete a missing file
+HTTP 404
+
+<html>
+  <head><title>404 - Error</title></head>
+  <body>
+    <h1>Error</h1>
+    <p>No such child: file.txt</p>
+  </body>
+</html>
+
+== delete in a missing folder
+HTTP 404
+
+<html>
+  <head><title>404 - Error</title></head>
+  <body>
+    <h1>Error</h1>
+    <p>No such child: nofolder</p>
+  </body>
+</html>
+
+== list a missing folder
+HTTP 404
+
+<html>
+  <head><title>404 - Error</title></head>
+  <body>
+    <h1>Error</h1>
+    <p>No such child: nofolder</p>
+  </body>
+</html>
+

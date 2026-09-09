@@ -1,0 +1,7 @@
+15:07:34.01 login cookie=[]
+15:07:34.15 authenticate token=[testsynotoken123] cookie=[]
+15:07:34.60 login cookie=[]
+15:07:34.70 authenticate token=[testsynotoken123] cookie=[]
+15:07:35.07 authenticate token=[testsynotoken123] cookie=[id=fakedsmsession]
+15:07:41.26 authenticate token=[] cookie=[id=fakedsmsession]
+15:07:41.40 authenticate token=[testsynotoken123] cookie=[id=fakedsmsession]

@@ -1,0 +1,141 @@
+[
+  {
+    "step": "enable-out-of-process",
+    "status": 200
+  },
+  {
+    "step": "1-created",
+    "id": "11",
+    "run": "Completed",
+    "urlKeys": [
+      "job1-first-7471dbb9-9bd9-4a86-908a-eb5ccab02087",
+      "job1-second-07ae8b3d-6053-4772-b7e4-fbcf3c52848d"
+    ],
+    "files": {
+      "primary": 3,
+      "first": 3,
+      "second": 3
+    }
+  },
+  {
+    "step": "1-delete-request",
+    "status": 200,
+    "body": {
+      "Status": "OK",
+      "Reason": null,
+      "ID": 23
+    }
+  },
+  {
+    "step": "1-result",
+    "task": "Completed",
+    "failed": null,
+    "firstLeft": 0,
+    "primaryUnchanged": true,
+    "secondUnchanged": true,
+    "jobStatus": 404,
+    "dbExists": true
+  },
+  {
+    "step": "2-delete-request",
+    "status": 200,
+    "body": {
+      "Status": "OK",
+      "Reason": null,
+      "ID": 25
+    }
+  },
+  {
+    "step": "2-failed-result",
+    "task": "Failed",
+    "failed": [
+      "job2-second-89038449-fdce-41bd-b871-1a7261ed2141"
+    ],
+    "error": "The remote files could not be deleted from: job2-second-89038449-fdce-41bd-b871-1a7261ed2141. The job and its local database are kept, so the delete can be started again.",
+    "secondKey": "job2-second-89038449-fdce-41bd-b871-1a7261ed2141",
+    "firstLeft": 0,
+    "primaryUnchanged": true,
+    "jobStatus": 200,
+    "dbExists": true
+  },
+  {
+    "step": "2-retry-request",
+    "status": 200,
+    "body": {
+      "Status": "OK",
+      "Reason": null,
+      "ID": 26
+    }
+  },
+  {
+    "step": "2-retry-result",
+    "task": "Completed",
+    "failed": null,
+    "firstLeft": 0,
+    "secondLeft": 0,
+    "primaryUnchanged": true,
+    "jobStatus": 404,
+    "dbExists": false
+  },
+  {
+    "step": "3-refused",
+    "refused": {
+      "empty": {
+        "status": 400,
+        "helpId": "RemoteDestinationsEmpty"
+      },
+      "unknown": {
+        "status": 400,
+        "helpId": "RemoteDestinationsUnknown"
+      },
+      "conflict": {
+        "status": 400,
+        "helpId": "RemoteDestinationsConflict"
+      },
+      "otherJobKey": {
+        "status": 400,
+        "helpId": "RemoteDestinationsUnknown"
+      }
+    },
+    "nothingDeleted": true,
+    "jobStatus": 200
+  },
+  {
+    "step": "3-older-parameter",
+    "request": 200,
+    "task": "Completed",
+    "primaryLeft": 0,
+    "firstUnchanged": true,
+    "secondUnchanged": true
+  },
+  {
+    "step": "3-sync-job",
+    "status": 400,
+    "helpId": "RemoteDestinationsSyncJob",
+    "run": "Completed",
+    "jobStatus": 200
+  },
+  {
+    "step": "extension",
+    "listed": true
+  },
+  {
+    "step": "openapi",
+    "deleteParameters": [
+      "id:string",
+      "delete-remote-files:boolean",
+      "delete-local-db:boolean",
+      "force:boolean",
+      "remote-destinations:array<string>"
+    ],
+    "taskStateFields": [
+      "Status",
+      "ID",
+      "TaskStarted",
+      "TaskFinished",
+      "ErrorMessage",
+      "Exception",
+      "FailedDestinations"
+    ]
+  }
+]

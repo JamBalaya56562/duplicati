@@ -1,0 +1,115 @@
+[
+  {
+    "step": "1-run-older",
+    "task": "Completed"
+  },
+  {
+    "step": "1-run-newer",
+    "task": "Completed"
+  },
+  {
+    "step": "1-destinations",
+    "primaryDlists": [
+      "duplicati-20261119T121955Z.dlist.zip.aes",
+      "duplicati-20261119T122000Z.dlist.zip.aes"
+    ],
+    "secondaryDlists": [
+      "duplicati-20261119T121955Z.dlist.zip.aes"
+    ],
+    "jobVersions": [
+      "2026-11-19T12:20:00.000Z",
+      "2026-11-19T12:19:55.000Z"
+    ],
+    "sha256Older": "9f0d1b2fb97fdc083ef1c90d3cc07f4547eabd292cb755be8e3d7fddc370afac",
+    "sha256Newer": "9b957bbc8fb4ecf5c768436954b0ef1b5edb35f415f69ec9407e4ee0ead2176b"
+  },
+  {
+    "step": "2-temporary-job",
+    "copy": {
+      "status": 200,
+      "body": {
+        "ID": "95df607b-53cd-484a-a010-6f5a7be48341",
+        "Temporary": false
+      }
+    },
+    "targetIsSecondary": true,
+    "ownDatabase": true,
+    "additionalTargets": 0,
+    "versions": [
+      "2026-11-19T12:19:55.000Z"
+    ],
+    "onlyOlder": true
+  },
+  {
+    "step": "2-repairupdate",
+    "task": "Completed"
+  },
+  {
+    "step": "2-list-folder",
+    "status": 200,
+    "paths": [
+      "sample.bin"
+    ],
+    "size": [
+      50000
+    ]
+  },
+  {
+    "step": "3-restore",
+    "request": 200,
+    "task": "Completed",
+    "error": null,
+    "matchesOlder": true,
+    "matchesNewer": false,
+    "jobUnchanged": true,
+    "dbUnchanged": true
+  },
+  {
+    "step": "3-cleanup",
+    "temporaryJobsLeft": 0,
+    "temporaryDatabasesLeft": 0
+  },
+  {
+    "step": "4-refused",
+    "refused": {
+      "unknown": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationUnknown"
+      },
+      "empty": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationEmpty"
+      },
+      "primaryWord": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationUnknown"
+      }
+    },
+    "temporaryJobs": 0
+  },
+  {
+    "step": "4-secondary-unavailable",
+    "copy": 200,
+    "listing": {
+      "status": 200,
+      "success": false,
+      "times": [],
+      "error": "Remote folder is missing",
+      "helpId": "FolderMissing",
+      "raw": "{\"Success\":false,\"Error\":\"Remote folder is missing\",\"StatusCode\":\"FolderMissing\"}"
+    },
+    "mainDestinationIsBack": true
+  },
+  {
+    "step": "4-cleanup",
+    "temporaryJobsLeft": 0
+  },
+  {
+    "step": "contract",
+    "extension": true,
+    "parameters": [
+      "id:path:string",
+      "destination:query:string"
+    ]
+  }
+]
