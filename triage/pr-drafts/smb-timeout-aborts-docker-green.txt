@@ -1,0 +1,20 @@
+sockets before pause:
+  socket 030012AC:8C36 to :445 state 01
+  socket 030012AC:A838 to :445 state 06
+11:36:05.187 server paused
+sockets after the paused listing returned (01=ESTABLISHED; none = closed):
+  socket 030012AC:8C36 to :445 state 05
+  socket 030012AC:A838 to :445 state 06
+11:36:11.476 server resumed
+sockets after the resumed listing:
+  socket 030012AC:A38C to :445 state 01
+  socket 030012AC:A838 to :445 state 06
+--- harness log (green)
+11:36:02.621 before pause: OK 12 entries in 1.3s
+11:36:02.642 WAIT paused
+11:36:08.500 while paused: TimeoutException: The operation has timed out. after 2.0s
+11:36:08.500 WAIT checked
+11:36:10.532 WAIT resumed
+11:36:12.718 after resume: OK 12 entries in 0.2s
+11:36:12.718 WAIT final
+11:36:15.341 DONE
