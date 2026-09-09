@@ -1,0 +1,46 @@
+test-fix-7804 started 2026-11-14T05:31:31, PowerShell 7.6.10
+moved C:\ProgramData\Duplicati aside (4 files, 119321 bytes)
+
+===== original (duplicati-2.4.1.0_stable_2026-10-29-win-x64-gui.msi)
+msiexec 1 install -> exit code 0
+  after install: Duplicati.lnk: args=[--no-hosted-server]
+  after install: Startup\Duplicati.lnk: args=[--no-hosted-server]
+  after install: C:\Users\Public\Desktop\Duplicati.lnk: args=[--no-hosted-server]
+    [05:31:34:576]: Skipping action: ClearNoHostedServerArg (condition is false)
+    [05:31:34:581]: Feature: DuplicatiServiceFeature; Installed: Absent;   Request: Local;   Action: Local
+    [05:31:41:321]: Doing action: SetNoHostedServerArg
+    [05:31:41:323]: PROPERTY CHANGE: Adding NOHOSTEDSERVERARG property. Its value is '--no-hosted-server'.
+msiexec 2 repair -> exit code 0
+  after repair: Duplicati.lnk: args=[]
+  after repair: Startup\Duplicati.lnk: args=[]
+  after repair: C:\Users\Public\Desktop\Duplicati.lnk: args=[]
+    [05:32:07:261]: Doing action: ClearNoHostedServerArg
+    [05:32:07:265]: Feature: DuplicatiServiceFeature; Installed: Local;   Request: Reinstall;   Action: Reinstall
+    [05:32:24:647]: Skipping action: SetNoHostedServerArg (condition is false)
+  after repair: service: Running; http 8200: answers (200)
+msiexec 3 uninstall -> exit code 0
+  after uninstall: installed=False service=False folder=False
+
+===== patched (duplicati-2.4.1.0-patched-7804.msi)
+msiexec 1 install -> exit code 0
+  after install: Duplicati.lnk: args=[--no-hosted-server]
+  after install: Startup\Duplicati.lnk: args=[--no-hosted-server]
+  after install: C:\Users\Public\Desktop\Duplicati.lnk: args=[--no-hosted-server]
+    [05:33:32:854]: Skipping action: ClearNoHostedServerArg (condition is false)
+    [05:33:32:856]: Feature: DuplicatiServiceFeature; Installed: Absent;   Request: Local;   Action: Local
+    [05:33:34:971]: Doing action: SetNoHostedServerArg
+    [05:33:34:972]: PROPERTY CHANGE: Adding NOHOSTEDSERVERARG property. Its value is '--no-hosted-server'.
+msiexec 2 repair -> exit code 0
+  after repair: Duplicati.lnk: args=[--no-hosted-server]
+  after repair: Startup\Duplicati.lnk: args=[--no-hosted-server]
+  after repair: C:\Users\Public\Desktop\Duplicati.lnk: args=[--no-hosted-server]
+    [05:33:55:727]: Skipping action: ClearNoHostedServerArg (condition is false)
+    [05:33:55:743]: Feature: DuplicatiServiceFeature; Installed: Local;   Request: Reinstall;   Action: Reinstall
+    [05:34:12:292]: Doing action: SetNoHostedServerArg
+    [05:34:12:292]: PROPERTY CHANGE: Adding NOHOSTEDSERVERARG property. Its value is '--no-hosted-server'.
+  after repair: service: Running; http 8200: answers (200)
+msiexec 3 uninstall -> exit code 0
+  after uninstall: installed=False service=False folder=False
+restored C:\ProgramData\Duplicati (4 files, 119321 bytes; before 4, 119321)
+check: installed=False service=False C:\ProgramData\Duplicati=True C:\ProgramData\Duplicati.before-7804=False
+done 2026-11-14T05:35:26

@@ -1,0 +1,46 @@
+  Data downloaded: 5.73 MiB
+Backup completed successfully!
+volumes: 13
+== before-1
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T161855Z_6b68a684_54'
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T161855Z_ac472fd0_51'
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T161855Z_a2cadc76_52'
+Error during file listing => The channel "" is retired
+restored files: 19, matching: 15
+== after-1
+Restored 24 (68.66 MiB) files to /root/w6606/out-after-1
+restored files: 24, matching: 24
+== before-2
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162112Z_d5d285c1_54'
+Error during file listing => The channel "" is retired
+UnobservedTaskException: System.AggregateException: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (The channel "Request waiter" is retired)
+ ---> CoCoL.RetiredException: The channel "Request waiter" is retired
+restored files: 20, matching: 18
+== after-2
+Restored 24 (68.66 MiB) files to /root/w6606/out-after-2
+restored files: 24, matching: 24
+== before-3
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162345Z_dd7a3089_54'
+Error during file listing => The channel "" is retired
+The operation Restore has failed => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162345Z_dd7a3089_54'
+System.Security.Cryptography.CryptographicException: No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162345Z_dd7a3089_54'
+restored files: 19, matching: 17
+== after-3
+Restored 24 (68.66 MiB) files to /root/w6606/out-after-3
+restored files: 24, matching: 24
+== before-4
+Restored 24 (68.66 MiB) files to /root/w6606/out-before-4
+restored files: 24, matching: 24
+== after-4
+Restored 24 (68.66 MiB) files to /root/w6606/out-after-4
+restored files: 24, matching: 24
+== before-5
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162916Z_73bd0c46_54'
+Error during decryption => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162916Z_478ee376_51'
+Error during file listing => The channel "" is retired
+The operation Restore has failed => No space left on device : '/mnt/r6606tmp/Duplicati.Library.Main.Backend.BackendManager+GetOperation_DecryptFile_20261111T162916Z_73bd0c46_54'
+restored files: 19, matching: 16
+== after-5
+Restored 24 (68.66 MiB) files to /root/w6606/out-after-5
+restored files: 24, matching: 24
+== done

@@ -1,0 +1,5 @@
+temporary-job {"status":200,"id":"cd612a5d-147c-4bcb-a127-aabe3bca26d8"}
+restore-request {"id":"cd612a5d-147c-4bcb-a127-aabe3bca26d8","body":{"paths":["/fixture/linux-source/Documents/*"],"restore_path":"C:\\Users\\Jam\\AppData\\Local\\Temp\\claude\\eb7164b3a8a8609a\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\scratchpad\\r449\\out-l2w-nolist","overwrite":true,"permissions":false}}
+restore-start {"status":200,"body":"{\"Status\":\"OK\",\"ID\":2}"}
+restore-task {"status":"Completed","error":null}
+restored-files [{"p":"payload.txt","content":"linux payload\n"}]

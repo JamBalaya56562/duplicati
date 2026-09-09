@@ -1,0 +1,6 @@
+temporary-job {"status":200,"id":"49528628-d4be-4048-955b-8e29aa745630"}
+list-filesets {"status":200,"success":true,"count":1,"error":null}
+repairupdate {"status":200,"task":"Completed","error":null}
+roots {"status":200,"success":true,"error":null,"data":[{"Path":"/fixture/linux-source/","IsDirectory":true}]}
+children {"request":"/fixture/linux-source/","status":200,"success":true,"error":null,"data":[{"Path":"/fixture/linux-source/Documents/","IsDirectory":true},{"Path":"/fixture/linux-source/peer.txt","IsDirectory":false}]}
+documents {"request":"/fixture/linux-source/Documents/","status":200,"data":[{"Path":"/fixture/linux-source/Documents/payload.txt","IsDirectory":false}]}

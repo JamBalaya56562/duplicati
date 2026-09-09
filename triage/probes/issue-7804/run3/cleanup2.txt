@@ -1,0 +1,6 @@
+22:08:11 files in C:\ProgramData\Duplicati before: 4, 119321 bytes
+22:08:11 renamed C:\ProgramData\Duplicati -> C:\ProgramData\Duplicati.before-7804
+22:08:53 uninstall exit code: 0
+22:08:53 moved the test's C:\ProgramData\Duplicati -> C:\Users\Jam\Documents\dup-msi-7804\run3-programdata-2
+22:08:53 renamed C:\ProgramData\Duplicati.before-7804 back -> C:\ProgramData\Duplicati; files: 4, 119321 bytes (before: 4, 119321)
+22:08:54 check: installed=False service=False installfolder=False C:\ProgramData\Duplicati exists=True C:\ProgramData\Duplicati.before-7804 exists=False

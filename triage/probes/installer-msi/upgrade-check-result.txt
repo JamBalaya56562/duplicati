@@ -1,0 +1,69 @@
+﻿[before]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : False
+=== U1
+  msiexec U1-v1 exit code: 0
+[U1 after branch.msi STARTUP_FOR_CURRENT_USER=1]
+  HKCU Run Duplicati     : "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe"
+  HKCU marker Enabled    : 1
+  all-users Startup .lnk : False
+  msiexec U1-v2 exit code: 0
+[U1 after upgrade to v2 (/qr)]
+  HKCU Run Duplicati     : "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe"
+  HKCU marker Enabled    : 1
+  all-users Startup .lnk : False
+  msiexec U1-uninstall exit code: 0
+[U1 after uninstall]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : False
+=== U2
+  msiexec U2-v1 exit code: 0
+[U2 after branch.msi STARTUP_FOR_CURRENT_USER=1]
+  HKCU Run Duplicati     : "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe"
+  HKCU marker Enabled    : 1
+  all-users Startup .lnk : False
+  msiexec U2-v2 exit code: 0
+[U2 after upgrade to v2 (/qn)]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : True
+  msiexec U2-uninstall exit code: 0
+[U2 after uninstall]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : False
+=== U3
+  msiexec U3-v1 exit code: 0
+[U3 after master.msi ]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : True
+  msiexec U3-v2 exit code: 0
+[U3 after upgrade to v2 (/qn)]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : True
+  msiexec U3-uninstall exit code: 0
+[U3 after uninstall]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : False
+=== U4
+  msiexec U4-v1 exit code: 0
+[U4 after branch.msi ]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : True
+  msiexec U4-v2 exit code: 0
+[U4 after upgrade to v2 (/qr)]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : True
+  msiexec U4-uninstall exit code: 0
+[U4 after uninstall]
+  HKCU Run Duplicati     : (none)
+  HKCU marker Enabled    : (none)
+  all-users Startup .lnk : False
+Program Files\Duplicati 2 left: False

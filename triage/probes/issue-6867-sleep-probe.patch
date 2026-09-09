@@ -1,0 +1,153 @@
+diff --git a/Duplicati/GUI/Duplicati.GUI.TrayIcon/HttpServerConnection.cs b/Duplicati/GUI/Duplicati.GUI.TrayIcon/HttpServerConnection.cs
+index 985d9cc453..6ab8dbd93f 100644
+--- a/Duplicati/GUI/Duplicati.GUI.TrayIcon/HttpServerConnection.cs
++++ b/Duplicati/GUI/Duplicati.GUI.TrayIcon/HttpServerConnection.cs
+@@ -215,8 +215,11 @@
+         {
+             var query = longpoll ? $"?longpoll=true&lastEventId={m_lastEventId}&duration={LONGPOLL_TIMEOUT}" : "";
+ 
++            var probeStart = DateTime.Now;
++            Probe6867.Write("Tray request: longpoll={0} lastEventId={1}", longpoll, m_lastEventId);
+             m_status = await PerformRequestAsync<ServerStatusImpl>("GET", $"/serverstate{query}", null,
+                 longpoll ? Library.Utility.Timeparser.ParseTimeSpan(LONGPOLL_TIMEOUT) : null);
++            Probe6867.Write("Tray received after {0}: {1}/{2}/{3}", DateTime.Now - probeStart, m_status.ProgramState, m_status.SuggestedStatusIcon, m_status.LastEventID);
+             m_lastEventId = m_status.LastEventID;
+ 
+             if (OnStatusUpdated != null)
+@@ -300,6 +303,7 @@
+                 }
+                 catch (Exception ex)
+                 {
++                    Probe6867.Write("Tray poll error #{0} (hasConnected={1}): {2}: {3}", errorCount + 1, hasConnected, ex.GetType().Name, ex.Message);
+                     errorCount++;
+                     // More than 1 error, and we are disconnected
+                     if (errorCount >= 2 && OnStatusUpdated != null || !hasConnected)
+diff --git a/Duplicati/GUI/Duplicati.GUI.TrayIcon/Probe6867.cs b/Duplicati/GUI/Duplicati.GUI.TrayIcon/Probe6867.cs
+new file mode 100644
+index 0000000000..840dc6f5eb
+--- /dev/null
++++ b/Duplicati/GUI/Duplicati.GUI.TrayIcon/Probe6867.cs
+@@ -0,0 +1,21 @@
++// Temporary probe for issue 6867, not to be committed
++using System;
++using System.IO;
++
++namespace Duplicati.GUI.TrayIcon
++{
++    internal static class Probe6867
++    {
++        private static readonly object Lock = new object();
++
++        public static void Write(string format, params object[] args)
++        {
++            var path = Environment.GetEnvironmentVariable("PROBE6867_FILE");
++            if (string.IsNullOrWhiteSpace(path))
++                return;
++            var line = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [T{Environment.CurrentManagedThreadId}] {string.Format(format, args)}{Environment.NewLine}";
++            lock (Lock)
++                File.AppendAllText(path, line);
++        }
++    }
++}
+diff --git a/Duplicati/GUI/Duplicati.GUI.TrayIcon/TrayIconBase.cs b/Duplicati/GUI/Duplicati.GUI.TrayIcon/TrayIconBase.cs
+index 3a5adaa9eb..efcfa10a97 100644
+--- a/Duplicati/GUI/Duplicati.GUI.TrayIcon/TrayIconBase.cs
++++ b/Duplicati/GUI/Duplicati.GUI.TrayIcon/TrayIconBase.cs
+@@ -250,9 +250,11 @@
+         protected async Task OnStatusUpdatedAsync(IServerStatus status)
+         {
+             await m_startupDelay;
++            Probe6867.Write("Tray status update queued: {0}/{1}/{2}", status.ProgramState, status.SuggestedStatusIcon, status.LastEventID);
+             await this.UpdateUIStateAsync(()
+             =>
+             {
++                Probe6867.Write("Tray status applied on UI thread: {0}/{1}/{2}", status.ProgramState, status.SuggestedStatusIcon, status.LastEventID);
+                 switch (status.SuggestedStatusIcon)
+                 {
+                     case SuggestedStatusIcon.Active:
+diff --git a/Duplicati/Library/RestAPI/LiveControls.cs b/Duplicati/Library/RestAPI/LiveControls.cs
+index 040c921f1e..dd737e6f9d 100644
+--- a/Duplicati/Library/RestAPI/LiveControls.cs
++++ b/Duplicati/Library/RestAPI/LiveControls.cs
+@@ -229,6 +229,7 @@
+ 
+                 m_powerModeProvider = PowerModeUtility.GetPowerModeProvider(newProvider);
+                 m_currentPowerModeProvider = newProvider;
++                Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "Power mode provider {0}: {1}", newProvider, m_powerModeProvider?.GetType().FullName ?? "(none)");
+                 if (m_powerModeProvider != null)
+                 {
+                     m_powerModeProvider.OnResume = OnResume;
+@@ -247,6 +248,7 @@
+         /// <param name="sender">The sender of the event</param>
+         private void m_waitTimer_Tick(object sender)
+         {
++            Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "WaitTimer tick: state={0} thread={1}", m_state, Environment.CurrentManagedThreadId);
+             lock (m_lock)
+                 Resume();
+         }
+@@ -400,6 +402,13 @@
+         /// </summary>
+         private void OnSuspend()
+         {
++            Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "OnSuspend enter: state={0} pausedForSuspend={1} waitExp={2:o} thread={3}", m_state, m_pausedForSuspend, m_waitTimeExpiration, Environment.CurrentManagedThreadId);
++            try { OnSuspendInner(); }
++            finally { Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "OnSuspend exit: state={0} pausedForSuspend={1} thread={2}", m_state, m_pausedForSuspend, Environment.CurrentManagedThreadId); }
++        }
++
++        private void OnSuspendInner()
++        {
+             //If we are running, register as being paused due to suspending
+             if (this.m_state == LiveControlState.Running)
+             {
+@@ -423,6 +432,13 @@
+         /// </summary>
+         private void OnResume()
+         {
++            Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "OnResume enter: state={0} pausedForSuspend={1} minPause={2:o} thread={3}", m_state, m_pausedForSuspend, m_suspendMinimumPause, Environment.CurrentManagedThreadId);
++            try { OnResumeInner(); }
++            finally { Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "OnResume exit: state={0} pausedForSuspend={1} waitExp={2:o} thread={3}", m_state, m_pausedForSuspend, m_waitTimeExpiration, Environment.CurrentManagedThreadId); }
++        }
++
++        private void OnResumeInner()
++        {
+             //If we have been been paused due to suspending, we un-pause now
+             if (m_pausedForSuspend)
+             {
+diff --git a/Duplicati/Server/Program.cs b/Duplicati/Server/Program.cs
+index 79f9faf235..3acb42f956 100644
+--- a/Duplicati/Server/Program.cs
++++ b/Duplicati/Server/Program.cs
+@@ -1303,6 +1303,7 @@
+         private static void LiveControl_StateChanged(IQueueRunnerService queueRunnerService, Connection connection, EventPollNotify eventPollNotify, ISchedulerService schedulerService, LiveControls.LiveControlEvent e)
+         {
+             var appSettings = connection.ApplicationSettings;
++            Log.WriteInformationMessage("PROBE6867", "Probe", "StateChanged enter: event={0} eventNo={1} thread={2}", e.State, eventPollNotify.EventNo, Environment.CurrentManagedThreadId);
+             switch (e.State)
+             {
+                 case LiveControls.LiveControlState.Paused:
+@@ -1326,6 +1327,7 @@
+             }
+ 
+             eventPollNotify.SignalNewEvent();
++            Log.WriteInformationMessage("PROBE6867", "Probe", "StateChanged signalled: event={0} eventNo={1} liveState={2}", e.State, eventPollNotify.EventNo, LiveControl.State);
+ 
+         }
+ 
+diff --git a/Duplicati/WebserverCore/Endpoints/V1/ServerState.cs b/Duplicati/WebserverCore/Endpoints/V1/ServerState.cs
+index 8e0960c4f4..89f12168f2 100644
+--- a/Duplicati/WebserverCore/Endpoints/V1/ServerState.cs
++++ b/Duplicati/WebserverCore/Endpoints/V1/ServerState.cs
+@@ -71,10 +71,13 @@
+             if (ts.TotalSeconds is < 10 or > 3600)
+                 throw new BadRequestException("The duration must be between 10 seconds and 1 hour");
+ 
++            var probeStart = DateTime.Now;
++            Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "Longpoll wait: lastEventId={0} snapshot={1}/{2}/{3}", lastEventId, status.ProgramState, status.SuggestedStatusIcon, status.LastEventID);
+             var id = statusEventNotifier.Wait(lastEventId.Value, (int)ts.TotalMilliseconds);
+             // If the id changed, regenerate the response object
+             if (id != lastEventId)
+                 status = statusService.GetStatus();
++            Library.Logging.Log.WriteInformationMessage("PROBE6867", "Probe", "Longpoll return after {0}: id={1} regenerated={2} returning={3}/{4}/{5}", DateTime.Now - probeStart, id, id != lastEventId, status.ProgramState, status.SuggestedStatusIcon, status.LastEventID);
+         }
+ 
+         return status;

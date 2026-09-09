@@ -1,0 +1,18 @@
+=== duplicati/duplicati:2.3.0.0-stable
+40 backups took 1078 s; versions: 40
+database: 196 MB
+compact 1: exit 0, 145.2 s
+      1   took 0:00:00:00.000
+  slowest timed step: 144.44 s
+compact 2: exit 0, 21.9 s
+      1   took 0:00:00:00.000
+  slowest timed step: 20.85 s
+=== duplicati/duplicati:latest
+40 backups took 1181 s; versions: 40
+database: 196 MB
+compact 1: exit 0, 71.6 s
+      2   took 0:00:00:00.000
+  slowest timed step: 71.03 s
+compact 2: exit 0, 5.6 s
+      2   took 0:00:00:00.000
+  slowest timed step: 3.78 s

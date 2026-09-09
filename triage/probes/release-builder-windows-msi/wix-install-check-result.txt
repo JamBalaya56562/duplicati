@@ -1,0 +1,68 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: True
+installed Duplicati products: TrayIcon 0, Agent 0; service 'Duplicati' exists: False; 'C:\Program Files\Duplicati 2' exists: False
+=== A: WiX MSI, INSTALL_PRELOAD=true NOSCRIPT=true
+  msiexec /i exit code: 0
+  error lines in log: 0
+  preload.json installed: True, same content: True
+  install folder SDDL: O:SYG:SYD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)
+  Duplicati.GUI.TrayIcon.exe installed: True
+  msiexec /x exit code: 0
+  error lines in log: 0
+  after uninstall: preload.json False, install folder False
+=== B: WiX MSI, ADDLOCAL=DuplicatiCore,DuplicatiServiceFeature (scripts run)
+  msiexec /i exit code: 0
+  error lines in log: 0
+[B installed]
+  service: Running, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 1
+  (DelayedAutostart set to 0 before the repair, to see whether the repair sets it again)
+  msiexec /fvomus exit code: 0
+  error lines in log: 0
+[B repaired]
+  service: Running, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 1
+  msiexec /x exit code: 0
+  error lines in log: 0
+[B uninstalled]
+  service: (none)
+  install folder left: False; TrayIcon products installed: 0
+=== C: wixl MSI, ADDLOCAL=DuplicatiCore,DuplicatiServiceFeature (scripts run)
+  msiexec /i exit code: 0
+  error lines in log: 0
+[C installed]
+  service: Running, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 1
+  (DelayedAutostart set to 0 before the repair, to see whether the repair sets it again)
+  msiexec /fvomus exit code: 0
+  error lines in log: 0
+[C repaired]
+  service: StartPending, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 0
+  msiexec /x exit code: 0
+  error lines in log: 0
+[C uninstalled]
+  service: (none)
+  install folder left: False; TrayIcon products installed: 0
+=== D: wixl MSI with Event 5, ADDLOCAL=DuplicatiCore,DuplicatiServiceFeature, then repair, then uninstall
+  msiexec /i exit code: 0
+  error lines in log: 0
+[D installed]
+  service: Running, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 1
+  (DelayedAutostart set to 0 before the repair, to see whether the repair sets it again)
+  msiexec /fvomus exit code: 0
+  error lines in log: 0
+[D repaired]
+  service: Running, StartType Automatic
+  sc qc: START_TYPE         : 2   AUTO_START  (DELAYED)
+  DelayedAutostart: 0
+  msiexec /x exit code: 0
+  error lines in log: 0
+[D uninstalled]
+  service: (none)
+  install folder left: False; TrayIcon products installed: 0

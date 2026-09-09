@@ -1,0 +1,24 @@
+== before
+source folder: nobody:nogroup 750 2001-02-03 13:05:06.000000000 +0900
+  Data uploaded: 1.97 KiB
+  Data downloaded: 1.97 KiB
+Backup completed successfully!
+/root/w6863/t-before/src/path/file.txt (7 bytes)
+Completing restore on destination ...
+Restored 1 (7 bytes) files to original location
+Duration of restore: 00:00:01
+restored folder: root:root 755 2026-11-11 20:28:12.518045277 +0900
+restored entries: file.txt 
+== after
+source folder: nobody:nogroup 750 2001-02-03 13:05:06.000000000 +0900
+  Data uploaded: 2.37 KiB
+  Data downloaded: 2.37 KiB
+Backup completed successfully!
+/root/w6863/t-after/src/path/ 
+/root/w6863/t-after/src/path/file.txt (7 bytes)
+Completing restore on destination ...
+Restored 1 (7 bytes) files to original location
+Duration of restore: 00:00:01
+restored folder: nobody:nogroup 750 2001-02-03 13:05:06.000000000 +0900
+restored entries: file.txt 
+== done

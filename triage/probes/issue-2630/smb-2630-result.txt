@@ -1,0 +1,36 @@
+test-smb-2630 started 2026-11-14T07:41:37, CLI 2026-11-14T07:21:37
+created account, share and source
+  --- before
+  net use: none
+  Get-SmbConnection: none
+  Get-SmbMapping: none
+  cmdkey (names only): none
+  this session browsing \\127.0.0.1\DupTest2630 : refused (UnauthorizedAccessException: Access to the path '\\127.0.0.1\DupTest2630' is denied.)
+
+===== A. smb:// (the built-in SMB client)
+  A-backup exit 0: Remote backup verification completed | Backup completed successfully!
+  server-side sessions of dup2630test during A-backup : 127.0.0.1 DESKTOP-U30T4EP\dup2630test dialect=3.0.2
+  A-restore exit 0: Verifying restored files ... | Restored 2 (25�o�C�g) files to C:\dup2630\restoreA
+  server-side sessions of dup2630test during A-restore : 127.0.0.1 DESKTOP-U30T4EP\dup2630test dialect=3.0.2
+  restored files match the source: True
+  files on the share: 3
+  --- after A
+  net use: none
+  Get-SmbConnection: 127.0.0.1\DupTest2630 as DESKTOP-U30T4EP\Jam | 127.0.0.1\IPC$ as DESKTOP-U30T4EP\Jam
+  Get-SmbMapping: none
+  cmdkey (names only): none
+  this session browsing \\127.0.0.1\DupTest2630 : refused (UnauthorizedAccessException: Access to the path '\\127.0.0.1\DupTest2630' is denied.)
+
+===== B. folder destination with a \\server\share path and credentials (the old way)
+  B-backup exit 0: Remote backup verification completed | Backup completed successfully!
+  server-side sessions of dup2630test during B-backup : 127.0.0.1 DESKTOP-U30T4EP\dup2630test dialect=3.1.1
+  files on the share: 3
+  --- after B
+  net use: OK \\127.0.0.1\DupTest2630 Microsoft Windows Network
+  Get-SmbConnection: 127.0.0.1\DupTest2630 as DESKTOP-U30T4EP\Jam
+  Get-SmbMapping:  -> \\127.0.0.1\DupTest2630
+  cmdkey (names only): none
+  this session browsing \\127.0.0.1\DupTest2630 : OPENS without credentials (2 entries)
+
+cleanup: account=False share=False folder=False net-use-127=False
+done 2026-11-14T07:41:51

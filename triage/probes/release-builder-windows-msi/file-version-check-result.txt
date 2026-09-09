@@ -1,0 +1,26 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: True
+=== F: old 2.0.0.98, delete two DLLs, repair
+  msiexec /i exit code: 0; 'Return value 3': 0; disallowed components: 0
+  [installed] products: {2B586744-B0A0-4CBF-9C77-376905B7D54E}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  (deleted Aliyun.OSS.Core.dll, coreclr.dll)
+  msiexec /fvomus exit code: 0; 'Return value 3': 0; disallowed components: 615
+  [repaired] products: {2B586744-B0A0-4CBF-9C77-376905B7D54E}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  msiexec /x exit code: 0; 'Return value 3': 0; disallowed components: 0
+  install folder left: False
+=== G: new 2.0.0.99, delete two DLLs, repair
+  msiexec /i exit code: 0; 'Return value 3': 0; disallowed components: 0
+  [installed] products: {C2EC1AC2-FF04-450A-A495-A43AC6DBCDE8}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  (deleted Aliyun.OSS.Core.dll, coreclr.dll)
+  msiexec /fvomus exit code: 0; 'Return value 3': 0; disallowed components: 1
+  [repaired] products: {C2EC1AC2-FF04-450A-A495-A43AC6DBCDE8}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  msiexec /x exit code: 0; 'Return value 3': 0; disallowed components: 0
+  install folder left: False
+=== H: install old 2.0.0.98, upgrade to new 2.0.0.99, repair new
+  msiexec /i exit code: 0; 'Return value 3': 0; disallowed components: 0
+  [old installed] products: {2B586744-B0A0-4CBF-9C77-376905B7D54E}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  msiexec /i exit code: 0; 'Return value 3': 0; disallowed components: 0
+  [upgraded] products: {C2EC1AC2-FF04-450A-A495-A43AC6DBCDE8}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  msiexec /fvomus exit code: 0; 'Return value 3': 0; disallowed components: 1
+  [repaired] products: {C2EC1AC2-FF04-450A-A495-A43AC6DBCDE8}; missing files: 0 of 1515; Aliyun.OSS.Core.dll=2.14.1, coreclr.dll=10,0,1426,52326 @Commit: 0427b9abbead3fa64c6655eb4290c537397131fa
+  msiexec /x exit code: 0; 'Return value 3': 0; disallowed components: 0
+  install folder left: False; products: 0

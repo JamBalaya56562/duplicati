@@ -1,0 +1,40 @@
+15:41:22.961 run8 started
+15:41:23.029 moved C:\ProgramData\Duplicati aside to C:\ProgramData\Duplicati.before-run8
+15:42:43.853 install -> exit 0; Running AcceptStop=True pid=3712
+15:43:28.199 first start: server answered after 43s; Running AcceptStop=True pid=3712
+15:43:31.092   [first start, server answering] before stop: Running AcceptStop=True pid=3712; sc stop exit 0; stopped after 1.3s
+15:43:31.096 
+15:43:31.102 ----- 1. stop at different times after a start
+15:43:34.686   [start, stop after 0s #1] before stop: Start Pending AcceptStop=True pid=32316; sc stop exit 0; stopped after 1.3s
+15:43:39.137   [start, stop after 1s #1] before stop: Running AcceptStop=True pid=832; sc stop exit 0; stopped after 1.1s
+15:43:45.006   [start, stop after 3s #1] before stop: Running AcceptStop=True pid=26860; sc stop exit 0; stopped after 1.1s
+15:43:57.901   [start, stop after 10s #1] before stop: Running AcceptStop=True pid=29992; sc stop exit 0; stopped after 0.9s
+15:44:03.437   [start, stop after server answers #1] server answered after 5s
+15:44:05.697   [start, stop after server answers #1] before stop: Running AcceptStop=True pid=5928; sc stop exit 0; stopped after 1s
+15:44:08.124   [start, stop after 0s #2] before stop: Start Pending AcceptStop=True pid=7616; sc stop exit 0; stopped after 1.1s
+15:44:12.135   [start, stop after 1s #2] before stop: Running AcceptStop=True pid=29724; sc stop exit 0; stopped after 1.2s
+15:44:18.813   [start, stop after 3s #2] before stop: Running AcceptStop=True pid=28216; sc stop exit 0; stopped after 1.2s
+15:44:31.816   [start, stop after 10s #2] before stop: Running AcceptStop=True pid=18788; sc stop exit 0; stopped after 1.2s
+15:44:38.761   [start, stop after server answers #2] server answered after 6s
+15:44:40.516   [start, stop after server answers #2] before stop: Running AcceptStop=True pid=31532; sc stop exit 0; stopped after 0.8s
+15:44:42.835   [start, stop after 0s #3] before stop: Start Pending AcceptStop=True pid=11948; sc stop exit 0; stopped after 1.1s
+15:44:46.225   [start, stop after 1s #3] before stop: Running AcceptStop=True pid=2612; sc stop exit 0; stopped after 0.9s
+15:44:51.622   [start, stop after 3s #3] before stop: Running AcceptStop=True pid=16560; sc stop exit 0; stopped after 0.7s
+15:45:03.809   [start, stop after 10s #3] before stop: Running AcceptStop=True pid=8624; sc stop exit 0; stopped after 0.7s
+15:45:10.174   [start, stop after server answers #3] server answered after 6s
+15:45:11.842   [start, stop after server answers #3] before stop: Running AcceptStop=True pid=27468; sc stop exit 0; stopped after 0.8s
+15:45:11.847 
+15:45:11.864 ----- 2. REMOVE-CERTS, then stop at once (as the uninstall does)
+15:45:34.720   [REMOVE-CERTS #1] exit 0 after 13.9s: TLS certs mode 'uninstall' written to registry. Service stopped. Service started. Waiting for TLS certs operation to complete... TLS certs operation complete.; now Running AcceptStop=True pid=25932
+15:45:36.870   [after REMOVE-CERTS #1] before stop: Running AcceptStop=True pid=25932; sc stop exit 0; stopped after 1s
+15:45:56.452   [REMOVE-CERTS #2] exit 0 after 12.8s: TLS certs mode 'uninstall' written to registry. Service stopped. Service started. Waiting for TLS certs operation to complete... TLS certs operation complete.; now Running AcceptStop=True pid=27904
+15:45:58.281   [after REMOVE-CERTS #2] before stop: Running AcceptStop=True pid=27904; sc stop exit 0; stopped after 0.8s
+15:46:15.724   [REMOVE-CERTS #3] exit 0 after 12.1s: TLS certs mode 'uninstall' written to registry. Service stopped. Service started. Waiting for TLS certs operation to complete... TLS certs operation complete.; now Running AcceptStop=True pid=2312
+15:46:16.611   [after REMOVE-CERTS #3] before stop: Running AcceptStop=True pid=2312; sc stop exit 0; stopped after 0.4s
+15:46:16.613 
+15:46:16.615 ----- 3. uninstall with the service running (as in run3)
+15:46:21.435   service started, server answered after 4s; Running AcceptStop=True pid=3596
+15:47:21.690   uninstall -> exit 0 after 59s; no service
+15:47:23.002 restored C:\ProgramData\Duplicati
+15:47:23.415 cleanup: installed=False; service=False; install folder=False; ProgramData restored=True
+15:47:23.416 done

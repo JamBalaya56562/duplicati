@@ -1,0 +1,89 @@
+== build master
+== unit test master
+  Failed ListFolder_BackupFromAnotherOperatingSystem_ListsTheEntriesOfAFolderAsync [462 ms]
+     The root of the other system should list its entries
+  Expected: equivalent to < "C:\home\jam\r449\src\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data\Documents\", "C:\home\jam\r449\src\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data\peer.txt" >
+  But was:  <empty>
+  Failed APathIsSplitTheSameWayOnEverySystem("C:\\Users\\someone\\Documents\\payload.txt","C:\\Users\\someone\\Documents\\","payload.txt") [4 ms]
+  Expected string length 27 but was 0. Strings differ at index 0.
+  Expected: "C:\\Users\\someone\\Documents\\"
+  But was:  <string.Empty>
+  Failed APathIsSplitTheSameWayOnEverySystem("C:\\Users\\someone\\Documents\\","C:\\Users\\someone\\","Documents\\") [< 1 ms]
+  Expected string length 17 but was 0. Strings differ at index 0.
+  Expected: "C:\\Users\\someone\\"
+  But was:  <string.Empty>
+  Failed APathIsSplitTheSameWayOnEverySystem("\\\\server\\share\\folder\\file.txt","\\\\server\\share\\folder\\","file.txt") [< 1 ms]
+  Expected string length 22 but was 0. Strings differ at index 0.
+  Expected: "\\\\server\\share\\folder\\"
+  But was:  <string.Empty>
+Failed!  - Failed:     4, Passed:    44, Skipped:     0, Total:    48, Duration: 44 s - Duplicati.UnitTest.dll (net10.0)
+== probe w2l-before
+temporary-job {"id": "c9ee63ce-609e-41b4-a398-d88a6276d304"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "IsDirectory": true}]}
+children {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "status": 200, "success": true, "data": []}
+== probe l2l-before
+temporary-job {"id": "873f4666-f10f-4950-9c24-10ae6e50a4cb"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "/fixture/linux-source/", "IsDirectory": true}]}
+children {"request": "/fixture/linux-source/", "status": 200, "success": true, "data": [{"Path": "/fixture/linux-source/Documents/", "IsDirectory": true}, {"Path": "/fixture/linux-source/peer.txt", "IsDirectory": false}]}
+documents {"request": "/fixture/linux-source/Documents/", "status": 200, "data": [{"Path": "/fixture/linux-source/Documents/payload.txt", "IsDirectory": false}]}
+== build fix
+== unit test fix
+Passed!  - Failed:     0, Passed:   111, Skipped:     0, Total:   111, Duration: 1 m 44 s - Duplicati.UnitTest.dll (net10.0)
+== probe w2l-after
+temporary-job {"id": "30a81f9f-8df2-4713-9b2a-922a03541fab"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "IsDirectory": true}]}
+children {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "status": 200, "success": true, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "IsDirectory": true}, {"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\peer.txt", "IsDirectory": false}]}
+documents {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "status": 200, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\payload.txt", "IsDirectory": false}]}
+== probe l2l-after
+temporary-job {"id": "f533cdbe-7388-4e40-b667-836d2141b861"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "/fixture/linux-source/", "IsDirectory": true}]}
+children {"request": "/fixture/linux-source/", "status": 200, "success": true, "data": [{"Path": "/fixture/linux-source/Documents/", "IsDirectory": true}, {"Path": "/fixture/linux-source/peer.txt", "IsDirectory": false}]}
+documents {"request": "/fixture/linux-source/Documents/", "status": 200, "data": [{"Path": "/fixture/linux-source/Documents/payload.txt", "IsDirectory": false}]}
+== probe w2l-same-job
+temporary-job {"id": "230ad34e-d79e-4006-af4e-04739adb28a4"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "IsDirectory": true}]}
+children {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "status": 200, "success": true, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "IsDirectory": true}, {"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\peer.txt", "IsDirectory": false}]}
+documents {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "status": 200, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\payload.txt", "IsDirectory": false}]}
+restore-request {"id": "230ad34e-d79e-4006-af4e-04739adb28a4", "body": {"paths": ["C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\*"], "restore_path": "/home/jam/r449/out-w2l-same-job", "overwrite": true, "permissions": false, "time": "2026-11-10T12:56:01Z"}}
+restore-task {"status": "Failed", "error": "Found 2 remote files that are not recorded in local storage. This can be caused by having two backups sharing a destination folder which is not supported. It can also be caused by restoring an old database. If you are certain that only one backup uses the folder and you have the most updated version of the database, you can use repair to delete the unknown files."}
+restored-files []
+== probe w2l-copy
+temporary-job {"id": "182971fc-324b-4b51-be4e-ae863dcea600"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "IsDirectory": true}]}
+children {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\", "status": 200, "success": true, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "IsDirectory": true}, {"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\peer.txt", "IsDirectory": false}]}
+documents {"request": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\", "status": 200, "data": [{"Path": "C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\payload.txt", "IsDirectory": false}]}
+copytotemp {"id": "4586013b-e46d-4c9b-af3c-a369bae6aeba"}
+restore-request {"id": "4586013b-e46d-4c9b-af3c-a369bae6aeba", "body": {"paths": ["C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\*"], "restore_path": "/home/jam/r449/out-w2l-copy", "overwrite": true, "permissions": false, "time": "2026-11-10T12:56:01Z"}}
+restore-task {"status": "Completed", "error": null}
+restored-files [{"p": "payload.txt", "content": "windows payload\n"}]
+== probe w2l-nolist
+temporary-job {"id": "3d0c2c26-4710-454a-b7fc-f330b1abe823"}
+restore-request {"id": "3d0c2c26-4710-454a-b7fc-f330b1abe823", "body": {"paths": ["C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\*"], "restore_path": "/home/jam/r449/out-w2l-nolist", "overwrite": true, "permissions": false}}
+restore-task {"status": "Completed", "error": null}
+restored-files [{"p": "payload.txt", "content": "windows payload\n"}]
+== probe l2l-same-job
+temporary-job {"id": "e883e056-40a7-431d-bf05-fc1cd89de144"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "/fixture/linux-source/", "IsDirectory": true}]}
+children {"request": "/fixture/linux-source/", "status": 200, "success": true, "data": [{"Path": "/fixture/linux-source/Documents/", "IsDirectory": true}, {"Path": "/fixture/linux-source/peer.txt", "IsDirectory": false}]}
+documents {"request": "/fixture/linux-source/Documents/", "status": 200, "data": [{"Path": "/fixture/linux-source/Documents/payload.txt", "IsDirectory": false}]}
+restore-request {"id": "e883e056-40a7-431d-bf05-fc1cd89de144", "body": {"paths": ["/fixture/linux-source/Documents/*"], "restore_path": "/home/jam/r449/out-l2l-same-job", "overwrite": true, "permissions": false, "time": "2026-11-10T12:55:47Z"}}
+restore-task {"status": "Failed", "error": "Found 2 remote files that are not recorded in local storage. This can be caused by having two backups sharing a destination folder which is not supported. It can also be caused by restoring an old database. If you are certain that only one backup uses the folder and you have the most updated version of the database, you can use repair to delete the unknown files."}
+restored-files []
+== probe l2l-copy
+temporary-job {"id": "bf953861-2173-44b3-a90b-ef3201a19d70"}
+repairupdate {"task": "Completed", "error": null}
+roots {"status": 200, "success": true, "error": null, "data": [{"Path": "/fixture/linux-source/", "IsDirectory": true}]}
+children {"request": "/fixture/linux-source/", "status": 200, "success": true, "data": [{"Path": "/fixture/linux-source/Documents/", "IsDirectory": true}, {"Path": "/fixture/linux-source/peer.txt", "IsDirectory": false}]}
+documents {"request": "/fixture/linux-source/Documents/", "status": 200, "data": [{"Path": "/fixture/linux-source/Documents/payload.txt", "IsDirectory": false}]}
+copytotemp {"id": "a4b23b22-98d7-4909-a1a5-37190d965c7a"}
+restore-request {"id": "a4b23b22-98d7-4909-a1a5-37190d965c7a", "body": {"paths": ["/fixture/linux-source/Documents/*"], "restore_path": "/home/jam/r449/out-l2l-copy", "overwrite": true, "permissions": false, "time": "2026-11-10T12:55:47Z"}}
+restore-task {"status": "Completed", "error": null}
+restored-files [{"p": "payload.txt", "content": "linux payload\n"}]
+== done

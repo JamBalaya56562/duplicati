@@ -1,0 +1,107 @@
+run6 started 2026-11-14T08:33:30, PowerShell 7.6.10
+moved C:\ProgramData\Duplicati aside (4 files, 119321 bytes)
+
+msiexec 段階 1: 2.4.0.1 をサービスとして入れます（TLS なし） -> exit code 0
+===== 1 after installing 2.4.0.1 without TLS (2026-11-14T08:35:46)
+  service: Running; http: answers (200); https: no answer
+  login at http://127.0.0.1:8200 with the tray icon password: 200 (200 = accepted, 401 = rejected)
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values [KeyExists]
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (106496 bytes, written 2026-11-14T08:35:50)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:34:49 情報: Found init password in registry, applying...
+  event 2026-11-14T08:35:18 エラー: 2026-11-14 08:35:18 +09 - [Error-Duplicati.Server.Program-UnobservedTaskException]: A Task's exception(s) were not observed either by Waiting on the Task or accessing its Exception property. As a result, the unobserved exception was rethrown by the finalizer thread. (The channel "" is retired) Syste
+  event 2026-11-14T08:35:29 情報: 2026-11-14 08:35:29 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:35:31 情報: 2026-11-14 08:35:31 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=27884 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec 段階 2: 2.4.1.0 に更新します（TLS にチェックを入れる） -> exit code 0
+===== 2 after upgrading to 2.4.1.0 with TLS checked (2026-11-14T08:39:56)
+  service: Running; http: no answer; https: answers (200)
+  login at https://127.0.0.1:8200 with the tray icon password: 200 (200 = accepted, 401 = rejected)
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values [KeyExists]
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (151552 bytes, written 2026-11-14T08:39:58)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:39:00 情報: Running ConfigureTool to generate TLS certificates.
+  event 2026-11-14T08:39:50 情報: 2026-11-14 08:39:50 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:39:52 情報: 2026-11-14 08:39:52 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=3672 own-listening-ports=[] connections=[] window=[]
+
+REMOVE-CERTS -> exit code 0
+  | TLS certs mode 'uninstall' written to registry.
+  | Service stopped.
+  | Service started. Waiting for TLS certs operation to complete...
+  | TLS certs operation complete.
+===== 3 after REMOVE-CERTS (2026-11-14T08:40:56)
+  service: Running; http: answers (200); https: no answer
+  login at http://127.0.0.1:8200 with the tray icon password: 200 (200 = accepted, 401 = rejected)
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values []
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (151552 bytes, written 2026-11-14T08:40:59)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:40:37 情報: Running ConfigureTool to remove TLS certificates.
+  event 2026-11-14T08:40:49 情報: 2026-11-14 08:40:49 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:40:51 情報: 2026-11-14 08:40:51 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=7924 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+sc start with --webservice-password -> exit code 0
+===== 4a after a start with --webservice-password in the start parameters (2026-11-14T08:41:44)
+  service: Running; http: answers (200); https: no answer
+  login at http://127.0.0.1:8200 with the tray icon password: 401 (200 = accepted, 401 = rejected)
+  login at http://127.0.0.1:8200 with the start-parameter test password: 200
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values []
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (151552 bytes, written 2026-11-14T08:41:48)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:41:37 情報: 2026-11-14 08:41:37 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:41:39 情報: 2026-11-14 08:41:39 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:41:48 警告: 2026-11-14 08:41:48 +09 - [Warning-Duplicati.WebserverCore.Services.LoginAttemptThrottle-FailedLoginAttempt]: Failed login attempt #1, delaying next attempt by 00:00:00.2500000
+  event 2026-11-14T08:41:48 エラー: 2026-11-14 08:41:48 +09 - [Error-Duplicati.WebserverCore.Endpoints.V1.Auth-PasswordLoginError]: Failed to log in Duplicati.WebserverCore.Exceptions.UnauthorizedException: Invalid password at Duplicati.WebserverCore.Services.LoginProvider.PerformLoginWithPasswordAsync(String password, Boolean shortLi
+  start menu shortcut args: [--no-hosted-server]
+===== 4b after a normal restart (2026-11-14T08:42:05)
+  service: Running; http: answers (200); https: no answer
+  login at http://127.0.0.1:8200 with the tray icon password: 401 (200 = accepted, 401 = rejected)
+  login at http://127.0.0.1:8200 with the start-parameter test password: 200
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values []
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (151552 bytes, written 2026-11-14T08:42:07)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:41:59 情報: 2026-11-14 08:41:59 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:42:01 情報: 2026-11-14 08:42:01 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:42:07 警告: 2026-11-14 08:42:07 +09 - [Warning-Duplicati.WebserverCore.Services.LoginAttemptThrottle-FailedLoginAttempt]: Failed login attempt #1, delaying next attempt by 00:00:00.2500000
+  event 2026-11-14T08:42:07 エラー: 2026-11-14 08:42:07 +09 - [Error-Duplicati.WebserverCore.Endpoints.V1.Auth-PasswordLoginError]: Failed to log in Duplicati.WebserverCore.Exceptions.UnauthorizedException: Invalid password at Duplicati.WebserverCore.Services.LoginProvider.PerformLoginWithPasswordAsync(String password, Boolean shortLi
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=18672 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec 段階 5: 2.4.1.0 を修復します -> exit code 0
+===== 5 after Repair (2026-11-14T08:47:05)
+  service: Running; http: no answer; https: answers (200)
+  login at https://127.0.0.1:8200 with the tray icon password: 401 (200 = accepted, 401 = rejected)
+  login at https://127.0.0.1:8200 with the start-parameter test password: 200
+  tray icon host url (wincred): not stored; tray icon password stored: True
+  service registry key: values [KeyExists]
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  server db: C:\ProgramData\Duplicati\Duplicati-server.sqlite (151552 bytes, written 2026-11-14T08:47:08)
+  server db: C:\Windows\System32\config\systemprofile\AppData\Local\Duplicati\Duplicati-server.sqlite not present
+  event 2026-11-14T08:46:15 情報: Running ConfigureTool to generate TLS certificates.
+  event 2026-11-14T08:46:58 情報: 2026-11-14 08:46:58 +09 - [Information-Duplicati.Server.WebServerLoader-ServerListening]: サーバーが起動しました。127.0.0.1のポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:47:00 情報: 2026-11-14 08:47:00 +09 - [Information-Duplicati.Server.Program-ServerStarted]: サーバーが起動しました。localhostのポート8200でリクエストを待ち受けています
+  event 2026-11-14T08:47:07 警告: 2026-11-14 08:47:07 +09 - [Warning-Duplicati.WebserverCore.Services.LoginAttemptThrottle-FailedLoginAttempt]: Failed login attempt #1, delaying next attempt by 00:00:00.2500000
+  event 2026-11-14T08:47:07 エラー: 2026-11-14 08:47:07 +09 - [Error-Duplicati.WebserverCore.Endpoints.V1.Auth-PasswordLoginError]: Failed to log in Duplicati.WebserverCore.Exceptions.UnauthorizedException: Invalid password at Duplicati.WebserverCore.Services.LoginProvider.PerformLoginWithPasswordAsync(String password, Boolean shortLi
+  start menu shortcut args: []
+  tray: pid=22132 own-listening-ports=[8300] connections=[:::0/Bound,127.0.0.1:14221/Established,127.0.0.1:14548/Established,127.0.0.1:14827/Established,127.0.0.1:2363/Established,127.0.0.1:3559/Established,127.0.0.1:3683/Established,127.0.0.1:5248/Established,127.0.0.1:5381/Established,127.0.0.1:5382/Established,127.0.0.1:8300/Established] window=[]
+
+----- cleanup
+  uninstall with duplicati-2.4.1.0_stable_2026-10-29-win-x64-gui.msi -> 0
+restored C:\ProgramData\Duplicati (4 files, 119321 bytes; before 4, 119321)
+check: installed=False service=False C:\ProgramData\Duplicati=True C:\ProgramData\Duplicati.before-7804=False trayicon-creds=False
+done 2026-11-14T08:48:36

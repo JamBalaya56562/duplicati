@@ -1,0 +1,11 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: False
+=== master (wixlmaster-gui.msi): follow the installer window, accept UAC
+  msiexec exit code: 0
+  'Ignoring disallowed property' lines: 0
+  RestrictedUserControl in log: False
+  uninstall exit code: 0; install folder left: False
+=== fixed (wixlsec-gui.msi): follow the installer window, accept UAC
+  msiexec exit code: 0
+  'Ignoring disallowed property' lines: 0
+  RestrictedUserControl in log: False
+  uninstall exit code: 0; install folder left: False

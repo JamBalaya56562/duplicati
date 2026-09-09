@@ -1,0 +1,47 @@
+run5 started 2026-11-14T08:04:35, PowerShell 7.6.10
+moved C:\ProgramData\Duplicati aside (4 files, 119321 bytes)
+
+########## Scenario 1 (the report): HTTP service, then an upgrade with TLS checked
+
+msiexec シナリオ 1 / 段階 1: 2.4.0.1 をサービスとして入れます（TLS なし） -> exit code 0
+===== 1a after installing 2.4.0.1 without TLS (2026-11-14T08:05:50)
+  service: Running; http: answers (200); https: no answer
+  tray icon host url (wincred): not stored (the tray icon uses http://127.0.0.1:8200); tray icon password stored: True
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=10228 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec シナリオ 1 / 段階 2: 2.4.1.0 に更新します（TLS にチェックを入れる） -> exit code 0
+===== 1b after upgrading to 2.4.1.0 with TLS checked (2026-11-14T08:09:31)
+  service: Running; http: no answer; https: answers (200)
+  tray icon host url (wincred): https://127.0.0.1:8200; tray icon password stored: True
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset, TlsCertsServiceInstalled=1
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=21324 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+----- uninstall between the scenarios
+  uninstall with duplicati-2.4.1.0-patched-7804-tls.msi -> 0
+
+########## Scenario 2 (the reverse): a fresh install with TLS, then Change with TLS unchecked
+
+msiexec シナリオ 2 / 段階 1: 2.4.1.0 をサービス・TLS ありで入れます -> exit code 0
+===== 2a after installing 2.4.1.0 with TLS (2026-11-14T08:13:24)
+  service: Running; http: no answer; https: answers (200)
+  tray icon host url (wincred): https://127.0.0.1:8200; tray icon password stored: True
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, TlsCertsServiceInstalled=1
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=27172 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec シナリオ 2 / 段階 2: Change で TLS のチェックを外します -> exit code 0
+===== 2b after Change with TLS unchecked (2026-11-14T08:14:42)
+  service: Running; http: answers (200); https: no answer
+  tray icon host url (wincred): http://127.0.0.1:8200; tray icon password stored: True
+  InstallState: InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1
+  start menu shortcut args: [--no-hosted-server]
+  tray: pid=27868 own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+----- cleanup
+  uninstall with duplicati-2.4.1.0-patched-7804-tls.msi -> 0
+restored C:\ProgramData\Duplicati (4 files, 119321 bytes; before 4, 119321)
+check: installed=False service=False C:\ProgramData\Duplicati=True C:\ProgramData\Duplicati.before-7804=False trayicon-creds=False
+done 2026-11-14T08:15:42

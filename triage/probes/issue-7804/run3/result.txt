@@ -1,0 +1,124 @@
+repro-7804 started 2026-11-13T21:42:39 on Microsoft Windows NT 10.0.26300.0, PowerShell 7.6.10
+service data folder existed before: False; wincred trayicon entries before: 0
+
+msiexec /i "C:\Users\Jam\Documents\dup-msi-7804\duplicati-2.4.0.1_stable_2026-10-07-win-x64-gui.msi" /l*v "C:\Users\Jam\Documents\dup-msi-7804\logs\01-install-2.4.0.1.log" -> exit code 0
+
+===== after 1 (2.4.0.1 installed)  (2026-11-13T21:44:16)
+service: Running, start=Automatic
+installed: Duplicati 2.4.0.1
+http://127.0.0.1:8200  -> answers (200)
+https://127.0.0.1:8200 -> no answer (HttpRequestException: The SSL connection could not be established, see inner exception.)
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\InstallState : InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\Service : KeyExists=1
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\Users\Public\Desktop\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+wincred entries named duplicati: LegacyGeneric:target=duplicati-trayicon-password
+  --- 01-install-2.4.0.1.log
+  MSI (s) (20:F8) [21:43:02:601]: Doing action: RemoveExistingProducts
+  MSI (s) (20:F8) [21:43:02:982]: Skipping action: ClearNoHostedServerArg (condition is false)
+  MSI (s) (20:F8) [21:43:02:997]: Feature: DuplicatiServiceFeature; Installed: Absent;   Request: Local;   Action: Local
+  MSI (s) (20:F8) [21:43:02:997]: Feature: DuplicatiTlsCertsFeature; Installed: Absent;   Request: Null;   Action: Null
+  MSI (s) (20:F8) [21:43:07:410]: Doing action: SetNoHostedServerArg
+  MSI (s) (20:F8) [21:43:07:447]: Doing action: SetInitPassword
+  Property(S): LAUNCH_AS_SERVICE = 1
+  Property(S): INSTALLASSERVICE = true
+  Property(S): NOHOSTEDSERVERARG = --no-hosted-server
+  Property(S): UILevel = 5
+  MSI (c) (D0:B8) [21:43:54:764]: Doing action: StoreTrayIconValues
+  Property(C): LAUNCH_AS_SERVICE = 1
+  Property(C): INSTALLASSERVICE = true
+  Property(C): UILevel = 5
+tray (after 1 (install)): pid=12452 user=Jam commandline=["C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server] own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec /i "C:\Users\Jam\Documents\dup-msi-7804\duplicati-2.4.1.0_stable_2026-10-29-win-x64-gui.msi" /l*v "C:\Users\Jam\Documents\dup-msi-7804\logs\02-upgrade-2.4.1.0.log" -> exit code 0
+
+===== after 2 (upgraded to 2.4.1.0)  (2026-11-13T21:51:07)
+service: Running, start=Automatic
+installed: Duplicati 2.4.1.0
+http://127.0.0.1:8200  -> answers (200)
+https://127.0.0.1:8200 -> no answer (HttpRequestException: The SSL connection could not be established, see inner exception.)
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\InstallState : InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\Service : KeyExists=1
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\Users\Public\Desktop\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+wincred entries named duplicati: LegacyGeneric:target=duplicati-trayicon-password
+  --- 02-upgrade-2.4.1.0.log
+  MSI (s) (20:44) [21:45:06:580]: Doing action: RemoveExistingProducts
+  MSI (s) (20:20) [21:45:07:106]: Doing action: RemoveExistingProducts
+  MSI (s) (20:20) [21:45:12:697]: Doing action: ClearNoHostedServerArg
+  MSI (s) (20:20) [21:45:12:772]: Feature: DuplicatiServiceFeature; Installed: Local;   Request: Absent;   Action: Absent
+  MSI (s) (20:20) [21:45:12:772]: Feature: DuplicatiTlsCertsFeature; Installed: Absent;   Request: Null;   Action: Null
+  MSI (s) (20:20) [21:47:03:664]: Skipping action: SetNoHostedServerArg (condition is false)
+  MSI (s) (20:20) [21:47:03:664]: Skipping action: SetInitPassword (condition is false)
+  MSI (s) (20:44) [21:47:41:366]: Skipping action: ClearNoHostedServerArg (condition is false)
+  MSI (s) (20:44) [21:47:41:389]: Feature: DuplicatiServiceFeature; Installed: Absent;   Request: Local;   Action: Local
+  MSI (s) (20:44) [21:47:41:389]: Feature: DuplicatiTlsCertsFeature; Installed: Absent;   Request: Null;   Action: Null
+  MSI (s) (20:44) [21:47:53:269]: Doing action: SetNoHostedServerArg
+  MSI (s) (20:44) [21:47:54:014]: Skipping action: SetInitPassword (condition is false)
+  Property(S): LAUNCH_AS_SERVICE = 1
+  Property(S): PREVIOUS_SERVICE_INSTALLED = 1
+  Property(S): PREVIOUSVERSIONSINSTALLED = {AD9E5442-3C86-4905-A7C4-D8CC9F9A0EEF}
+  Property(S): INSTALLASSERVICE = true
+  Property(S): NOHOSTEDSERVERARG = --no-hosted-server
+  Property(S): UILevel = 5
+  MSI (c) (D4:18) [21:49:31:832]: Skipping action: StoreTrayIconValues (condition is false)
+  Property(C): LAUNCH_AS_SERVICE = 1
+  Property(C): PREVIOUS_SERVICE_INSTALLED = 1
+  Property(C): PREVIOUSVERSIONSINSTALLED = {AD9E5442-3C86-4905-A7C4-D8CC9F9A0EEF}
+  Property(C): INSTALLASSERVICE = true
+  Property(C): UILevel = 5
+tray (after 2 (upgrade)): pid=17548 user=Jam commandline=["C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server] own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+Duplicati.WindowsService.exe REMOVE-CERTS -> exit 0
+TLS certs mode 'uninstall' written to registry.
+Service stopped.
+Service started. Waiting for TLS certs operation to complete...
+TLS certs operation complete.
+
+===== after 3 (REMOVE-CERTS)  (2026-11-13T21:52:23)
+service: Running, start=Automatic
+installed: Duplicati 2.4.1.0
+http://127.0.0.1:8200  -> answers (200)
+https://127.0.0.1:8200 -> no answer (HttpRequestException: The SSL connection could not be established, see inner exception.)
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\InstallState : InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\Service : 
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+shortcut C:\Users\Public\Desktop\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server
+wincred entries named duplicati: LegacyGeneric:target=duplicati-trayicon-password
+tray (after 3 (REMOVE-CERTS)): pid=22188 user=Jam commandline=["C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" --no-hosted-server] own-listening-ports=[] connections=[:::0/Bound,127.0.0.1:8200/Established] window=[]
+
+msiexec /i "C:\Users\Jam\Documents\dup-msi-7804\duplicati-2.4.1.0_stable_2026-10-29-win-x64-gui.msi" /l*v "C:\Users\Jam\Documents\dup-msi-7804\logs\04-repair.log" -> exit code 0
+
+===== after 4 (repair)  (2026-11-13T21:58:43)
+service: Running, start=Automatic
+installed: Duplicati 2.4.1.0
+http://127.0.0.1:8200  -> no answer (TaskCanceledException: The request was canceled due to the configured HttpClient.Timeout of 5 seconds elapsing.)
+https://127.0.0.1:8200 -> no answer (HttpRequestException: The SSL connection could not be established, see inner exception.)
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\InstallState : InstallLocation=C:\Program Files\Duplicati 2\, ServiceInstalled=1, BootstrapApplied=unset
+HKLM:\SOFTWARE\DuplicatiTeam\Duplicati\Service : KeyExists=1
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" 
+shortcut C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" 
+shortcut C:\Users\Public\Desktop\Duplicati.lnk: "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" 
+wincred entries named duplicati: LegacyGeneric:target=duplicati-trayicon-password
+  --- 04-repair.log
+  MSI (s) (20:84) [21:53:35:811]: Doing action: RemoveExistingProducts
+  MSI (s) (20:84) [21:54:07:656]: Doing action: ClearNoHostedServerArg
+  MSI (s) (20:84) [21:54:07:720]: Feature: DuplicatiServiceFeature; Installed: Local;   Request: Reinstall;   Action: Reinstall
+  MSI (s) (20:84) [21:54:07:720]: Feature: DuplicatiTlsCertsFeature; Installed: Absent;   Request: Null;   Action: Null
+  MSI (s) (20:84) [21:55:27:475]: Skipping action: SetNoHostedServerArg (condition is false)
+  MSI (s) (20:84) [21:55:27:525]: Skipping action: SetInitPassword (condition is false)
+  Property(S): LAUNCH_AS_SERVICE = 1
+  Property(S): PREVIOUS_SERVICE_INSTALLED = 1
+  Property(S): INSTALLASSERVICE = false
+  Property(S): UILevel = 5
+  MSI (c) (30:08) [21:57:29:280]: Skipping action: StoreTrayIconValues (condition is false)
+  Property(C): LAUNCH_AS_SERVICE = 1
+  Property(C): PREVIOUS_SERVICE_INSTALLED = 1
+  Property(C): INSTALLASSERVICE = false
+  Property(C): UILevel = 5
+tray (after 4 (repair)): pid=15192 user=Jam commandline=["C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe" ] own-listening-ports=[] connections=[] window=[]
+
+cleanup skipped (-SkipCleanup)

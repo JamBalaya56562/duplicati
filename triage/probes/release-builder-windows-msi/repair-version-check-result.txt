@@ -1,0 +1,21 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: True
+=== E: wixl MSI with Event 5 and a versioned Duplicati.WindowsService.exe
+  msiexec /i exit code: 0
+  error lines in log: 0
+  disallowed components: 0; Component: DuplicatiWindowsServiceComponent; Installed: Absent;   Request: Local;   Action: Local
+[E installed]
+  service: Running, StartType Automatic
+  DelayedAutostart: 1
+  (DelayedAutostart set to 0 before the repair)
+  msiexec /fvomus exit code: 0
+  error lines in log: 0
+  disallowed components: 501; Component: DuplicatiWindowsServiceComponent; Installed: Local;   Request: Local;   Action: Local
+[E repaired]
+  service: Running, StartType Automatic
+  DelayedAutostart: 1
+  msiexec /x exit code: 0
+  error lines in log: 0
+  disallowed components: 0; Component: DuplicatiWindowsServiceComponent; Installed: Local;   Request: Absent;   Action: Absent
+[E uninstalled]
+  service: (none)
+  install folder left: False

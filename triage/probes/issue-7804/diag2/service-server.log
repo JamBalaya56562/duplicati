@@ -1,0 +1,26 @@
+2026-11-13 21:27:37 +09 - [Warning-Duplicati.Library.Utility.CommandLineArgumentValidator-UnknownOption]: Unknown option supplied: debug-service
+2026-11-13 21:27:38 +09 - [Error-Duplicati.Server.Program-ServerCrashed]: サーバーがクラッシュしました：データベースを作成、アップグレード、または開けませんでした。
+エラーメッセージ：
+データベースはバージョン13ですが、サポートしている最大のバージョンは12です。
+
+これは新しいバージョンにアップグレードした後でダウングレードを行ったために生じている可能性があります。
+その場合、以前のバージョンのデータベースのバックアップのファイルがC:\ProgramData\Duplicatiのフォルダーに保存されている可能性があります。
+System.Exception: データベースを作成、アップグレード、または開けませんでした。
+エラーメッセージ：
+データベースはバージョン13ですが、サポートしている最大のバージョンは12です。
+
+これは新しいバージョンにアップグレードした後でダウングレードを行ったために生じている可能性があります。
+その場合、以前のバージョンのデータベースのバックアップのファイルがC:\ProgramData\Duplicatiのフォルダーに保存されている可能性があります。
+ ---> Duplicati.Library.Interface.UserInformationException: 
+データベースはバージョン13ですが、サポートしている最大のバージョンは12です。
+
+これは新しいバージョンにアップグレードした後でダウングレードを行ったために生じている可能性があります。
+その場合、以前のバージョンのデータベースのバックアップのファイルがC:\ProgramData\Duplicatiのフォルダーに保存されている可能性があります。
+   at Duplicati.Library.SQLiteHelper.DatabaseUpgrader.UpgradeDatabase(IDbConnection connection, String sourcefile, String schema, IList`1 versions)
+   at Duplicati.Library.SQLiteHelper.DatabaseUpgrader.UpgradeDatabase(IDbConnection connection, String sourcefile, Type eltype)
+   at Duplicati.Server.Program.GetDatabaseConnection(IApplicationSettings applicationSettings, Dictionary`2 commandlineOptions, Boolean silentConsole, Boolean changeDbEncryption)
+   --- End of inner exception stack trace ---
+   at Duplicati.Server.Program.GetDatabaseConnection(IApplicationSettings applicationSettings, Dictionary`2 commandlineOptions, Boolean silentConsole, Boolean changeDbEncryption)
+   at Duplicati.Server.Program.Main(IApplicationSettings applicationSettings, String[] _args)
+2026-11-13 21:27:38 +09 - [Information-Duplicati.Server.Program-ServerStopping]: Server is stopping, tearing down handlers
+2026-11-13 21:27:38 +09 - [Information-Duplicati.Server.Program-ServerStopped]: Server has stopped

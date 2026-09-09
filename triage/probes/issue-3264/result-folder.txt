@@ -1,0 +1,111 @@
+test started 2026-11-14T12:05:05; cli 2026-11-14T09:24:26; free letter R
+volume: \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\; access paths: C:\Users\Jam\Documents\dup-3264\work\mnt\, \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\
+Win32_Volume: DriveLetter=[] Name=[C:\Users\Jam\Documents\dup-3264\work\mnt\]
+
+----- 1. backup with the volume mounted only on a folder
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 0
+  | Backup started at 2026/11/14 12:05:23
+  | 操作 Backup が開始しました
+  | Checking remote backup ...
+  | Scanning source files ...
+  |   0 files need to be examined (0バイト)
+  | Compacting remote backup ...
+  | Compacting not required
+  | Checking remote backup ...
+  | Verifying remote backup ...
+  | Remote backup verification completed
+  | Successfully verified 3 remote files
+  | 操作 Backup が完了しました
+  |   Duration of backup: 00:00:14.6049878
+  |   Remote files: 3
+  |   Remote filesets: 1
+  |   Remote size: 1.00 MiB
+  |   Total remote quota: 951.76 GiB
+  |   Available remote quota: 193.04 GiB
+  |   Files added: 2
+  |   Files deleted: 0
+  |   Files changed: 0
+  |   Data uploaded: 1.00 MiB
+  |   Data downloaded: 1.00 MiB
+  | Backup completed successfully!
+
+----- 1b. files in version 0
+  > Duplicati.CommandLine find file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=0 --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Listing contents 0 (2026/11/14 12:05:38):
+  | C:\Users\Jam\Documents\dup-3264\work\mnt\data\ 
+  | C:\Users\Jam\Documents\dup-3264\work\mnt\data\sub\ 
+  | C:\Users\Jam\Documents\dup-3264\work\mnt\data\a.txt (12バイト)
+  | C:\Users\Jam\Documents\dup-3264\work\mnt\data\sub\c.bin (1.00 MiB)
+
+----- 1c. restore version 0
+  > Duplicati.CommandLine restore file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=0 --restore-path=C:\Users\Jam\Documents\dup-3264\work\restore --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Restore started at 2026/11/14 12:05:44
+  | Checking remote backup ...
+  |   2 files need to be restored (1.00 MiB)
+  |   0 files need to be restored (0バイト)
+  | Verifying restored files ...
+  | Completing restore on destination ...
+  | Restored 2 (1.00 MiB) files to C:\Users\Jam\Documents\dup-3264\work\restore
+  | Duration of restore: 00:00:01
+
+----- 1d. restored files compared with the volume (relative path and SHA-256)
+  volume  : a.txt 5C45C8D82696E30F6F62DD35E57033B7223D2B04DEC0E3CAA7AF3FDE4EA05FAA | sub\c.bin 573E3C6DEED36BFE40336458BC93C9B9742BBC47D198A3F7BF6AA8D8467CA50E
+  restored: a.txt 5C45C8D82696E30F6F62DD35E57033B7223D2B04DEC0E3CAA7AF3FDE4EA05FAA | sub\c.bin 573E3C6DEED36BFE40336458BC93C9B9742BBC47D198A3F7BF6AA8D8467CA50E
+  same: True
+
+access paths now: R:\, C:\Users\Jam\Documents\dup-3264\work\mnt\, \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\
+
+----- 2. backup with the volume on R: and the folder
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 0
+  | Backup started at 2026/11/14 12:05:50
+  | 操作 Backup が開始しました
+  | Checking remote backup ...
+  | Scanning source files ...
+  |   0 files need to be examined (0バイト)
+  | Checking remote backup ...
+  | Verifying remote backup ...
+  | Remote backup verification completed
+  | Successfully verified 3 remote files
+  | 操作 Backup が完了しました
+  |   Duration of backup: 00:00:04.3774523
+  |   Remote files: 4
+  |   Remote filesets: 2
+  |   Remote size: 1.00 MiB
+  |   Total remote quota: 951.76 GiB
+  |   Available remote quota: 192.81 GiB
+  |   Files added: 2
+  |   Files deleted: 2
+  |   Files changed: 0
+  |   Data uploaded: 889バイト
+  |   Data downloaded: 1.00 MiB
+  | Backup completed successfully!
+
+----- 2b. files in version 0
+  > Duplicati.CommandLine find file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=0 --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Listing contents 0 (2026/11/14 12:05:52):
+  | R:\data\ 
+  | R:\data\sub\ 
+  | R:\data\a.txt (12バイト)
+  | R:\data\sub\c.bin (1.00 MiB)
+
+access paths now: \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\
+Win32_Volume: DriveLetter=[] Name=[\\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\]
+
+----- 3. backup with the volume not mounted anywhere
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 100
+  | Backup started at 2026/11/14 12:06:02
+  | 操作 Backup が開始しました
+  | バックアップ元 \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\data\はボリューム 76ccdd5e-0000-0000-0000-010000000000 にありますが、ボリュームが見つかりません。バックアップを中断します
+  | The source path \\?\Volume{76ccdd5e-0000-0000-0000-010000000000}\data\ does not exist, skipping
+  | The operation Backup has failed => No valid source folders found, aborting backup as it would be empty
+  | ErrorID: NoSources
+  | No valid source folders found, aborting backup as it would be empty
+
+cleanup: work folder present=False; letter R in use=False
+done 2026-11-14T12:06:06

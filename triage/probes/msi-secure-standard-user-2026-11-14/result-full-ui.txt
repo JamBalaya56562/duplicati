@@ -1,0 +1,41 @@
+test started 2026-11-14T14:04:23; properties: NOSCRIPT=true
+user duptest-std groups: Users
+
+----- master.msi installed by duptest-std
+  msiexec exit code: 0
+  'Ignoring disallowed property': 0
+  MSI (c) (A0:80) [14:04:41:909]: Switching to server: INSTALLLOCATION="C:\Program Files\Duplicati 2\" INSTALL_TLS_CERTS="1" TARGETDIR="C:\" NOSCRIPT="true" SECONDSEQUENCE="1" INSTALLLEVEL="1" ROOTDRIVE="C:\" EXECUTEACTION="INSTALL" ACTION="INSTALL" SOURCEDIR="C:\Users\Public\dup-msi-secure\" USERNAME="(redacted)" CLIENTPROCESSID="20640" CLIENTUILEVEL="0" CURRENTDIRECTORY="C:\Users\Public\dup-msi-secure"  ADDLOCAL=DuplicatiDesktopShortCutFeature,DuplicatiProgramMenuShortCutFeature,DuplicatiStartupShortCutFeature,DuplicatiTlsCertsFeature,DuplicatiCore REMOVE=DuplicatiServiceFeature  
+  AdminUser  client: 1  server: 1
+  Privileged  client: 1  server: 1
+  LogonUser  client: duptest-std  server: duptest-std
+  INSTALL_TLS_CERTS  client: 1  server: 1
+  LAUNCH_AS_SERVICE  client: (none)  server: (none)
+  INSTALLASSERVICE  client: false  server: false
+  ADD_DESKTOP_SHORTCUT  client: 1  server: 1
+  NOSCRIPT  client: true  server: true
+  ADDLOCAL  client: (none)  server: DuplicatiDesktopShortCutFeature,DuplicatiProgramMenuShortCutFeature,DuplicatiStartupShortCutFeature,DuplicatiTlsCertsFeature,DuplicatiCore
+  REMOVE  client: (none)  server: DuplicatiServiceFeature
+  Duplicati shortcuts on a desktop or in a Startup folder: C:\Users\Public\Desktop\Duplicati.lnk, C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk
+  uninstall exit code: 0; install folder left: False
+  Duplicati certificates left in LocalMachine Root/My: 0
+
+----- fixed.msi installed by duptest-std
+  msiexec exit code: 0
+  'Ignoring disallowed property': 0
+  MSI (c) (44:2C) [14:05:36:884]: Switching to server: INSTALLLOCATION="C:\Program Files\Duplicati 2\" INSTALL_TLS_CERTS="1" TARGETDIR="C:\" NOSCRIPT="true" SECONDSEQUENCE="1" INSTALLLEVEL="1" ROOTDRIVE="C:\" EXECUTEACTION="INSTALL" ACTION="INSTALL" SOURCEDIR="C:\Users\Public\dup-msi-secure\" USERNAME="(redacted)" CLIENTPROCESSID="31812" CLIENTUILEVEL="0" CURRENTDIRECTORY="C:\Users\Public\dup-msi-secure"  ADDLOCAL=DuplicatiDesktopShortCutFeature,DuplicatiProgramMenuShortCutFeature,DuplicatiStartupShortCutFeature,DuplicatiTlsCertsFeature,DuplicatiCore REMOVE=DuplicatiServiceFeature  
+  AdminUser  client: 1  server: 1
+  Privileged  client: 1  server: 1
+  LogonUser  client: duptest-std  server: duptest-std
+  INSTALL_TLS_CERTS  client: 1  server: 1
+  LAUNCH_AS_SERVICE  client: (none)  server: (none)
+  INSTALLASSERVICE  client: false  server: false
+  ADD_DESKTOP_SHORTCUT  client: 1  server: 1
+  NOSCRIPT  client: true  server: true
+  ADDLOCAL  client: (none)  server: DuplicatiDesktopShortCutFeature,DuplicatiProgramMenuShortCutFeature,DuplicatiStartupShortCutFeature,DuplicatiTlsCertsFeature,DuplicatiCore
+  REMOVE  client: (none)  server: DuplicatiServiceFeature
+  Duplicati shortcuts on a desktop or in a Startup folder: C:\Users\Public\Desktop\Duplicati.lnk, C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk
+  uninstall exit code: 0; install folder left: False
+  Duplicati certificates left in LocalMachine Root/My: 0
+
+cleanup: user left=False; profile left=False; work folder left=False; install folder left=False
+done 2026-11-14T14:06:17

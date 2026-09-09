@@ -1,0 +1,12 @@
+21:42:37 files in C:\ProgramData\Duplicati before: 4, 119321 bytes
+21:42:38 renamed C:\ProgramData\Duplicati -> C:\ProgramData\Duplicati.before-7804
+21:59:22 repro-7804.ps1 finished
+22:05:10   uninstall exit code: 1603
+22:05:10   removed HKLM:\SOFTWARE\DuplicatiTeam
+22:05:11   service present: True
+22:05:11   install folder present: True
+22:05:11   cleanup done 2026-11-13T22:05:11
+22:05:11 moved the test's C:\ProgramData\Duplicati -> C:\Users\Jam\Documents\dup-msi-7804\run3-programdata
+22:05:11 renamed C:\ProgramData\Duplicati.before-7804 back -> C:\ProgramData\Duplicati; files: 4, 119321 bytes (before: 4, 119321)
+22:05:11 check: C:\ProgramData\Duplicati exists=True, C:\ProgramData\Duplicati.before-7804 exists=False
+22:05:11 run3 done.

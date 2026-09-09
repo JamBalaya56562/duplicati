@@ -1,0 +1,11 @@
+temporary-job {"status":200,"id":"4f096d3e-d68f-43e7-a8bf-88dd685dc8c0"}
+list-filesets {"status":200,"success":true,"count":1,"error":null}
+repairupdate {"status":200,"task":"Completed","error":null}
+roots {"status":200,"success":true,"error":null,"data":[{"Path":"/fixture/linux-source/","IsDirectory":true}]}
+children {"request":"/fixture/linux-source/","status":200,"success":true,"error":null,"data":[{"Path":"/fixture/linux-source/Documents/","IsDirectory":true},{"Path":"/fixture/linux-source/peer.txt","IsDirectory":false}]}
+documents {"request":"/fixture/linux-source/Documents/","status":200,"data":[{"Path":"/fixture/linux-source/Documents/payload.txt","IsDirectory":false}]}
+copytotemp {"status":200,"id":"8063d9bb-6047-467a-abef-d0af621d7794"}
+restore-request {"id":"8063d9bb-6047-467a-abef-d0af621d7794","body":{"paths":["/fixture/linux-source/Documents/*"],"restore_path":"C:\\Users\\Jam\\AppData\\Local\\Temp\\claude\\eb7164b3a8a8609a\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\scratchpad\\r449\\out-l2w-copy","overwrite":true,"permissions":false,"time":"2026-11-10T12:55:47Z"}}
+restore-start {"status":200,"body":"{\"Status\":\"OK\",\"ID\":7}"}
+restore-task {"status":"Completed","error":null}
+restored-files [{"p":"payload.txt","content":"linux payload\n"}]

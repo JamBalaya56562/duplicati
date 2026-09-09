@@ -1,0 +1,29 @@
+test started 2026-11-14T14:00:15; properties: ADD_DESKTOP_SHORTCUT=0 ADD_STARTUP_SHORTCUT=0 NOSCRIPT=true
+user duptest-std groups: Users
+
+----- master.msi installed by duptest-std
+  msiexec exit code: 0
+  'Ignoring disallowed property': 0
+  AdminUser  client: (none)  server: 1
+  Privileged  client: (none)  server: 1
+  LogonUser  client: (none)  server: duptest-std
+  ADD_DESKTOP_SHORTCUT  client: (none)  server: 0
+  ADD_STARTUP_SHORTCUT  client: (none)  server: 0
+  NOSCRIPT  client: (none)  server: true
+  Duplicati shortcuts on a desktop or in a Startup folder: C:\Users\Public\Desktop\Duplicati.lnk, C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk
+  uninstall exit code: 0; install folder left: False
+
+----- fixed.msi installed by duptest-std
+  msiexec exit code: 0
+  'Ignoring disallowed property': 0
+  AdminUser  client: (none)  server: 1
+  Privileged  client: (none)  server: 1
+  LogonUser  client: (none)  server: duptest-std
+  ADD_DESKTOP_SHORTCUT  client: (none)  server: 0
+  ADD_STARTUP_SHORTCUT  client: (none)  server: 0
+  NOSCRIPT  client: (none)  server: true
+  Duplicati shortcuts on a desktop or in a Startup folder: C:\Users\Public\Desktop\Duplicati.lnk, C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Duplicati.lnk
+  uninstall exit code: 0; install folder left: False
+
+cleanup: user left=False; profile left=False; work folder left=False; install folder left=False
+done 2026-11-14T14:01:35

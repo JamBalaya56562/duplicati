@@ -1,0 +1,6 @@
+temporary-job {"status":200,"id":"fc1268cd-b26e-4ac1-8d65-49c17f812744"}
+list-filesets {"status":200,"success":true,"count":1,"error":null}
+repairupdate {"status":200,"task":"Completed","error":null}
+roots {"status":200,"success":true,"error":null,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\","IsDirectory":true}]}
+children {"request":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\","status":200,"success":true,"error":null,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\","IsDirectory":true},{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\peer.txt","IsDirectory":false}]}
+documents {"request":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\","status":200,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\payload.txt","IsDirectory":false}]}

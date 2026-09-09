@@ -1,0 +1,203 @@
+test started 2026-11-14T09:05:17; drive letters R then S; cli 2026-11-14T08:59:44
+volume: \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\ on R:
+
+----- 1. backup with the volume on R:
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 0
+  | Backup started at 2026/11/14 9:05:24
+  | 操作 Backup が開始しました
+  | Checking remote backup ...
+  | Backend event: List - Started:  ()
+  |   Listing remote folder ...
+  | Backend event: List - Completed:  ()
+  | Backend event: QuotaInfo - Started:  ()
+  | Scanning source files ...
+  |   0 files need to be examined (0バイト)
+  | Backend event: Put - Started: duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB)
+  |   Uploading file duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB) ...
+  | Backend event: Put - Completed: duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB)
+  | Backend event: Put - Started: duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト)
+  |   Uploading file duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト) ...
+  | Backend event: Put - Completed: duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト)
+  | Backend event: Put - Started: duplicati-20261114T000526Z.dlist.zip (967バイト)
+  |   Uploading file duplicati-20261114T000526Z.dlist.zip (967バイト) ...
+  | Backend event: Put - Completed: duplicati-20261114T000526Z.dlist.zip (967バイト)
+  | Compacting remote backup ...
+  | Compacting not required
+  | Checking remote backup ...
+  | Backend event: List - Started:  ()
+  |   Listing remote folder ...
+  | Backend event: List - Completed:  (3バイト)
+  | Backend event: QuotaInfo - Started:  ()
+  | Verifying remote backup ...
+  | Remote backup verification completed
+  | Backend event: Get - Started: duplicati-20261114T000526Z.dlist.zip (967バイト)
+  |   Downloading file duplicati-20261114T000526Z.dlist.zip (967バイト) ...
+  | Backend event: Get - Completed: duplicati-20261114T000526Z.dlist.zip (967バイト)
+  | Backend event: Get - Started: duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト)
+  |   Downloading file duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト) ...
+  | Backend event: Get - Completed: duplicati-ib56180999a624d34b6890e04ed651cc8.dindex.zip (852バイト)
+  | Backend event: Get - Started: duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB)
+  |   Downloading file duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB) ...
+  | Backend event: Get - Completed: duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB)
+  | Successfully verified 3 remote files
+  | 操作 Backup が完了しました
+  |   Duration of backup: 00:00:06.0923825
+  |   Remote files: 3
+  |   Remote filesets: 1
+  |   Remote size: 1.00 MiB
+  |   Total remote quota: 951.76 GiB
+  |   Available remote quota: 198.76 GiB
+  |   Files added: 3
+  |   Files deleted: 0
+  |   Files changed: 0
+  |   Data uploaded: 1.00 MiB
+  |   Data downloaded: 1.00 MiB
+  | Backup completed successfully!
+
+drive letter changed: S:
+
+----- 2. backup with the volume on S: (b.txt changed)
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 0
+  | Backup started at 2026/11/14 9:05:36
+  | 操作 Backup が開始しました
+  | Checking remote backup ...
+  | Backend event: List - Started:  ()
+  |   Listing remote folder ...
+  | Backend event: List - Completed:  (3バイト)
+  | Backend event: QuotaInfo - Started:  ()
+  | Scanning source files ...
+  |   0 files need to be examined (0バイト)
+  | Backend event: Put - Started: duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト)
+  |   Uploading file duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト) ...
+  | Backend event: Put - Completed: duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト)
+  | Backend event: Put - Started: duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト)
+  |   Uploading file duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト) ...
+  | Backend event: Put - Completed: duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト)
+  | Backend event: Put - Started: duplicati-20261114T000537Z.dlist.zip (971バイト)
+  |   Uploading file duplicati-20261114T000537Z.dlist.zip (971バイト) ...
+  | Backend event: Put - Completed: duplicati-20261114T000537Z.dlist.zip (971バイト)
+  | Compacting remote backup ...
+  | Compacting not required
+  | Checking remote backup ...
+  | Backend event: List - Started:  ()
+  |   Listing remote folder ...
+  | Backend event: List - Completed:  (6バイト)
+  | Backend event: QuotaInfo - Started:  ()
+  | Verifying remote backup ...
+  | Remote backup verification completed
+  | Backend event: Get - Started: duplicati-20261114T000537Z.dlist.zip (971バイト)
+  |   Downloading file duplicati-20261114T000537Z.dlist.zip (971バイト) ...
+  | Backend event: Get - Completed: duplicati-20261114T000537Z.dlist.zip (971バイト)
+  | Backend event: Get - Started: duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト)
+  |   Downloading file duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト) ...
+  | Backend event: Get - Completed: duplicati-i1801d37bf83e4f67aceceec8929cdce2.dindex.zip (619バイト)
+  | Backend event: Get - Started: duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト)
+  |   Downloading file duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト) ...
+  | Backend event: Get - Completed: duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト)
+  | Successfully verified 3 remote files
+  | 操作 Backup が完了しました
+  |   Duration of backup: 00:00:04.6584224
+  |   Remote files: 6
+  |   Remote filesets: 2
+  |   Remote size: 1.01 MiB
+  |   Total remote quota: 951.76 GiB
+  |   Available remote quota: 198.76 GiB
+  |   Files added: 3
+  |   Files deleted: 3
+  |   Files changed: 0
+  |   Data uploaded: 2.24 KiB
+  |   Data downloaded: 2.24 KiB
+  | Backup completed successfully!
+
+----- 3a. compare version 1 (older) with version 0 (newer)
+  > Duplicati.CommandLine compare file://C:\Users\Jam\Documents\dup-3264\work\dest 1 0 --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --full-result=true
+  exit code: 0
+  | Listing changes
+  |   1: 2026/11/14 9:05:26
+  |   0: 2026/11/14 9:05:37
+  | Size of backup 1: 1.00 MiB
+  |   5 added entries:
+  |   + S:\data\
+  |   + S:\data\sub\
+  |   + S:\data\a.txt
+  |   + S:\data\b.txt
+  |   + S:\data\sub\c.bin
+  | 5 deleted entries:
+  |   - R:\data\
+  |   - R:\data\sub\
+  |   - R:\data\a.txt
+  |   - R:\data\b.txt
+  |   - R:\data\sub\c.bin
+  |   Added folders:     2
+  |   Added files:       3
+  |   Deleted folders:   2
+  |   Deleted files:     3
+  | Size of backup 0: 1.00 MiB
+
+----- 3b. files in version 0
+  > Duplicati.CommandLine find file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=0 --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Listing contents 0 (2026/11/14 9:05:37):
+  | S:\data\ 
+  | S:\data\a.txt (12バイト)
+  | S:\data\b.txt (24バイト)
+  | S:\data\sub\ 
+  | S:\data\sub\c.bin (1.00 MiB)
+
+----- 3c. files in version 1
+  > Duplicati.CommandLine find file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=1 --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Listing contents 1 (2026/11/14 9:05:26):
+  | R:\data\ 
+  | R:\data\a.txt (12バイト)
+  | R:\data\b.txt (24バイト)
+  | R:\data\sub\ 
+  | R:\data\sub\c.bin (1.00 MiB)
+
+----- 3d. restore version 0
+  > Duplicati.CommandLine restore file://C:\Users\Jam\Documents\dup-3264\work\dest * --version=0 --restore-path=C:\Users\Jam\Documents\dup-3264\work\restore --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true
+  exit code: 0
+  | Restore started at 2026/11/14 9:05:49
+  | Checking remote backup ...
+  |   Listing remote folder ...
+  |   3 files need to be restored (1.00 MiB)
+  |   Downloading file duplicati-b3810a9e84de240c79f86149a5f68492a.dblock.zip (700バイト) ...
+  |   Downloading file duplicati-b16e62cc1614341c38a62f0d89dad60da.dblock.zip (1.00 MiB) ...
+  |   0 files need to be restored (0バイト)
+  | Verifying restored files ...
+  | Completing restore on destination ...
+  | Restored 3 (1.00 MiB) files to C:\Users\Jam\Documents\dup-3264\work\restore
+  | Duration of restore: 00:00:01
+
+----- 3e. restored files compared with the volume (relative path and SHA-256)
+  volume  : a.txt 5C45C8D82696E30F6F62DD35E57033B7223D2B04DEC0E3CAA7AF3FDE4EA05FAA | b.txt 580EF1F929221AC508CDEC63FA6C4AE974B0FE8D0CAEB7B4633A02A933168873 | sub\c.bin 573E3C6DEED36BFE40336458BC93C9B9742BBC47D198A3F7BF6AA8D8467CA50E
+  restored: a.txt 5C45C8D82696E30F6F62DD35E57033B7223D2B04DEC0E3CAA7AF3FDE4EA05FAA | b.txt 580EF1F929221AC508CDEC63FA6C4AE974B0FE8D0CAEB7B4633A02A933168873 | sub\c.bin 573E3C6DEED36BFE40336458BC93C9B9742BBC47D198A3F7BF6AA8D8467CA50E
+
+access paths now: C:\Users\Jam\Documents\dup-3264\work\mnt\, \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\
+
+----- 4. backup with the volume mounted only on a folder
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 100
+  | Backup started at 2026/11/14 9:05:55
+  | 操作 Backup が開始しました
+  | バックアップ元 \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\はボリューム 76ccfb3c-0000-0000-0000-010000000000 にありますが、ボリュームが見つかりません。バックアップを中断します
+  | The source path \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ does not exist, skipping
+  | The operation Backup has failed => No valid source folders found, aborting backup as it would be empty
+  | ErrorID: NoSources
+  | No valid source folders found, aborting backup as it would be empty
+
+----- 5. backup with the volume detached
+  > Duplicati.CommandLine backup file://C:\Users\Jam\Documents\dup-3264\work\dest \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ --dbpath=C:\Users\Jam\Documents\dup-3264\work\backup.sqlite --no-encryption=true --snapshot-policy=off --console-log-level=Information --disable-module=console-password-input
+  exit code: 100
+  | Backup started at 2026/11/14 9:06:01
+  | 操作 Backup が開始しました
+  | バックアップ元 \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\はボリューム 76ccfb3c-0000-0000-0000-010000000000 にありますが、ボリュームが見つかりません。バックアップを中断します
+  | The source path \\?\Volume{76ccfb3c-0000-0000-0000-010000000000}\data\ does not exist, skipping
+  | The operation Backup has failed => No valid source folders found, aborting backup as it would be empty
+  | ErrorID: NoSources
+  | No valid source folders found, aborting backup as it would be empty
+
+cleanup: work folder present=False; letters R/S in use=False
+done 2026-11-14T09:06:03

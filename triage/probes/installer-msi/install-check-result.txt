@@ -1,0 +1,31 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: True
+[before]
+  HKCU Run Duplicati      : (none)
+  HKCU marker Enabled     : (none)
+  all-users Startup .lnk  : False
+  current-user Startup .lnk: False
+  msiexec exit code: 0 (log: C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\msi\install-a.log)
+[A installed, STARTUP_FOR_CURRENT_USER=1]
+  HKCU Run Duplicati      : "C:\Program Files\Duplicati 2\Duplicati.GUI.TrayIcon.exe"
+  HKCU marker Enabled     : 1
+  all-users Startup .lnk  : False
+  current-user Startup .lnk: False
+  msiexec exit code: 0 (log: C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\msi\uninstall-a.log)
+[A uninstalled]
+  HKCU Run Duplicati      : (none)
+  HKCU marker Enabled     : (none)
+  all-users Startup .lnk  : False
+  current-user Startup .lnk: False
+  msiexec exit code: 0 (log: C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\msi\install-b.log)
+[B installed, default]
+  HKCU Run Duplicati      : (none)
+  HKCU marker Enabled     : (none)
+  all-users Startup .lnk  : True
+  current-user Startup .lnk: False
+  msiexec exit code: 0 (log: C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\msi\uninstall-b.log)
+[B uninstalled]
+  HKCU Run Duplicati      : (none)
+  HKCU marker Enabled     : (none)
+  all-users Startup .lnk  : False
+  current-user Startup .lnk: False
+Program Files\Duplicati 2 left: False

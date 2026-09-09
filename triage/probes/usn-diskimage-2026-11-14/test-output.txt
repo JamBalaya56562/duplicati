@@ -1,0 +1,87 @@
+VSTest 縺ｮ繝舌・繧ｸ繝ｧ繝ｳ 18.12.0 (x64)
+
+繝・せ繝亥ｮ溯｡後ｒ髢句ｧ九＠縺ｦ縺・∪縺吶ゅ♀蠕・■縺上□縺輔＞...
+蜷郁ｨ・1 蛟九・繝・せ繝・繝輔ぃ繧､繝ｫ縺梧欠螳壹＆繧後◆繝代ち繝ｼ繝ｳ縺ｨ荳閾ｴ縺励∪縺励◆縲・
+NUnit Adapter 5.0.0.0: Test execution started
+Running selected tests in C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\Duplicati.UnitTest.dll
+   NUnit3TestExecutor discovered 9 of 9 NUnit test cases using Current Discovery mode, Non-Explicit run
+One Time Setup DiskImageUnitTests
+Setup DiskImageUnitTests 8MB 96MB
+Memory: 8MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (97MB)
+Memory: 8MB -> 8MB (96MB)
+Memory: 8MB -> 8MB (97MB)
+Memory: 8MB -> 8MB (96MB)
+Memory: 8MB -> 8MB (96MB)
+Memory: 8MB -> 8MB (96MB)
+Memory: 8MB -> 8MB (96MB)
+Memory: 8MB -> 8MB (94MB)
+Memory: 8MB -> 8MB (94MB)
+Memory: 9MB -> 8MB (98MB)
+Memory: 9MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (97MB)
+Memory: 8MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (99MB)
+Memory: 8MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (98MB)
+Memory: 8MB -> 8MB (100MB)
+Memory: 9MB -> 8MB (98MB)
+Memory: 9MB -> 8MB (99MB)
+Setup Test_RawDisk_DisposeWhileReading_DoesNotCrash_Async 8MB 100MB
+Memory: 42MB -> 42MB (112MB)
+TearDown Test_RawDisk_DisposeWhileReading_DoesNotCrash_Async 8MB 112MB
+  謌仙粥 Test_RawDisk_DisposeWhileReading_DoesNotCrash_Async [577 ms]
+Warning: Failed to detach disk image: PowerShell command timed out after 30 seconds.
+Script:
+
+                    $image = Get-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_gpt_class_test.vhdx'
+                    if ($image -and $image.Attached) {
+                        Dismount-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_gpt_class_test.vhdx'
+                    }
+                
+Warning: Failed to delete disk image file: The process cannot access the file 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_gpt_class_test.vhdx' because it is being used by another process.
+Warning: Failed to detach disk image: PowerShell command timed out after 30 seconds.
+Script:
+
+                    $image = Get-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_mbr_class_test.vhdx'
+                    if ($image -and $image.Attached) {
+                        Dismount-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_mbr_class_test.vhdx'
+                    }
+                
+Warning: Failed to delete disk image file: The process cannot access the file 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_mbr_class_test.vhdx' because it is being used by another process.
+Warning: Failed to detach disk image: PowerShell command timed out after 30 seconds.
+Script:
+
+                    $image = Get-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_writable_class_test.vhdx'
+                    if ($image -and $image.Attached) {
+                        Dismount-DiskImage -ImagePath 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_writable_class_test.vhdx'
+                    }
+                
+Warning: Failed to delete disk image file: The process cannot access the file 'C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_writable_class_test.vhdx' because it is being used by another process.
+One Time Setup Issue4951
+Setup RenameCaseChangeUSNAsync(True) 8MB 109MB
+Memory: 12MB -> 9MB (154MB)
+TearDown RenameCaseChangeUSNAsync 10MB 152MB
+  謌仙粥 RenameCaseChangeUSNAsync(True) [2 s]
+Setup RenameCaseChangeUSNAsync(False) 10MB 152MB
+TearDown RenameCaseChangeUSNAsync 10MB 153MB
+  謌仙粥 RenameCaseChangeUSNAsync(False) [1 s]
+One Time Setup UsnSourceFileBackupTests
+Setup ASourceFileIsKeptWhenHiddenAndSystemFilesAreExcluded 10MB 153MB
+Drive root C:\ has attributes Hidden, System, Directory
+  謌仙粥 APurgedJournalIsAWarningWhenTheJournalWasAskedFor(On) [8 ms]
+  謌仙粥 APurgedJournalIsAWarningWhenTheJournalWasAskedFor(Required) [< 1 ms]
+  謌仙粥 APurgedJournalStaysInformationWithTheAutoPolicy [< 1 ms]
+  謌仙粥 OtherReasonsForAFullScanStayInformation [< 1 ms]
+TearDown ASourceFileIsKeptWhenHiddenAndSystemFilesAreExcluded 10MB 158MB
+Setup TheFolderOfASourceFileIsRecordedWithTheJournal 10MB 158MB
+  謌仙粥 ASourceFileIsKeptWhenHiddenAndSystemFilesAreExcluded [1 s]
+TearDown TheFolderOfASourceFileIsRecordedWithTheJournal 10MB 161MB
+NUnit Adapter 5.0.0.0: Test execution complete
+  謌仙粥 TheFolderOfASourceFileIsRecordedWithTheJournal [1 s]
+
+繝・せ繝医・螳溯｡後↓謌仙粥縺励∪縺励◆縲・
+繝・せ繝医・蜷郁ｨ域焚: 9
+     謌仙粥: 9
+蜷郁ｨ域凾髢・ 2.5099 蛻・

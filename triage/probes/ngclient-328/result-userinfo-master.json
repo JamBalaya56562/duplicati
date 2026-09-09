@@ -1,0 +1,14 @@
+{
+  "id": "1",
+  "created": "ssh://fixture-user:fixture-secret@Example.COM:022/archive%2fpart?auth-password=p%2525&buffer-size=64MB&future=a+b&future=two&flag",
+  "getTarget": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?auth-password=***************&buffer-size=64MB&future=a+b,two",
+  "getHidesSecrets": false,
+  "afterPut": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&future=a+b,two&auth-password=p%2525",
+  "afterPutEqualsCreated": false,
+  "moved": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?auth-password=***************&buffer-size=64MB&future=a+b,two&auth-username=fixture-user",
+  "afterMoved": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&future=a+b,two&auth-username=fixture-user&auth-password=p%2525",
+  "exportArgs": "{\"Backend\":\"ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&future=a+b,two\",\"Arguments\":[\"C:\\\\Users\\\\Jam\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\eb7164b3a8a8609a\\\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\\\scratchpad\\\\p328\\\\source\\\\\"],\"Options\":[\"--backup-name=User info password\",\"--dbpath=C:\\\\Users\\\\Jam\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\eb7164b3a8a8609a\\\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\\\scratchpad\\\\p328\\\\data-userinfo-master\\\\EKOKYDTJES.sqlite\",\"--backup-id=DB-1\",\"--no-encryption=true\",\"--disable-module=console-password-input\"]}",
+  "exportArgsHidesSecrets": false,
+  "exportCmdline": "{\"Command\":\"\\\"C:\\\\Users\\\\Jam\\\\Documents\\\\duplicati\\\\Executables\\\\Duplicati.Server\\\\bin\\\\Debug\\\\net10.0\\\\Duplicati.CommandLine.exe\\\" backup \\\"ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&future=a+b,two\\\" \\\"C:\\\\Users\\\\Jam\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\eb7164b3a8a8609a\\\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\\\scratchpad\\\\p328\\\\source\\\\\\\\\\\" --backup-name=\\\"User info password\\\" --dbpath=\\\"C:\\\\Users\\\\Jam\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\eb7164b3a8a8609a\\\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\\\scratchpad\\\\p328\\\\data-userinfo-master\\\\EKOKYDTJES.sqlite\\\" --backup-id=DB-1 --no-encryption=true --disable-module=console-password-input\"}",
+  "exportCmdlineHidesSecrets": false
+}

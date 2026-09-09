@@ -1,0 +1,13 @@
+test started 2026-11-14T12:21:51; dll 2026-11-14T12:19:10
+filter: TestCategory=USN|FullyQualifiedName~Test_RawDisk_DisposeWhileReading_DoesNotCrash_Async
+exit code: 0
+
+----- results
+
+----- error messages
+
+leftover test disks: 3
+  detaching C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_gpt_class_test.vhdx
+  detaching C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_mbr_class_test.vhdx
+  detaching C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\duplicati_writable_class_test.vhdx
+done 2026-11-14T12:25:39

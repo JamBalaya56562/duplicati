@@ -1,0 +1,47 @@
+[
+  {
+    "name": "report",
+    "id": "1",
+    "submitted": "ssh://fixture-user:fixture-secret@Example.COM:022/archive%2fpart?auth-password=p%2525&buffer-size=64MB&web-timeout=2m&future=a+b&future=two&flag",
+    "created": "ssh://fixture-user:fixture-secret@Example.COM:022/archive%2fpart?auth-password=p%2525&buffer-size=64MB&web-timeout=2m&future=a+b&future=two&flag",
+    "createdEqualsSubmitted": true,
+    "getTarget": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?auth-password=***************&buffer-size=64MB&web-timeout=2m&future=a+b,two",
+    "getHidesSecret": true,
+    "afterPut": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&web-timeout=2m&future=a+b,two&auth-password=p%2525",
+    "afterPutEqualsCreated": false,
+    "getAgain": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?buffer-size=64MB&web-timeout=2m&future=a+b,two&auth-password=***************",
+    "getStable": false,
+    "edited": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?auth-password=changed%2Bpw&buffer-size=32MB&web-timeout=2m&future=a+b,two",
+    "afterEdit": "ssh://fixture-user:fixture-secret@Example.COM:22/archive/part?auth-password=changed%2Bpw&buffer-size=32MB&web-timeout=2m&future=a+b,two"
+  },
+  {
+    "name": "edge",
+    "id": "2",
+    "submitted": "ftp://Example.COM/a%2Fb%20c?auth-username=u&empty=&plus=a+b&space=a%20b&double=%2520&auth-password=x%26y%3D&flag&dup=1&dup=2",
+    "created": "ftp://Example.COM/a%2Fb%20c?auth-username=u&empty=&plus=a+b&space=a%20b&double=%2520&auth-password=x%26y%3D&flag&dup=1&dup=2",
+    "createdEqualsSubmitted": true,
+    "getTarget": "ftp://Example.COM/a/b%20c?auth-username=u&plus=a+b&space=a%20b&double=%2520&auth-password=***************&dup=1,2",
+    "getHidesSecret": true,
+    "afterPut": "ftp://Example.COM/a/b%20c?auth-username=u&plus=a+b&space=a%20b&double=%2520&dup=1,2&auth-password=x%26y%3D",
+    "afterPutEqualsCreated": false,
+    "getAgain": "ftp://Example.COM/a/b%20c?auth-username=u&plus=a+b&space=a%20b&double=%2520&dup=1,2&auth-password=***************",
+    "getStable": false,
+    "edited": "ftp://Example.COM/a/b%20c?auth-username=u&plus=a+b&space=a%20b&double=%2520&auth-password=changed%2Bpw&dup=1,2",
+    "afterEdit": "ftp://Example.COM/a/b%20c?auth-username=u&plus=a+b&space=a%20b&double=%2520&auth-password=changed%2Bpw&dup=1,2"
+  },
+  {
+    "name": "no-secret",
+    "id": "3",
+    "submitted": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "created": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "createdEqualsSubmitted": true,
+    "getTarget": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "getHidesSecret": true,
+    "afterPut": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "afterPutEqualsCreated": true,
+    "getAgain": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "getStable": true,
+    "edited": "ssh://Example.COM:022/archive%2fpart?future=a+b&future=two&flag",
+    "afterEdit": null
+  }
+]

@@ -1,0 +1,17 @@
+﻿user: DESKTOP-U30T4EP\Jam, elevated: True
+port 8299 held on 127.0.0.1 and ::1
+=== master
+  after 40 s: state STOPPED, WIN32_EXIT_CODE 0
+  Service Control Manager events: 0
+  Application log entries from the service: 0
+  service deleted: True
+=== branch
+  after 40 s: state RUNNING, WIN32_EXIT_CODE 0
+  Service Control Manager events: 5
+    18:26:35 7045: サービスがシステムにインストールされました。 サービス名: Duplicati failure test サービス ファイル名: C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\svcfail\branch\Duplicati.WindowsService.exe SERVER --webservice-port=8299 --webservice-interface=loopback --server-datafolder=C:\Users\Jam\AppData\Local\Temp\claude\8062b0f02d09eafd\2ade3d67-588b-4a0d-82ef-8acf31aad402\scratchpad\svcfail\data-branch サービスの種類: ユーザー モード サービス サービス開始の種類: 要求による開始 サービス アカウント: LocalSystem
+    18:27:02 7023: Duplicati failure test サービスは、次のエラーで終了しました: プロセスを途中で強制終了しました。
+    18:27:02 7031: Duplicati failure test サービスは予期せぬ原因により終了しました。このサービスの終了は 1 回目です。次の修正操作が 5000 ミリ秒以内に実行されます: サービスの再開。
+    18:27:12 7031: Duplicati failure test サービスは予期せぬ原因により終了しました。このサービスの終了は 2 回目です。次の修正操作が 5000 ミリ秒以内に実行されます: サービスの再開。
+    18:27:12 7023: Duplicati failure test サービスは、次のエラーで終了しました: プロセスを途中で強制終了しました。
+  Application log entries from the service: 0
+  service deleted: True

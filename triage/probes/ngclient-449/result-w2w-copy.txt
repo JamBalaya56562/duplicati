@@ -1,0 +1,11 @@
+temporary-job {"status":200,"id":"0f403af8-2f92-40ea-9ed7-f2a205097a90"}
+list-filesets {"status":200,"success":true,"count":1,"error":null}
+repairupdate {"status":200,"task":"Completed","error":null}
+roots {"status":200,"success":true,"error":null,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\","IsDirectory":true}]}
+children {"request":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\","status":200,"success":true,"error":null,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\","IsDirectory":true},{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\peer.txt","IsDirectory":false}]}
+documents {"request":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\","status":200,"data":[{"Path":"C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\payload.txt","IsDirectory":false}]}
+copytotemp {"status":200,"id":"13f8cd3b-4f37-48eb-87c5-ce20943d4f18"}
+restore-request {"id":"13f8cd3b-4f37-48eb-87c5-ce20943d4f18","body":{"paths":["C:\\Users\\Jam\\Documents\\ngclient\\tmp\\restore449\\fixture-final\\windows-source\\Documents\\*"],"restore_path":"C:\\Users\\Jam\\AppData\\Local\\Temp\\claude\\eb7164b3a8a8609a\\2ade3d67-588b-4a0d-82ef-8acf31aad402\\scratchpad\\r449\\out-w2w-copy","overwrite":true,"permissions":false,"time":"2026-11-10T12:56:01Z"}}
+restore-start {"status":200,"body":"{\"Status\":\"OK\",\"ID\":7}"}
+restore-task {"status":"Completed","error":null}
+restored-files [{"p":"payload.txt","content":"windows payload\n"}]
