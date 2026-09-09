@@ -39,7 +39,13 @@ namespace Duplicati.UnitTest
     public class DisruptionTests : BasicSetupHelper
     {
         // Files to create in MB.
-        private readonly int[] fileSizes = { 10, 20, 30 };
+        private readonly int[] fileSizes = ProbeSizes();
+
+        private static int[] ProbeSizes()
+        {
+            var v = System.Environment.GetEnvironmentVariable("DUPLICATI_PROBE_SIZES");
+            return string.IsNullOrWhiteSpace(v) ? new[] { 10, 20, 30 } : v.Split(',').Select(int.Parse).ToArray();
+        }
 
         private void ModifySourceFiles()
         {
@@ -120,7 +126,9 @@ namespace Duplicati.UnitTest
             }
 
             // Inject some spacing to allow for the purged fileset
-            Thread.Sleep(2000);
+            var probeSpacing = int.TryParse(System.Environment.GetEnvironmentVariable("DUPLICATI_PROBE_SPACING"), out var probeSpacingValue) ? probeSpacingValue : 2000;
+            TestContext.Out.WriteLine($"PROBE spacing={probeSpacing}");
+            Thread.Sleep(probeSpacing);
 
             // Run a partial backup.
             using (var c = new Controller("file://" + this.TARGETFOLDER, options, null))
@@ -145,6 +153,7 @@ namespace Duplicati.UnitTest
                         filelistFiles.Add(dlistFile);
                         VolumeBase.FilesetData filesetData = VolumeReaderBase.GetFilesetData(volume.CompressionModule, dlistFile, new Options(options));
                         map[volume.Time] = filesetData.IsFullBackup ? BackupType.FULL_BACKUP : BackupType.PARTIAL_BACKUP;
+                        TestContext.Out.WriteLine($"PROBE dlist name={volume.File.Name} time={volume.Time:HH:mm:ss.fff} full={filesetData.IsFullBackup}");
                     }
                 }
 
@@ -159,10 +168,13 @@ namespace Duplicati.UnitTest
                 TestUtils.AssertResults(await c.PurgeFilesAsync(new Library.Utility.FilterExpression($"{this.DATAFOLDER}/*{this.fileSizes[0]}*")));
 
                 var filesets = (await c.ListAsync()).Filesets.ToList();
+                foreach (var fs in filesets)
+                    TestContext.Out.WriteLine($"PROBE after-purge fileset v{fs.Version} time={fs.Time:HH:mm:ss.fff} full={fs.IsFullBackup}");
                 Assert.AreEqual(2, filesets.Count);
                 Assert.AreEqual(BackupType.FULL_BACKUP, filesets.Single(x => x.Version == 1).IsFullBackup);
                 Assert.AreEqual(BackupType.PARTIAL_BACKUP, filesets.Single(x => x.Version == 0).IsFullBackup);
 
+                TestContext.Out.WriteLine("PROBE --- listing after purge ---");
                 (backupTypeMap, dlistFiles) = await GetBackupTypesFromRemoteFilesAsync(c);
             }
 
@@ -183,10 +195,13 @@ namespace Duplicati.UnitTest
                 TestUtils.AssertResults(await c.RepairAsync());
 
                 var filesets = (await c.ListAsync()).Filesets.ToList();
+                foreach (var fs in filesets)
+                    TestContext.Out.WriteLine($"PROBE after-repair fileset v{fs.Version} time={fs.Time:HH:mm:ss.fff} full={fs.IsFullBackup}");
                 Assert.AreEqual(2, filesets.Count);
                 Assert.AreEqual(BackupType.FULL_BACKUP, filesets.Single(x => x.Version == 1).IsFullBackup);
                 Assert.AreEqual(BackupType.PARTIAL_BACKUP, filesets.Single(x => x.Version == 0).IsFullBackup);
 
+                TestContext.Out.WriteLine("PROBE --- listing after repair ---");
                 (backupTypeMap, _) = await GetBackupTypesFromRemoteFilesAsync(c);
             }
 

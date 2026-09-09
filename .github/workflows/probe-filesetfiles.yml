@@ -1,0 +1,96 @@
+name: Probe FilesetFiles
+
+# Scratch workflow: hunts the intermittent ubuntu failure of
+# DisruptionTests.FilesetFilesAsync with the dlist names printed.
+# Not intended for upstream.
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - "probe/**"
+
+jobs:
+  probe:
+    name: Probe (${{ matrix.mode }} ${{ matrix.attempt }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      DUPLICATI__AES_V3_ITERATIONS: 10000
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [single-cov, suite]
+        attempt: [1, 2]
+
+    steps:
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Restore NuGet dependencies
+        run: dotnet restore Duplicati.slnx
+
+      - name: Build Duplicati
+        run: dotnet build --no-restore Duplicati.slnx
+
+      - name: Run the test the way CI does
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/TestResults/unit"
+          fails=0
+
+          if [ "${{ matrix.mode }}" = "single-cov" ]; then
+            for i in $(seq 1 10); do
+              echo "=== iteration $i (single with coverage) ==="
+              set +e
+              dotnet test --no-build --verbosity minimal \
+                --filter "FullyQualifiedName~FilesetFilesAsync" \
+                --logger "console;verbosity=detailed" \
+                --collect:"XPlat Code Coverage" \
+                --results-directory "$GITHUB_WORKSPACE/TestResults/unit" \
+                Duplicati/UnitTest/Duplicati.UnitTest.csproj > iteration.log 2>&1
+              rc=$?
+              set -e
+              grep -E "PROBE|Expected:|But was:" iteration.log | sed 's/^ *//' | uniq || true
+              if [ $rc -ne 0 ]; then
+                echo "ITERATION $i FAILED"
+                fails=$((fails + 1))
+                cp iteration.log "failure-single-cov-$i.log"
+              fi
+            done
+          else
+            # Exactly what tests.yml runs, so the whole suite is in one process with coverage
+            echo "=== full unit suite, the way tests.yml runs it ==="
+            set +e
+            dotnet test --no-build --verbosity minimal \
+              --filter "Category!=Integration&Category!=DiskImageLocal&Category!=ExcludedFromCLI&ClassName!~SecretProviderSetSecretTests" \
+              --collect:"XPlat Code Coverage" \
+              --results-directory "$GITHUB_WORKSPACE/TestResults/unit" \
+              Duplicati.slnx > suite.log 2>&1
+            rc=$?
+            set -e
+            grep -E "PROBE|FilesetFiles|Expected:|But was:" suite.log | sed 's/^ *//' | uniq | head -60 || true
+            if [ $rc -ne 0 ]; then
+              echo "SUITE FAILED"
+              fails=1
+              cp suite.log "failure-suite-${{ matrix.attempt }}.log"
+            fi
+          fi
+
+          echo "TOTAL FAILURES: $fails"
+
+      - name: Upload failing logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: probe-logs-${{ matrix.mode }}-${{ matrix.attempt }}
+          path: |
+            failure-*.log
+            suite.log
+          if-no-files-found: ignore
