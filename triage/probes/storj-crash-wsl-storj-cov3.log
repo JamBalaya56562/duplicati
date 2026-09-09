@@ -1,0 +1,35 @@
+earlier crash artifacts:
+===== with-storj run 1 03:50:35
+Blame: Attaching crash dump utility to process dotnet (540).
+  Passed AnUploadHasNoExpiryTime [174 ms]
+The active test run was aborted. Reason: Test host process crashed
+Test Run Aborted.
+Total tests: Unknown
+===== with-storj run 2 03:52:02
+Blame: Attaching crash dump utility to process dotnet (670).
+  Passed AnUploadHasNoExpiryTime [47 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [15 s]
+  Passed SuspendThenResume_Async [5 s]
+Total tests: 25
+===== with-storj run 3 03:54:02
+Blame: Attaching crash dump utility to process dotnet (843).
+  Passed AnUploadHasNoExpiryTime [60 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [16 s]
+  Passed SuspendThenResume_Async [4 s]
+Total tests: 25
+===== without-storj run 1 03:56:28
+Blame: Attaching crash dump utility to process dotnet (1037).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [11 s]
+  Passed SuspendThenResume_Async [9 s]
+Total tests: 24
+===== without-storj run 2 03:58:57
+Blame: Attaching crash dump utility to process dotnet (1207).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [16 s]
+  Passed SuspendThenResume_Async [3 s]
+Total tests: 24
+===== without-storj run 3 04:01:37
+Blame: Attaching crash dump utility to process dotnet (1373).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [11 s]
+  Passed SuspendThenResume_Async [3 s]
+Total tests: 24
+end

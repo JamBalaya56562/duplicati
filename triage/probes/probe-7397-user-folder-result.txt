@@ -1,0 +1,11 @@
+build exit=0
+PROBE warnings: 
+PROBE messages: 2026-10-08 15:19:39 +09 - [Information-Duplicati.Library.SourceProvider.FileRestoreDestinationProvider-SymlinkRestoredAsFolder]: Not making the symbolic link C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data\link\ -> C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data-outside, because the entries below it were restored into a folder in its place
+PROBE mine.txt kept: True, a.txt: True, is link: False
+  Passed ProbeUserFolderInPlaceOfASourceLink [23 s]
+PROBE warnings: 
+PROBE messages: 2026-10-08 15:19:50 +09 - [Information-Duplicati.Library.SourceProvider.FileRestoreDestinationProvider-SymlinkRestoredAsFolder]: Not making the symbolic link C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data\link\ -> C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\bin\Debug\net10.0\duplicati_testdata\backup-data-outside, because the entries below it were restored into a folder in its place
+PROBE mine.txt kept: True, a.txt: True, is link: False
+  Passed ProbeUserFolderInPlaceOfASourceLink [4 s]
+
+[exited with code 0]

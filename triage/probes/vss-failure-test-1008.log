@@ -1,0 +1,58 @@
+start 2026-10-08T02:09:06.5616111+09:00 elevated=True
+===== branch-Native 2026-10-08T02:09:06.5979626+09:00
+A total of 1 test files matched the specified pattern.
+One Time Setup WindowsSnapshotFailureTests
+Setup ASnapshotAfterAFailedSnapshotWorks("Native") 5MB 82MB
+TearDown ASnapshotAfterAFailedSnapshotWorks 6MB 92MB
+  Passed ASnapshotAfterAFailedSnapshotWorks("Native") [32 s]
+Total tests: 1
+     Passed: 1
+ Total time: 43.2973 Seconds
+===== branch-Vanara 2026-10-08T02:10:22.9880169+09:00
+A total of 1 test files matched the specified pattern.
+One Time Setup WindowsSnapshotFailureTests
+Setup ASnapshotAfterAFailedSnapshotWorks("Vanara") 5MB 75MB
+TearDown ASnapshotAfterAFailedSnapshotWorks 6MB 97MB
+  Passed ASnapshotAfterAFailedSnapshotWorks("Vanara") [18 s]
+Total tests: 1
+     Passed: 1
+ Total time: 21.6343 Seconds
+===== master-Native 2026-10-08T02:11:16.5973229+09:00
+A total of 1 test files matched the specified pattern.
+One Time Setup WindowsSnapshotFailureTests
+Setup ASnapshotAfterAFailedSnapshotWorks("Native") 5MB 75MB
+TearDown ASnapshotAfterAFailedSnapshotWorks 6MB 91MB
+  Passed ASnapshotAfterAFailedSnapshotWorks("Native") [37 s]
+Total tests: 1
+     Passed: 1
+ Total time: 41.3768 Seconds
+===== master-Vanara 2026-10-08T02:12:29.4055687+09:00
+A total of 1 test files matched the specified pattern.
+One Time Setup WindowsSnapshotFailureTests
+Setup ASnapshotAfterAFailedSnapshotWorks("Vanara") 5MB 74MB
+TearDown ASnapshotAfterAFailedSnapshotWorks 6MB 96MB
+  Failed ASnapshotAfterAFailedSnapshotWorks("Vanara") [27 s]
+  Error Message:
+     a snapshot after the failed one should work
+Assert.That(() => Snapshot([source], provider), Throws.Nothing)
+  Expected: No Exception to be thrown
+  But was:  <System.NullReferenceException: Object reference not set to an instance of an object.
+   at Vanara.PInvoke.VssApi.CVssBackupComponents.StartSnapshotSet()
+   at Duplicati.Library.WindowsModules.VanaraVssBackup.StartSnapshotSet()
+   at Duplicati.Library.Snapshots.Windows.SnapshotManager.InitShadowVolumes(IEnumerable`1 sources) in C:\Users\Jam\Documents\duplicati\Duplicati\Library\Snapshots\Windows\SnapshotManager.cs:line 197
+   at Duplicati.Library.Snapshots.WindowsSnapshot.CreateSnapshotManagerCore(WindowsSnapshotProvider provider, TimeSpan vssTimeout, Guid providerId, Boolean useMapping, Guid[] excludedWriters) in C:\Users\Jam\Documents\duplicati\Duplicati\Library\Snapshots\WindowsSnapshot.cs:line 225
+   at Duplicati.Library.Snapshots.WindowsSnapshot.CreateSnapshotManager(WindowsSnapshotProvider provider, TimeSpan vssTimeout, Guid providerId, Boolean useMapping, Guid[] excludedWriters) in C:\Users\Jam\Documents\duplicati\Duplicati\Library\Snapshots\WindowsSnapshot.cs:line 195
+   at Duplicati.Library.Snapshots.WindowsSnapshot..ctor(IEnumerable`1 sources, IDictionary`2 options, Boolean followSymlinks, Func`4 providerFactory) in C:\Users\Jam\Documents\duplicati\Duplicati\Library\Snapshots\WindowsSnapshot.cs:line 158
+   at Duplicati.Library.Snapshots.WindowsSnapshot..ctor(IEnumerable`1 sources, IDictionary`2 options, Boolean followSymlinks) in C:\Users\Jam\Documents\duplicati\Duplicati\Library\Snapshots\WindowsSnapshot.cs:line 128
+   at Duplicati.UnitTest.WindowsSnapshotFailureTests.Snapshot(String[] sources, String provider) in C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\WindowsSnapshotFailureTests.cs:line 52
+   at Duplicati.UnitTest.WindowsSnapshotFailureTests.<>c__DisplayClass2_0.<ASnapshotAfterAFailedSnapshotWorks>b__4() in C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\WindowsSnapshotFailureTests.cs:line 87
+   at NUnit.Framework.Internal.ExceptionHelper.Rethrow(Exception exception)
+   at NUnit.Framework.Internal.Reflect.DynamicInvokeWithTransparentExceptions(Delegate delegate)
+   at NUnit.Framework.Internal.ExceptionHelper.RecordException(Delegate parameterlessDelegate, String parameterName)>
+     at Duplicati.UnitTest.WindowsSnapshotFailureTests.ASnapshotAfterAFailedSnapshotWorks(String provider) in C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\WindowsSnapshotFailureTests.cs:line 87
+1)    at Duplicati.UnitTest.WindowsSnapshotFailureTests.ASnapshotAfterAFailedSnapshotWorks(String provider) in C:\Users\Jam\Documents\duplicati\Duplicati\UnitTest\WindowsSnapshotFailureTests.cs:line 87
+Test Run Failed.
+Total tests: 1
+     Failed: 1
+ Total time: 31.9959 Seconds
+end 2026-10-08T02:13:33.5047967+09:00

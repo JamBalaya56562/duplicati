@@ -1,0 +1,34 @@
+===== storj-suspend run 1 03:39:44
+Blame: Attaching crash dump utility to process dotnet (581).
+  Passed AnUploadHasNoExpiryTime [71 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [10 s]
+  Passed SuspendThenResume_Async [5 s]
+Total tests: 3
+===== storj-suspend run 2 03:42:02
+Blame: Attaching crash dump utility to process dotnet (735).
+  Passed AnUploadHasNoExpiryTime [43 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [11 s]
+  Passed SuspendThenResume_Async [4 s]
+Total tests: 3
+===== suspend-only run 1 03:43:58
+Blame: Attaching crash dump utility to process dotnet (884).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [9 s]
+  Passed SuspendThenResume_Async [4 s]
+Total tests: 2
+===== suspend-only run 2 03:45:54
+Blame: Attaching crash dump utility to process dotnet (1060).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [10 s]
+  Passed SuspendThenResume_Async [3 s]
+Total tests: 2
+===== ssl-suspend run 1 03:47:42
+Blame: Attaching crash dump utility to process dotnet (1200).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [8 s]
+  Passed SuspendThenResume_Async [2 s]
+Total tests: 24
+===== ssl-suspend run 2 03:48:58
+Blame: Attaching crash dump utility to process dotnet (1339).
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [8 s]
+  Passed SuspendThenResume_Async [2 s]
+Total tests: 24
+crash artifacts:
+end

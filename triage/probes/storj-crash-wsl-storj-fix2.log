@@ -1,0 +1,55 @@
+===== run 1 04:26:48
+  Passed AnUploadHasNoExpiryTime [7 ms]
+Memory: 11MB -> 9MB (134MB)
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown ResumeWhileSuspendIsStillBeingHandled_Async 17MB 226MB
+--
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [9 s]
+Setup SuspendThenResume_Async 17MB 226MB
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown SuspendThenResume_Async 21MB 235MB
+--
+  Passed SuspendThenResume_Async [3 s]
+
+--
+Total tests: 25
+     Passed: 24
+===== run 2 04:28:27
+  Passed AnUploadHasNoExpiryTime [6 ms]
+Memory: 11MB -> 9MB (132MB)
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown ResumeWhileSuspendIsStillBeingHandled_Async 17MB 226MB
+--
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [10 s]
+Setup SuspendThenResume_Async 17MB 222MB
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown SuspendThenResume_Async 21MB 237MB
+--
+  Passed SuspendThenResume_Async [4 s]
+
+--
+Total tests: 25
+     Passed: 24
+===== run 3 04:29:51
+  Passed AnUploadHasNoExpiryTime [8 ms]
+Memory: 11MB -> 9MB (133MB)
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown ResumeWhileSuspendIsStillBeingHandled_Async 17MB 225MB
+--
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [8 s]
+Setup SuspendThenResume_Async 17MB 223MB
+--
+Server: Running, follower: State { ProgramState = Running, SuggestedStatusIcon = ReadyWarning, LastEventID = 6 }
+TearDown SuspendThenResume_Async 21MB 232MB
+--
+  Passed SuspendThenResume_Async [4 s]
+
+--
+Total tests: 25
+     Passed: 24
+end
