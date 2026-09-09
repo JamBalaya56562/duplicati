@@ -1,0 +1,99 @@
+{
+  "deleteBackup": {
+    "tags": [
+      "Duplicati.Server"
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "name": "delete-remote-files",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "delete-local-db",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "force",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      {
+        "name": "remote-destinations",
+        "in": "query",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DeleteBackupOutputDto"
+            }
+          }
+        }
+      }
+    }
+  },
+  "GetTaskStateDto": {
+    "type": "object",
+    "properties": {
+      "Status": {
+        "type": "string",
+        "nullable": true
+      },
+      "ID": {
+        "type": "integer",
+        "format": "int64"
+      },
+      "TaskStarted": {
+        "type": "string",
+        "format": "date-time",
+        "nullable": true
+      },
+      "TaskFinished": {
+        "type": "string",
+        "format": "date-time",
+        "nullable": true
+      },
+      "ErrorMessage": {
+        "type": "string",
+        "nullable": true
+      },
+      "Exception": {
+        "type": "string",
+        "nullable": true
+      },
+      "FailedDestinations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,124 @@
+name: Probe 7987
+
+# Fork-only: builds the MSIs from this branch and installs them on throwaway runners
+# (https://github.com/duplicati/duplicati/issues/7987).
+on:
+  push:
+    branches: [probe/msi-service-7987]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, tool: wixl }
+          - { os: windows-latest, tool: wix }
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    name: build ${{ matrix.tool }}
+    steps:
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+      - uses: actions/checkout@v7
+      - name: Install wixl
+        if: matrix.tool == 'wixl'
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q wixl msitools
+          wixl --version
+          d=$(dirname "$(readlink -f "$(which dotnet)")")/packs/Microsoft.NETCore.App.Host.win-x64/10.0.0
+          ls "$(dirname "$(readlink -f "$(which dotnet)")")/packs"
+          curl -sSL -o host.zip https://www.nuget.org/api/v2/package/Microsoft.NETCore.App.Host.win-x64/10.0.0
+          sudo mkdir -p "$d" && sudo unzip -q host.zip -d "$d" && sudo chmod -R a+rX "$d"
+          ls "$d/runtimes/win-x64/native"
+      - name: Install WiX
+        if: matrix.tool == 'wix'
+        run: |
+          dotnet tool install --global wix --version 6.0.2
+          wix extension add --global WixToolset.UI.wixext/6.0.2
+      - name: Build
+        shell: bash
+        working-directory: ./ReleaseBuilder
+        env:
+          UPDATER_KEYFILE: ./testfile.key1
+          WIX:
+        run: |
+          echo "## Changed" > ./changelog-news.txt
+          dotnet run -- build debug --targets win-x64-gui.msi --targets win-x64-agent.msi --git-stash-push=false --disable-docker-push=true --keep-builds=true --disable-authenticode=true --disable-signcode=true --disable-notarize-signing=true --disable-gpg-signing=true --disable-s3-upload=true --disable-github-upload=true --disable-update-server-reload=true --disable-discourse-announce=true --disable-clean-source=true --password=test1234 --version=2.4.1.199
+          find .. -name '*.msi' -not -path '*/node_modules/*' -exec ls -la {} \;
+          mkdir -p ../msi && find .. -name '*.msi' -not -path '../msi/*' -exec cp {} ../msi/ \;
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: msi-${{ matrix.tool }}
+          path: msi/*.msi
+          retention-days: 1
+
+  install:
+    needs: build
+    if: always()
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2025, windows-2022]
+        tool: [wixl, wix]
+        case: [fresh, upgrade, noservice, agent]
+    name: ${{ matrix.case }} ${{ matrix.tool }} (${{ matrix.os }})
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: msi-${{ matrix.tool }}
+          path: msi
+      - name: Install
+        shell: pwsh
+        env:
+          CASE: ${{ matrix.case }}
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $agent = $env:CASE -eq 'agent'
+          $kind = if ($agent) { 'agent' } else { 'gui' }
+          $svc = if ($agent) { 'Duplicati.Agent' } else { 'Duplicati' }
+          $msi = (Get-ChildItem msi -Filter "*$kind.msi" | Select-Object -First 1).FullName
+          "MSI $msi"
+          # The agent must not register with the console
+          Add-Content "$env:SystemRoot\System32\drivers\etc\hosts" "`r`n127.0.0.1 api.duplicati.com`r`n127.0.0.1 app.duplicati.com`r`n127.0.0.1 console.duplicati.com`r`n"
+          $opts = if ($agent -or $env:CASE -eq 'noservice') { @() } else { @('INSTALLASSERVICE=true', 'ADDLOCAL=DuplicatiCore,DuplicatiServiceFeature') }
+          function Run-Msi($label, $msiArgs) {
+            $log = "$env:RUNNER_TEMP\$label.log"
+            $p = Start-Process msiexec.exe -ArgumentList ($msiArgs + @('/qn', '/norestart', '/l*v', $log)) -Wait -PassThru
+            "EXIT $label $($p.ExitCode)"
+            Get-Content $log | Select-String -Pattern 'Error 1\d\d\d\.|ServiceConfig|SetServiceRecovery|Return value 3|Installation success or error|error status: ' | ForEach-Object { "LOG $label " + $_.Line.Trim() } | Select-Object -First 25
+          }
+          function Show-Service($label) {
+            "STATE $label " + ((sc.exe query $svc) -match 'STATE|1060' -join ' ').Trim()
+            "ACTIONS $label " + (((sc.exe qfailure $svc) -match 'RESET_PERIOD|RESTART|1060') -join ' ' -replace '\s+', ' ')
+            "FLAG $label " + (((sc.exe qfailureflag $svc) -match 'FAILURE_ACTIONS_ON|1060') -join ' ' -replace '\s+', ' ')
+            "START $label " + (((sc.exe qc $svc) -match 'START_TYPE|1060') -join ' ' -replace '\s+', ' ')
+          }
+          if ($env:CASE -eq 'upgrade') {
+            $m1 = "$env:RUNNER_TEMP\first.msi"
+            Invoke-WebRequest "https://github.com/duplicati/duplicati/releases/download/v2.4.1.101_canary_2026-11-07/duplicati-2.4.1.101_canary_2026-11-07-win-x64-gui.msi" -OutFile $m1
+            Run-Msi 'first' (@('/i', $m1) + $opts)
+            Show-Service 'first'
+          }
+          Run-Msi 'install' (@('/i', $msi) + $opts)
+          Show-Service 'install'
+          if ($env:CASE -ne 'noservice') {
+            # A crash is restarted by the recovery actions
+            $old = (Get-CimInstance Win32_Service -Filter "Name='$svc'").ProcessId
+            if ($old) { Stop-Process -Id $old -Force; Start-Sleep 5; "AFTERKILL " + (Get-CimInstance Win32_Service -Filter "Name='$svc'").State; Start-Sleep 85; $n = Get-CimInstance Win32_Service -Filter "Name='$svc'"; "AFTERWAIT $($n.State) newpid=$($n.ProcessId -ne $old)" }
+            # A repair sets the recovery actions again
+            sc.exe failure $svc reset= 0 actions= '""' | Out-Null
+            Show-Service 'cleared'
+            Run-Msi 'repair' @('/fa', $msi)
+            Show-Service 'repair'
+            # Removing it leaves no service
+            Run-Msi 'remove' @('/x', $msi)
+            Show-Service 'remove'
+          }
+          exit 0

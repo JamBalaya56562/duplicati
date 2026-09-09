@@ -1,0 +1,86 @@
+name: Probe tray session end
+
+# Fork-only probe (forum 22853 #9): does the Restart Manager close a tray icon
+# built from master and from the fix?
+on:
+  push:
+    branches: [probe/msi-running-tray]
+
+permissions:
+  contents: read
+
+jobs:
+  rm:
+    runs-on: windows-2025
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        source: [master, fix]
+    name: restart manager on ${{ matrix.source }}
+    steps:
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 3
+      - name: Build
+        shell: pwsh
+        env:
+          SOURCE: ${{ matrix.source }}
+        run: |
+          # The probe commit sits on the fix, and the fix on master
+          if ($env:SOURCE -eq 'master') { git checkout HEAD~2 -- Duplicati/GUI/Duplicati.GUI.TrayIcon }
+          git log --oneline -3
+          git diff HEAD --stat
+          dotnet build Executables/Duplicati.GUI.TrayIcon/Duplicati.GUI.TrayIcon.csproj -c Release -v q -nologo | Select-Object -Last 3
+      - name: Shut down the tray icon with the Restart Manager
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          Add-Type -TypeDefinition @'
+          using System;
+          using System.Runtime.InteropServices;
+          public static class Rm {
+            [StructLayout(LayoutKind.Sequential)] public struct FILETIME { public uint Low; public uint High; }
+            [StructLayout(LayoutKind.Sequential)] public struct RM_UNIQUE_PROCESS { public int dwProcessId; public FILETIME ProcessStartTime; }
+            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)] public struct RM_PROCESS_INFO {
+              public RM_UNIQUE_PROCESS Process;
+              [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string strAppName;
+              [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)] public string strServiceShortName;
+              public int ApplicationType; public uint AppStatus; public uint TSSessionId;
+              [MarshalAs(UnmanagedType.Bool)] public bool bRestartable; }
+            [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)] public static extern int RmStartSession(out uint h, int f, System.Text.StringBuilder key);
+            [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)] public static extern int RmRegisterResources(uint h, uint n, string[] files, uint a, IntPtr b, uint c, string[] d);
+            [DllImport("rstrtmgr.dll")] public static extern int RmGetList(uint h, out uint needed, ref uint n, [In, Out] RM_PROCESS_INFO[] info, ref uint reasons);
+            [DllImport("rstrtmgr.dll")] public static extern int RmShutdown(uint h, uint flags, IntPtr cb);
+            [DllImport("rstrtmgr.dll")] public static extern int RmEndSession(uint h);
+            public static string Run(string file, uint flags) {
+              uint h; var key = new System.Text.StringBuilder(64);
+              var log = "start=" + RmStartSession(out h, 0, key);
+              log += " register=" + RmRegisterResources(h, 1, new[] { file }, 0, IntPtr.Zero, 0, null);
+              uint needed, n = 10, reasons = 0; var info = new RM_PROCESS_INFO[10];
+              log += " list=" + RmGetList(h, out needed, ref n, info, ref reasons) + " reasons=" + reasons;
+              for (int i = 0; i < n; i++) log += " [pid=" + info[i].Process.dwProcessId + " app=" + info[i].strAppName + " type=" + info[i].ApplicationType + " status=" + info[i].AppStatus + "]";
+              log += " shutdown=" + RmShutdown(h, flags, IntPtr.Zero);
+              RmEndSession(h);
+              return log;
+            }
+          }
+          '@
+          $exe = (Resolve-Path 'Executables/Duplicati.GUI.TrayIcon/bin/Release/net10.0/Duplicati.GUI.TrayIcon.exe').Path
+          $data = Join-Path $env:RUNNER_TEMP 'data'
+          $t = Start-Process $exe -ArgumentList @("--server-datafolder=$data") -PassThru -RedirectStandardOutput (Join-Path $env:RUNNER_TEMP 'tray.out') -RedirectStandardError (Join-Path $env:RUNNER_TEMP 'tray.err')
+          for ($i = 0; $i -lt 90; $i++) { if (Get-NetTCPConnection -LocalPort 8200 -State Listen -ErrorAction SilentlyContinue) { break }; Start-Sleep 1 }
+          Start-Sleep 5
+          "WAITED $i s, alive $(-not $t.HasExited)"
+          "RM " + [Rm]::Run($exe, 0)
+          Start-Sleep 15
+          $t.Refresh()
+          "AFTER alive $(-not $t.HasExited)" + $(if ($t.HasExited) { " exitcode $($t.ExitCode)" } else { "" })
+          $l = Get-NetTCPConnection -LocalPort 8200 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+          "PORT 8200 owner=" + $(if ($l) { $l.OwningProcess } else { 'none' })
+          Get-Content (Join-Path $env:RUNNER_TEMP 'tray.out'), (Join-Path $env:RUNNER_TEMP 'tray.err') -ErrorAction SilentlyContinue | Select-Object -Last 20 | ForEach-Object { "TRAY $_" }
+          if (-not $t.HasExited) { Stop-Process -Id $t.Id -Force }
+          exit 0

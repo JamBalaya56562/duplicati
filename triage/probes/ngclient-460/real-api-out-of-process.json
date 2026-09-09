@@ -1,0 +1,113 @@
+[
+  {
+    "step": "1-run-older",
+    "task": "Completed"
+  },
+  {
+    "step": "1-run-newer",
+    "task": "Completed"
+  },
+  {
+    "step": "1-destinations",
+    "primaryDlists": [
+      "duplicati-20261119T121910Z.dlist.zip.aes",
+      "duplicati-20261119T121916Z.dlist.zip.aes"
+    ],
+    "secondaryDlists": [
+      "duplicati-20261119T121910Z.dlist.zip.aes"
+    ],
+    "jobVersions": [
+      "2026-11-19T12:19:16.000Z",
+      "2026-11-19T12:19:10.000Z"
+    ],
+    "sha256Older": "784de7018dc573312424f55f3cbbb4aa58e39f236111a44f7039f0da9a24e166",
+    "sha256Newer": "393b419b71ce3f5a6a401985e684b08ac555994eba21e8c016054447c1ac7aa0"
+  },
+  {
+    "step": "2-temporary-job",
+    "copy": {
+      "status": 200,
+      "body": {
+        "ID": "391dbdd4-f840-43b7-804e-676687e30c95",
+        "Temporary": false
+      }
+    },
+    "targetIsSecondary": true,
+    "ownDatabase": true,
+    "additionalTargets": 0,
+    "versions": [
+      "2026-11-19T12:19:10.000Z"
+    ],
+    "onlyOlder": true
+  },
+  {
+    "step": "2-repairupdate",
+    "task": "Completed"
+  },
+  {
+    "step": "2-list-folder",
+    "status": 200,
+    "paths": [
+      "sample.bin"
+    ],
+    "size": [
+      50000
+    ]
+  },
+  {
+    "step": "3-restore",
+    "request": 200,
+    "task": "Completed",
+    "error": null,
+    "matchesOlder": true,
+    "matchesNewer": false,
+    "jobUnchanged": true,
+    "dbUnchanged": true
+  },
+  {
+    "step": "3-cleanup",
+    "temporaryJobsLeft": 0,
+    "temporaryDatabasesLeft": 0
+  },
+  {
+    "step": "4-refused",
+    "refused": {
+      "unknown": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationUnknown"
+      },
+      "empty": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationEmpty"
+      },
+      "primaryWord": {
+        "status": 400,
+        "helpId": "CopyToTempDestinationUnknown"
+      }
+    },
+    "temporaryJobs": 0
+  },
+  {
+    "step": "4-secondary-unavailable",
+    "copy": 200,
+    "listing": {
+      "status": 500,
+      "times": [],
+      "error": "An error occurred",
+      "raw": "{\"Error\":\"An error occurred\",\"Code\":500}"
+    },
+    "mainDestinationIsBack": true
+  },
+  {
+    "step": "4-cleanup",
+    "temporaryJobsLeft": 0
+  },
+  {
+    "step": "contract",
+    "extension": true,
+    "parameters": [
+      "id:path:string",
+      "destination:query:string"
+    ]
+  }
+]
