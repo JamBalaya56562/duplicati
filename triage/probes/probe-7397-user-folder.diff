@@ -1,0 +1,26 @@
+diff --git a/Duplicati/UnitTest/RestoreSymlinkOverExistingDataTests.cs b/Duplicati/UnitTest/RestoreSymlinkOverExistingDataTests.cs
+index d7a6c8a053..6070a73c8c 100644
+--- a/Duplicati/UnitTest/RestoreSymlinkOverExistingDataTests.cs
++++ b/Duplicati/UnitTest/RestoreSymlinkOverExistingDataTests.cs
+@@ -349,4 +349,21 @@
+         Assert.That(new DirectoryInfo(FolderLink).LinkTarget, Is.Not.Null, "the link should still be a link");
+         Assert.That(File.ReadAllText(Path.Combine(LinkTarget, "a.txt")), Is.EqualTo("a"), "the file should be restored through the link");
+     }
++
++    // Throwaway probe: a source that is itself a link, replaced by the user with a real folder
++    // holding a file that is in no backup, then restored in place
++    [Test]
++    public async Task ProbeUserFolderInPlaceOfASourceLink()
++    {
++        await MakeLinkSourceAndBackupAsync();
++        new DirectoryInfo(FolderLink).Delete();
++        Directory.CreateDirectory(FolderLink);
++        File.WriteAllText(Path.Combine(FolderLink, "mine.txt"), "mine");
++
++        var r = await RestoreWithResultsAsync(false, null);
++
++        TestContext.Progress.WriteLine("PROBE warnings: " + string.Join(" | ", r.Warnings));
++        TestContext.Progress.WriteLine("PROBE messages: " + string.Join(" | ", r.Messages.Where(m => m.Contains("Symlink"))));
++        TestContext.Progress.WriteLine("PROBE mine.txt kept: " + File.Exists(Path.Combine(FolderLink, "mine.txt")) + ", a.txt: " + File.Exists(Path.Combine(FolderLink, "a.txt")) + ", is link: " + (new DirectoryInfo(FolderLink).LinkTarget != null));
++    }
+ }
