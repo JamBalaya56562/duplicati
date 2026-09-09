@@ -1,0 +1,32 @@
+Duplicati/UnitTest/StorjUploadOptionsTests.cs:34:/// it sends <see cref="DateTime.UnixEpoch"/> as zero, which is no expiry.
+Duplicati/UnitTest/StorjUploadOptionsTests.cs:54:        Assert.That(options.Expires, Is.EqualTo(DateTime.UnixEpoch));
+Duplicati/UnitTest/StorjUploadOptionsTests.cs:59:        if (OperatingSystem.IsWindows())
+Duplicati/Library/Backend/Storj/StorjBackend.cs:180:            => new UploadOptions { Expires = DateTime.UnixEpoch };
+== green
+  Passed AnUploadHasNoExpiryTime [20 ms]
+== red (old behaviour)
+  Failed AnUploadHasNoExpiryTime [67 ms]
+  Expected: 1970-01-01 00:00:00
+  But was:  0001-01-01 00:00:00
+===== three classes with coverage, run 1 04:18:35
+  Passed AnUploadHasNoExpiryTime [30 ms]
+  Failed ResumeWhileSuspendIsStillBeingHandled_Async [1 m 10 s]
+  Passed SuspendThenResume_Async [22 s]
+Data collector 'XPlat code coverage' message: [coverlet]Coverlet.Collector.Utilities.CoverletDataCollectorException: CoverletCoverageDataCollector: Failed to get coverage result
+Total tests: 25
+===== three classes with coverage, run 2 04:21:48
+  Passed AnUploadHasNoExpiryTime [5 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [10 s]
+  Passed SuspendThenResume_Async [4 s]
+Total tests: 25
+===== three classes with coverage, run 3 04:23:42
+  Passed AnUploadHasNoExpiryTime [6 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [8 s]
+  Passed SuspendThenResume_Async [3 s]
+Total tests: 25
+===== three classes with coverage, run 4 04:25:02
+  Passed AnUploadHasNoExpiryTime [6 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [8 s]
+  Passed SuspendThenResume_Async [3 s]
+Total tests: 25
+end
