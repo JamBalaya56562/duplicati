@@ -1,0 +1,12 @@
+  失敗 WaitAsyncLeavesTheFailureUnobserved [712 ms]
+     unobserved
+  Expected: 0
+  But was:  1
+失敗!   -失敗:     1、合格:     4、スキップ:     0、合計:     5、期間: 35 s - Duplicati.UnitTest.dll (net10.0)
+  失敗 WaitAsyncLeavesTheFailureUnobserved [690 ms]
+     unobserved
+  Expected: 0
+  But was:  1
+失敗!   -失敗:     1、合格:     4、スキップ:     0、合計:     5、期間: 9 s - Duplicati.UnitTest.dll (net10.0)
+
+[exited with code 0]

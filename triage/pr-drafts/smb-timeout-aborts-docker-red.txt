@@ -1,0 +1,18 @@
+sockets before pause:
+  socket to :445 state 06
+  socket to :445 state 01
+  socket to :445 state 06
+11:34:15.489 server paused
+sockets after the paused listing returned (01=ESTABLISHED; none = closed):
+  socket to :445 state 06
+  socket to :445 state 01
+  socket to :445 state 06
+11:34:51.881 server resumed
+--- harness log (red)
+11:34:11.762 before pause: OK 12 entries in 1.9s
+11:34:11.783 WAIT paused
+11:34:46.980 while paused: UserInformationException: Failed to open directory small with status STATUS_IO_TIMEOUT after 30.2s
+11:34:46.981 WAIT checked
+11:34:49.991 WAIT resumed
+11:34:53.236 after resume: OK 12 entries in 0.0s
+11:34:53.237 DONE

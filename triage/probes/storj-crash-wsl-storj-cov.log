@@ -1,0 +1,63 @@
+===== filter=FullyQualifiedName~StorjUploadOptionsTests coverage=yes 03:31:09
+Blame: Attaching crash dump utility to process dotnet (1111).
+  Passed AnUploadHasNoExpiryTime [256 ms]
+Total tests: 1
+     Passed: 1
+===== filter=FullyQualifiedName~StorjUploadOptionsTests coverage=no 03:35:19
+Blame: Attaching crash dump utility to process dotnet (1245).
+  Passed AnUploadHasNoExpiryTime [104 ms]
+Total tests: 1
+     Passed: 1
+===== filter=FullyQualifiedName~SslCertificateValidatorTests|FullyQualifiedName~StorjUploadOptionsTests|FullyQualifiedName~SuspendResumeStateTests coverage=yes 03:35:38
+Blame: Attaching crash dump utility to process dotnet (1365).
+  Passed AcceptAll_ReturnsTrueEvenForExpiredCertificate [252 ms]
+  Passed AcceptAll_ReturnsTrueEvenForNameMismatch [280 ms]
+  Passed AcceptAll_ReturnsTrueForAnyCertificate [148 ms]
+  Passed ChainErrors_WithNoPinnedHash_ThrowsInvalidCertificateException [260 ms]
+  Passed Constructor_OmitsIgnoreRevocationFailure_DefaultsToFalse [294 ms]
+  Passed IgnoreRevocationFailure_NameMismatchStillThrows [189 ms]
+  Passed IgnoreRevocationFailure_NonRevocationChainStatus_DoesNotClearChainErrors [291 ms]
+  Passed IgnoreRevocationFailure_NotEnabled_KeepsChainErrorsAndThrows [213 ms]
+  Passed IgnoreRevocationFailure_NullChain_KeepsChainErrorsAndThrows [182 ms]
+  Passed IgnoreRevocationFailure_UntrustedSelfSignedCert_NoErrors_ReturnsFalse [272 ms]
+  Passed InvalidCertificateException_PreservesErrorAndCertificate [14 ms]
+  Passed NameMismatch_WithNoPinnedHash_ThrowsInvalidCertificateException [225 ms]
+  Passed NoHashes_ExpiredCertificate_ReturnsFalse [10 ms]
+  Passed NoHashes_NotYetValidCertificate_ReturnsFalse [17 ms]
+  Passed NoHashes_UntrustedSelfSignedCert_NoErrors_ReturnsFalse [204 ms]
+  Passed NullCertificate_Throws [20 ms]
+  Passed PinnedHash_CaseInsensitiveMatch [228 ms]
+  Passed PinnedHash_EmptyHashEntriesAreIgnored [204 ms]
+  Passed PinnedHash_MatchingHash_ExpiredCertificate_ReturnsFalse [14 ms]
+  Passed PinnedHash_MatchingHash_ReturnsTrueForValidCertificate [146 ms]
+  Passed PinnedHash_NonMatchingHash_ExpiredCertificate_ReturnsFalse [12 ms]
+  Passed AnUploadHasNoExpiryTime [49 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [15 s]
+The active test run was aborted. Reason: Test host process crashed
+===== filter=FullyQualifiedName~SslCertificateValidatorTests|FullyQualifiedName~StorjUploadOptionsTests|FullyQualifiedName~SuspendResumeStateTests coverage=no 03:38:14
+Blame: Attaching crash dump utility to process dotnet (1506).
+  Passed AcceptAll_ReturnsTrueEvenForExpiredCertificate [157 ms]
+  Passed AcceptAll_ReturnsTrueEvenForNameMismatch [121 ms]
+  Passed AcceptAll_ReturnsTrueForAnyCertificate [82 ms]
+  Passed ChainErrors_WithNoPinnedHash_ThrowsInvalidCertificateException [127 ms]
+  Passed Constructor_OmitsIgnoreRevocationFailure_DefaultsToFalse [109 ms]
+  Passed IgnoreRevocationFailure_NameMismatchStillThrows [83 ms]
+  Passed IgnoreRevocationFailure_NonRevocationChainStatus_DoesNotClearChainErrors [101 ms]
+  Passed IgnoreRevocationFailure_NotEnabled_KeepsChainErrorsAndThrows [80 ms]
+  Passed IgnoreRevocationFailure_NullChain_KeepsChainErrorsAndThrows [82 ms]
+  Passed IgnoreRevocationFailure_UntrustedSelfSignedCert_NoErrors_ReturnsFalse [100 ms]
+  Passed InvalidCertificateException_PreservesErrorAndCertificate [4 ms]
+  Passed NameMismatch_WithNoPinnedHash_ThrowsInvalidCertificateException [81 ms]
+  Passed NoHashes_ExpiredCertificate_ReturnsFalse [9 ms]
+  Passed NoHashes_NotYetValidCertificate_ReturnsFalse [11 ms]
+  Passed NoHashes_UntrustedSelfSignedCert_NoErrors_ReturnsFalse [98 ms]
+  Passed NullCertificate_Throws [10 ms]
+  Passed PinnedHash_CaseInsensitiveMatch [85 ms]
+  Passed PinnedHash_EmptyHashEntriesAreIgnored [88 ms]
+  Passed PinnedHash_MatchingHash_ExpiredCertificate_ReturnsFalse [8 ms]
+  Passed PinnedHash_MatchingHash_ReturnsTrueForValidCertificate [88 ms]
+  Passed PinnedHash_NonMatchingHash_ExpiredCertificate_ReturnsFalse [16 ms]
+  Passed AnUploadHasNoExpiryTime [43 ms]
+  Passed ResumeWhileSuspendIsStillBeingHandled_Async [16 s]
+  Passed SuspendThenResume_Async [6 s]
+end
