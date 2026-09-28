@@ -427,7 +427,7 @@ namespace Duplicati.Library.Snapshots
         }
 
         /// <inheritdoc />
-        public override bool IsBlockDevice(string localPath) => false;
+        public override bool IsSpecialFile(string localPath) => false;
 
         /// <inheritdoc />
         public override string HardlinkTargetID(string localPath) => null;
