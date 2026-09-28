@@ -72,7 +72,7 @@ public class BackendSourceFileEntry(BackendSourceProvider parent, string path, b
         : FileAttributes.Normal;
 
     /// <inheritdoc/>
-    public bool IsBlockDevice => false;
+    public bool IsSpecialFile => false;
 
     /// <inheritdoc/>
     public bool IsCharacterDevice => false;
