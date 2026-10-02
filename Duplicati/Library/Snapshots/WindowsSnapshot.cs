@@ -176,11 +176,11 @@ namespace Duplicati.Library.Snapshots
         /// <returns>The snapshot manager with an active snapshot</returns>
         private SnapshotManager CreateSnapshotManager(WindowsSnapshotProvider provider, TimeSpan vssTimeout, Guid providerId, bool useMapping, Guid[] excludedWriters)
         {
-            SnapshotManager manager = null;
+            // A manager that fails to set up is released before the exception leaves
+            // CreateSnapshotManagerCore, so the retry starts with no snapshot set in progress
             try
             {
-                manager = CreateSnapshotManagerCore(provider, vssTimeout, providerId, useMapping, excludedWriters);
-                return manager;
+                return CreateSnapshotManagerCore(provider, vssTimeout, providerId, useMapping, excludedWriters);
             }
             catch (UserInformationException ex) when (ex.HelpID == "SnapshotDeviceEmpty" && providerId == Guid.Empty)
             {
@@ -190,14 +190,7 @@ namespace Duplicati.Library.Snapshots
                 Logging.Log.WriteWarningMessage(LOGTAG, "VssRetryWithSystemProvider", null,
                     "The snapshot provider did not expose a usable snapshot device path; retrying with the Microsoft Software Shadow Copy provider. Set --vss-provider-id={0} to avoid this retry.", MS_SOFTWARE_PROVIDER_ID);
 
-                manager?.Dispose();
-                manager = CreateSnapshotManagerCore(provider, vssTimeout, MS_SOFTWARE_PROVIDER_ID, useMapping, excludedWriters);
-                return manager;
-            }
-            catch
-            {
-                manager?.Dispose();
-                throw;
+                return CreateSnapshotManagerCore(provider, vssTimeout, MS_SOFTWARE_PROVIDER_ID, useMapping, excludedWriters);
             }
         }
 
@@ -213,18 +206,28 @@ namespace Duplicati.Library.Snapshots
         private SnapshotManager CreateSnapshotManagerCore(WindowsSnapshotProvider provider, TimeSpan vssTimeout, Guid providerId, bool useMapping, Guid[] excludedWriters)
         {
             var manager = new SnapshotManager(provider, vssTimeout, providerId);
+            try
+            {
+                manager.SetupWriters(null, excludedWriters);
 
-            manager.SetupWriters(null, excludedWriters);
+                manager.InitShadowVolumes(_sourceEntries);
 
-            manager.InitShadowVolumes(_sourceEntries);
+                manager.MapVolumesToSnapShots();
 
-            manager.MapVolumesToSnapShots();
+                //If we should map the drives, we do that now and update the volumeMap
+                if (useMapping)
+                    manager.MapDrives();
 
-            //If we should map the drives, we do that now and update the volumeMap
-            if (useMapping)
-                manager.MapDrives();
-
-            return manager;
+                return manager;
+            }
+            catch
+            {
+                // The caller never gets a manager that failed to set up, so it is released here.
+                // Otherwise a snapshot set that was started stays in progress, and every later
+                // snapshot fails with VSS_E_SNAPSHOT_SET_IN_PROGRESS (0x80042316)
+                manager.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
