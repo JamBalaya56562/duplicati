@@ -260,7 +260,7 @@ namespace Duplicati.Library.Main.Operation
                             .ConfigureAwait(false);
 
                     if (!m_options.SkipMetadata)
-                        await ApplyStoredMetadataAsync(m_options, new RestoreHandlerMetadataStorage(), restoreDestination, m_result.TaskControl.ProgressToken);
+                        await ApplyStoredMetadataAsync(m_options, new RestoreHandlerMetadataStorage(), restoreDestination, m_result, m_result.TaskControl.ProgressToken);
 
                     //If we have --version set, we need to adjust, as the db has only the required versions
                     //TODO: Bit of a hack to set options that way
@@ -675,7 +675,7 @@ namespace Duplicati.Library.Main.Operation
             await blockmarker.CommitAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        private static async Task ApplyStoredMetadataAsync(Options options, RestoreHandlerMetadataStorage metadatastorage, IRestoreDestinationProvider restoreDestination, CancellationToken cancellationToken)
+        private static async Task ApplyStoredMetadataAsync(Options options, RestoreHandlerMetadataStorage metadatastorage, IRestoreDestinationProvider restoreDestination, RestoreResults result, CancellationToken cancellationToken)
         {
             foreach (var metainfo in metadatastorage.Records)
             {
@@ -710,7 +710,18 @@ namespace Duplicati.Library.Main.Operation
                             }
                         }
 
-                        await ApplyMetadataAsync(targetpath, metainfo.Value, options, restoreDestination, false, cancellationToken).ConfigureAwait(false);
+                        var metadata = ReadMetadata(metainfo.Value);
+                        var written = await ApplyMetadataAsync(targetpath, metadata, options, restoreDestination, false, cancellationToken).ConfigureAwait(false);
+
+                        // A symbolic link has no data, so it is made here and nowhere else.
+                        // Count it as the new restore engine does, as a file.
+                        if (metadata != null && metadata.TryGetValue("CoreSymlinkTarget", out var symlinkTarget) && !string.IsNullOrWhiteSpace(symlinkTarget))
+                        {
+                            if (written)
+                                result.RestoredFiles++;
+                            else
+                                result.UnmodifiedFiles++;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1302,7 +1313,7 @@ namespace Duplicati.Library.Main.Operation
 
             // Apply metadata
             if (!m_options.SkipMetadata)
-                await ApplyStoredMetadataAsync(m_options, metadatastorage, restoreDestination, m_result.TaskControl.ProgressToken).ConfigureAwait(false);
+                await ApplyStoredMetadataAsync(m_options, metadatastorage, restoreDestination, m_result, m_result.TaskControl.ProgressToken).ConfigureAwait(false);
 
             if (!await m_result.TaskControl.ProgressRendevouzAsync().ConfigureAwait(false))
                 return;
@@ -1375,18 +1386,38 @@ namespace Duplicati.Library.Main.Operation
         /// <param name="hasRestoredEntriesBelow">Whether the path is a symbolic link to a folder with other entries restored below it.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns><c>true</c> if the metadata was written, <c>false</c> otherwise.</returns>
-        public static async Task<bool> ApplyMetadataAsync(string path, System.IO.Stream stream, Options options, IRestoreDestinationProvider restoreDestination, bool hasRestoredEntriesBelow, CancellationToken cancellationToken)
+        public static Task<bool> ApplyMetadataAsync(string path, System.IO.Stream stream, Options options, IRestoreDestinationProvider restoreDestination, bool hasRestoredEntriesBelow, CancellationToken cancellationToken)
+            => ApplyMetadataAsync(path, ReadMetadata(stream), options, restoreDestination, hasRestoredEntriesBelow, cancellationToken);
+
+        /// <summary>
+        /// Applies the deserialized metadata to the given path through the restore destination.
+        /// </summary>
+        /// <param name="path">The path to apply the metadata to.</param>
+        /// <param name="metadata">The metadata, or <c>null</c> if there is none.</param>
+        /// <param name="options">The restore options.</param>
+        /// <param name="restoreDestination">The restore destination provider.</param>
+        /// <param name="hasRestoredEntriesBelow">Whether the path is a symbolic link to a folder with other entries restored below it.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><c>true</c> if the metadata was written, <c>false</c> otherwise.</returns>
+        private static async Task<bool> ApplyMetadataAsync(string path, Dictionary<string, string?>? metadata, Options options, IRestoreDestinationProvider restoreDestination, bool hasRestoredEntriesBelow, CancellationToken cancellationToken)
+        {
+            // If this is dry-run, we stop after having deserialized the metadata
+            if (metadata == null || options.Dryrun)
+                return false;
+
+            return await restoreDestination.WriteMetadata(path, metadata, options.RestoreSymlinkMetadata, options.RestorePermissions, hasRestoredEntriesBelow, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Deserializes the metadata in the stream.
+        /// </summary>
+        /// <param name="stream">The serialized metadata.</param>
+        /// <returns>The metadata, or <c>null</c> if the stream holds none.</returns>
+        private static Dictionary<string, string?>? ReadMetadata(System.IO.Stream stream)
         {
             using (var tr = new System.IO.StreamReader(stream))
             using (var jr = new Newtonsoft.Json.JsonTextReader(tr))
-            {
-                var metadata = new Newtonsoft.Json.JsonSerializer().Deserialize<Dictionary<string, string?>>(jr);
-                // If this is dry-run, we stop after having deserialized the metadata
-                if (metadata == null || options.Dryrun)
-                    return false;
-
-                return await restoreDestination.WriteMetadata(path, metadata, options.RestoreSymlinkMetadata, options.RestorePermissions, hasRestoredEntriesBelow, cancellationToken).ConfigureAwait(false);
-            }
+                return new Newtonsoft.Json.JsonSerializer().Deserialize<Dictionary<string, string?>>(jr);
         }
 
         private static async Task ScanForExistingSourceBlocksFastAsync(LocalRestoreDatabase database, Options options, byte[] blockbuffer, System.Security.Cryptography.HashAlgorithm hasher, IRestoreDestinationProvider restoreDestination, RestoreResults result)
