@@ -8,8 +8,8 @@ concurrency:
   # Runs from branches of this repository use the shared test accounts and secret stores, so they
   # take turns in one group for the whole repository. Pull requests from forks get no secrets and
   # skip those jobs, so each has its own group, and a newer run replaces the older one.
-  group: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && 'duplicati-ci-livetests' || format('{0}-{1}', github.workflow, github.event.pull_request.number) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+  group: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository) && 'duplicati-ci-livetests' || format('{0}-{1}', github.workflow, github.event.pull_request.number) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
 jobs:
   check_secrets:
     runs-on: ubuntu-latest
