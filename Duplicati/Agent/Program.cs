@@ -20,6 +20,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System.CommandLine;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Duplicati.Library.AutoUpdater;
 using Duplicati.Library.Encryption;
@@ -32,6 +33,8 @@ using Duplicati.Server;
 using Duplicati.WebserverCore.Abstractions;
 using Duplicati.WebserverCore.Services;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: InternalsVisibleTo("Duplicati.UnitTest")]
 
 namespace Duplicati.Agent;
 
@@ -73,7 +76,7 @@ public static class Program
     /// <param name="SecretProviderPattern">The secret provider pattern</param>
     /// <param name="AllowInsecureDatafolder">Allow the data folder to be in a shared location without restricted permissions</param>
     /// <param name="ReducedReporting">Switch reduced reporting on or off for this machine; null leaves the stored setting unchanged</param>
-    private sealed record CommandLineArguments(
+    internal sealed record CommandLineArguments(
         string AgentRegistrationUrl,
         FileInfo AgentSettingsFile,
         string? AgentSettingsFilePassphrase,
@@ -621,6 +624,23 @@ public static class Program
         else if (!string.IsNullOrWhiteSpace(settings.SettingsEncryptionKey))
             settingsEncryptionKey = settings.SettingsEncryptionKey;
 
+        var args = BuildServerArguments(agentConfig, settingsEncryptionKey);
+
+        // Set the global origin
+        applicationSettings.Origin = "Agent";
+
+        // Start the server
+        await RunServerAsync(applicationSettings, args, cancellationToken);
+    }
+
+    /// <summary>
+    /// Builds the commandline arguments for the hosted webserver
+    /// </summary>
+    /// <param name="agentConfig">The agent configuration</param>
+    /// <param name="settingsEncryptionKey">The settings encryption key to pass on, if any</param>
+    /// <returns>The arguments for the webserver</returns>
+    internal static string[] BuildServerArguments(CommandLineArguments agentConfig, string? settingsEncryptionKey)
+    {
         // Helper method to support empty arguments
         static string EncodeOption(string option, string? value)
         {
@@ -636,7 +656,7 @@ public static class Program
 
         // Lock down the instance, reset tokens and password,
         // and forward relevant settings from agent to the webserver
-        var args = new[] {
+        return new[] {
             EncodeOption("--webservice-interface", agentConfig.WebserviceInterface),
             EncodeOption("--webservice-password", agentConfig.WebservicePassword),
             EncodeOption("--webservice-port", agentConfig.WebservicePort),
@@ -646,6 +666,7 @@ public static class Program
             EncodeOption("--webservice-disable-signin-tokens", agentConfig.WebserviceDisableSigninTokens.ToString()),
             EncodeOption("--disable-db-encryption", agentConfig.DisableDbEncryption.ToString()),
             EncodeOption("--disable-default-secret-provider", agentConfig.DisableDefaultSecretProvider.ToString()),
+            EncodeOption("--ping-pong-keepalive", agentConfig.PingPongKeepalive.ToString()),
             EncodeOption("--settings-encryption-key", settingsEncryptionKey),
             EncodeOption("--webservice-disable-api-extensions", string.Join(",", disabledExtensions)),
             EncodeOption($"--{DataFolderManager.ALLOW_INSECURE_DATAFOLDER_OPTION}", agentConfig.AllowInsecureDatafolder.ToString()),
@@ -653,12 +674,6 @@ public static class Program
             }
             .WhereNotNullOrWhiteSpace()
             .ToArray();
-
-        // Set the global origin
-        applicationSettings.Origin = "Agent";
-
-        // Start the server
-        await RunServerAsync(applicationSettings, args, cancellationToken);
     }
 }
 
