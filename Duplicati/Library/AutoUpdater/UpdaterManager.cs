@@ -224,7 +224,8 @@ namespace Duplicati.Library.AutoUpdater
 
                         using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-                        var installId = DataFolderManager.GetInstallID();
+                        // A tool run without a server, like the AutoUpdater, may not have created the ID yet
+                        var installId = DataFolderManager.GetInstallID(probeOnly: true);
 
                         request.Headers.Add(System.Net.HttpRequestHeader.UserAgent.ToString(), string.Format("{0} v{1}{2}", APPNAME, SelfVersion.Version, string.IsNullOrWhiteSpace(installId) ? "" : " -" + installId));
                         request.Headers.Add("X-Install-ID", installId);
@@ -390,7 +391,7 @@ namespace Duplicati.Library.AutoUpdater
                             using var request = new HttpRequestMessage(HttpMethod.Get, url);
 
                             request.Headers.Add(System.Net.HttpRequestHeader.UserAgent.ToString(), string.Format("{0} v{1}", APPNAME, SelfVersion.Version));
-                            request.Headers.Add("X-Install-ID", DataFolderManager.GetInstallID());
+                            request.Headers.Add("X-Install-ID", DataFolderManager.GetInstallID(probeOnly: true));
 
                             using var timeoutToken = new CancellationTokenSource();
                             timeoutToken.CancelAfter(TimeSpan.FromSeconds(DOWNLOAD_OPERATION_TIMEOUT_SECONDS));
