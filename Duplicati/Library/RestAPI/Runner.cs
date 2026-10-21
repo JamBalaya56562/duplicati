@@ -933,6 +933,9 @@ namespace Duplicati.Server
                 // Pack in the system or task config for easy restore
                 if (data.Operation == DuplicatiOperation.BackupOrSync)
                     tempfolder = StoreTaskConfigAndGetTempFolder(databaseConnection, data, options);
+                // The option is only read by the server, so the other operations would warn about it
+                else
+                    options.Remove("store-task-config");
 
                 var useOutOfProcess = databaseConnection.ApplicationSettings.UseOutOfProcessController;
 
