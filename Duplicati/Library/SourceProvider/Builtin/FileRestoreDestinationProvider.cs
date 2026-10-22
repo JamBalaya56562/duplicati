@@ -231,7 +231,9 @@ public class FileRestoreDestinationProvider(string mountedPath, bool allowRestor
         else if (isDirTarget && !SystemIO.IO_OS.DirectoryExists(targetpath))
             SystemIO.IO_OS.DirectoryCreate(targetpath);
 
-        // Avoid setting restoring symlink metadata, as that writes the symlink target, not the symlink itself
+        // Do not apply metadata to symlinks unless --restore-symlink-metadata is set. The timestamps, owner and
+        // access rules are set on the link itself, but on Linux and macOS the read-only attribute and the
+        // extended attributes are applied to the file or folder the link points to
         if (!restoreSymlinkMetadata && SystemIO.IO_OS.IsSymlink(targetpath))
         {
             Logging.Log.WriteVerboseMessage(LOGTAG, "no-symlink-metadata-restored", "Not applying metadata to symlink: {0}", targetpath);
