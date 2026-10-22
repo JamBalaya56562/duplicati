@@ -52,11 +52,39 @@ server signing = mandatory
 smb encrypt = required", "&enable-smb311=true");
 
     /// <summary>
+    /// Test listing a folder with 20000 files over a link slow enough that a single page of the
+    /// listing takes longer than the 5 seconds SMBLibrary waits for a response by default.
+    /// The listing used to fail with "Not enough credits" (forum topic 22594).
+    ///
+    /// This test has no requirement of environment variables.
+    /// </summary>
+    [TestMethod]
+    public Task TestSmbListLargeFolderOnSlowLink()
+        => RunSmbTest("", "",
+            @"DEBIAN_FRONTEND=noninteractive apt-get install -y iproute2
+mkdir /shares/testshare1/big
+(cd /shares/testshare1/big && seq -f 'duplicati-b%032g.dblock.zip.aes' 1 20000 | xargs touch)
+chown -R smbuser1:smbuser1 /shares/testshare1/big
+tc qdisc add dev eth0 root tbf rate 1mbit burst 32kbit latency 60s",
+            async url =>
+            {
+                using var backend = new Library.Backend.SMBBackend(url.Replace("/new/", "/big/"), new Dictionary<string, string?>());
+                var count = 0;
+                await foreach (var entry in backend.ListAsync(CancellationToken.None))
+                    if (!entry.IsFolder)
+                        count++;
+
+                Assert.AreEqual(20000, count);
+            });
+
+    /// <summary>
     /// Starts a Samba Server with TestContainers and runs the BackendTester against it.
     /// </summary>
     /// <param name="extraGlobalConfig">Lines added to the [global] section of smb.conf</param>
     /// <param name="extraUrlOptions">Options appended to the query string of the backend url</param>
-    private async Task RunSmbTest(string extraGlobalConfig, string extraUrlOptions)
+    /// <param name="extraSetup">Commands run as root in the container before Samba starts; the container is privileged when set</param>
+    /// <param name="check">Runs against the backend url instead of the BackendTester when set</param>
+    private async Task RunSmbTest(string extraGlobalConfig, string extraUrlOptions, string extraSetup = "", Func<string, Task>? check = null)
     {
         var outputConsumer = new OutputConsumer();
         var randomPassword = GeneratePassword();
@@ -88,6 +116,7 @@ chown smbuser1:smbuser1 /shares/testshare1
 chmod 700 /shares/testshare1
 (echo {randomPassword}; echo {randomPassword}) | smbpasswd -a smbuser1 -s
 smbpasswd -e smbuser1
+{extraSetup}
 smbd --foreground --no-process-group --debug-stdout";
 
         await File.WriteAllTextAsync(Path.Combine(testFilePath, "entrypoint.sh"), entrypoint);
@@ -102,6 +131,7 @@ smbd --foreground --no-process-group --debug-stdout";
                 UnixFileModes.UserWrite | UnixFileModes.GroupRead | UnixFileModes.OtherRead)
             .WithPortBinding(139, 139)
             .WithPortBinding(445, 445)
+            .WithPrivileged(extraSetup != "")
             .WithOutputConsumer(outputConsumer)
             // Wait until something accepts connections on the port the test uses.
             // UntilPortIsAvailable(139) greps /proc/net/tcp for ':0*8B', which also
@@ -119,10 +149,17 @@ smbd --foreground --no-process-group --debug-stdout";
         // Both tests bind host port 445, so the container must stop even when a test fails.
         try
         {
+            var url = $"smb://localhost/testshare1/new/?transport=directtcp&auth-domain&auth-username=smbuser1&auth-password={randomPassword}{extraUrlOptions}";
+            if (check != null)
+            {
+                await check(url);
+                return;
+            }
+
             var exitCode = CommandLine.BackendTester.Program.Main(
                 new[]
                 {
-                    $"smb://localhost/testshare1/new/?transport=directtcp&auth-domain&auth-username=smbuser1&auth-password={randomPassword}{extraUrlOptions}",
+                    url,
                 }.Concat(Parameters.GlobalTestParameters).ToArray());
 
             Console.WriteLine(await outputConsumer.GetStreamsOutput());

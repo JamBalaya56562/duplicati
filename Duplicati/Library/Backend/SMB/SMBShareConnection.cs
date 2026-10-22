@@ -92,7 +92,11 @@ public class SMBShareConnection : IDisposable, IAsyncDisposable
     /// <exception cref="UserInformationException">Exception to be displayed to user</exception>
     public static async Task<SMBShareConnection> CreateAsync(SMBConnectionParameters connectionParameters, TimeoutOptionsHelper.Timeouts timeouts, CancellationToken cancellationToken)
     {
-        var client = new SMB2Client(SMB2Client.DefaultResponseTimeoutInMilliseconds, connectionParameters.EnableSMB311Support);
+        // SMBLibrary gives up on a response after this long, so its default of 5 seconds would cut
+        // a slow listing short of the list timeout. WithTimeout cannot stop a synchronous call once
+        // it has started, so this is the only limit on how long any one request waits.
+        var responseTimeout = new[] { timeouts.ShortTimeout, timeouts.ListTimeout, timeouts.ReadWriteTimeout }.Max();
+        var client = new SMB2Client((int)Math.Min(responseTimeout.TotalMilliseconds, int.MaxValue), connectionParameters.EnableSMB311Support);
         var connected = await Utility.Utility.WithTimeout(timeouts.ShortTimeout, cancellationToken, _ =>
             client.Connect(connectionParameters.ServerName, connectionParameters.TransportType)
         ).ConfigureAwait(false);
