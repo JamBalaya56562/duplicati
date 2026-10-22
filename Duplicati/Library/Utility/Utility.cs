@@ -2082,7 +2082,9 @@ namespace Duplicati.Library.Utility
             cts.CancelAfter(timeout);
             try
             {
-                await func(cts.Token);
+                // Stop waiting when the timeout passes, also for a call that ignores the token;
+                // such a call keeps running, and the caller must not reuse what it is using
+                await func(cts.Token).WaitAsync(cts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested && !token.IsCancellationRequested)
             {
@@ -2106,7 +2108,9 @@ namespace Duplicati.Library.Utility
             cts.CancelAfter(timeout);
             try
             {
-                return await func(cts.Token);
+                // Stop waiting when the timeout passes, also for a call that ignores the token;
+                // such a call keeps running, and the caller must not reuse what it is using
+                return await func(cts.Token).WaitAsync(cts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested && !token.IsCancellationRequested)
             {
