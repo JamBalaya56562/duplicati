@@ -480,6 +480,7 @@ internal partial class BackendManager : IBackendManager
             TrackedInDb = true,
             IndexVolumeFinishedCallback = indexVolumeFinished,
             OnDbUpdate = onDbUpdate ?? PutOperation.OnDbUpdateDefault,
+            IsRemoteNameTaken = (volume as FilesetVolumeWriter)?.IsRemoteNameTaken,
         };
 
         // Prepare encryption
