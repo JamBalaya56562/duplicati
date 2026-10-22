@@ -83,4 +83,88 @@ public sealed class SshTests : BaseSftpgoTest
 
         await container.StopAsync();
     }
+
+    /// <summary>
+    /// Starts an SFTPGo container with the test user, listening on port 3000 on the host
+    /// </summary>
+    private async Task<IContainer> StartSftpgoAsync(OutputConsumer outputConsumer)
+    {
+        var filePermissions = UnixFileModes.UserRead | UnixFileModes.UserWrite | UnixFileModes.UserExecute |
+                                        UnixFileModes.GroupRead | UnixFileModes.GroupWrite | UnixFileModes.GroupExecute |
+                                        UnixFileModes.OtherRead | UnixFileModes.OtherWrite | UnixFileModes.OtherExecute;
+
+        var temporaryKeysDir = CreateHttpsCertificates();
+        CreateUsersFile(temporaryKeysDir);
+
+        var container = new ContainerBuilder()
+            .WithImage("drakkan/sftpgo")
+            .WithEnvironment("SFTPGO_LOADDATA_FROM", "/var/lib/sftpgo/users.json")
+            .WithEnvironment("SFTPGO_LOADDATA_CLEAN", "0")
+            .WithEnvironment("SFTPGO_SFTPD__BINDINGS__0__PORT", "3333")
+            .WithPortBinding(3000, 3333)
+            .WithResourceMapping(temporaryKeysDir, "/var/lib/sftpgo/", filePermissions)
+            .WithOutputConsumer(outputConsumer)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(3333))
+            .Build();
+
+        await container.StartAsync();
+        temporaryKeysDir.Delete(true);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        return container;
+    }
+
+    /// <summary>
+    /// Creates the SSH backend for the container started by <see cref="StartSftpgoAsync"/>
+    /// </summary>
+    private static Library.Interface.IBackend CreateBackend(Dictionary<string, string>? options = null)
+        => Library.DynamicLoader.BackendLoader.GetBackend(
+            $"ssh://{TEST_USER_NAME}:{TEST_USER_PASSWORD}@127.0.0.1:3000",
+            new Dictionary<string, string>(options ?? []) { ["ssh-accept-any-fingerprints"] = "true" });
+
+    /// <summary>
+    /// Tests that a rename reports the server's answer, including an error for a missing file
+    /// </summary>
+    [TestMethod]
+    public async Task TestSSHRenameReportsErrors()
+    {
+        var outputConsumer = new OutputConsumer();
+        var container = await StartSftpgoAsync(outputConsumer);
+        try
+        {
+            using var backend = CreateBackend();
+            var rename = (Library.Interface.IRenameEnabledBackend)backend;
+
+            using (var file = new Library.Utility.TempFile())
+            {
+                await File.WriteAllTextAsync(file, "rename");
+                await backend.PutAsync("rename-source.txt", file, CancellationToken.None);
+            }
+
+            await rename.RenameAsync("rename-source.txt", "rename-target.txt", CancellationToken.None);
+            var names = await backend.ListAsync(CancellationToken.None).Select(x => x.Name).ToListAsync();
+            CollectionAssert.Contains(names, "rename-target.txt");
+            CollectionAssert.DoesNotContain(names, "rename-source.txt");
+
+            Exception? error = null;
+            try
+            {
+                await rename.RenameAsync("missing.txt", "missing-target.txt", CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            Assert.IsNotNull(error, "Renaming a file that does not exist did not fail");
+        }
+        catch
+        {
+            Console.WriteLine(await outputConsumer.GetStreamsOutput());
+            throw;
+        }
+        finally
+        {
+            await container.StopAsync();
+        }
+    }
 }
