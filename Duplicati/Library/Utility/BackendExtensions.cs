@@ -199,6 +199,16 @@ public static class BackendExtensions
     }
 
     /// <summary>
+    /// Checks if a file name is the name of a test file, with the old fixed name or the current form
+    /// </summary>
+    /// <param name="name">The file name</param>
+    /// <returns><c>true</c> if the name is a test file name</returns>
+    public static bool IsTestFileName(string name)
+        => name == TEST_FILE_NAME
+            || (name.StartsWith(TEST_FILE_PREFIX, StringComparison.Ordinal)
+                && name.EndsWith(TEST_FILE_EXTENSION, StringComparison.Ordinal));
+
+    /// <summary>
     /// Checks if a listed file is a test file left over from an earlier test
     /// </summary>
     /// <param name="entry">The listed file</param>
@@ -206,16 +216,14 @@ public static class BackendExtensions
     /// <returns><c>true</c> if the file is a left over test file</returns>
     private static bool IsLeftoverTestFile(IFileEntry entry, DateTime now)
     {
-        if (entry.IsFolder)
+        if (entry.IsFolder || !IsTestFileName(entry.Name))
             return false;
 
         if (entry.Name == TEST_FILE_NAME)
             return true;
 
         // A file without a known time may belong to a test that is still running
-        return entry.Name.StartsWith(TEST_FILE_PREFIX, StringComparison.Ordinal)
-            && entry.Name.EndsWith(TEST_FILE_EXTENSION, StringComparison.Ordinal)
-            && entry.LastModification != default
+        return entry.LastModification != default
             && now - entry.LastModification.ToUniversalTime() > LEFTOVER_TEST_FILE_AGE;
     }
 
