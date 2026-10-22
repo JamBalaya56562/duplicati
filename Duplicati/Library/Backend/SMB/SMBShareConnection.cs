@@ -74,7 +74,7 @@ public class SMBShareConnection : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="connectionParameters">Connection Parameters</param>
     /// <param name="timeouts">Timeouts to use for operations</param>
-    private SMBShareConnection(SMB2Client client, ISMBFileStore fileStore, SMBConnectionParameters connectionParameters, TimeoutOptionsHelper.Timeouts timeouts)
+    internal SMBShareConnection(SMB2Client client, ISMBFileStore fileStore, SMBConnectionParameters connectionParameters, TimeoutOptionsHelper.Timeouts timeouts)
     {
         _connectionParameters = connectionParameters;
         _timeouts = timeouts;
@@ -272,6 +272,15 @@ public class SMBShareConnection : IDisposable, IAsyncDisposable
                     return fileList;
                 }).ConfigureAwait(false);
 
+                var handle = directoryHandle;
+                directoryHandle = null;
+                if (handle != null)
+                {
+                    var closeStatus = _smbFileStore.CloseFile(handle);
+                    if (closeStatus != NTStatus.STATUS_SUCCESS)
+                        throw new UserInformationException($"{LC.L("Failed to close directory handle on ListAsync")} with status {closeStatus.ToString()}", "HandleCloseError");
+                }
+
                 return
                 [
                     ..fileList
@@ -288,14 +297,13 @@ public class SMBShareConnection : IDisposable, IAsyncDisposable
                         .ToList()
                 ];
             }
-            finally
+            catch
             {
+                // Closing can fail for the same reason the listing did, and must not hide that reason
                 if (directoryHandle != null)
-                {
-                    var status = _smbFileStore.CloseFile(directoryHandle);
-                    if (status != NTStatus.STATUS_SUCCESS)
-                        throw new UserInformationException($"{LC.L("Failed to close directory handle on ListAsync")} with status {status.ToString()}", "HandleCloseError");
-                }
+                    try { _smbFileStore.CloseFile(directoryHandle); }
+                    catch { }
+                throw;
             }
         }
         finally
