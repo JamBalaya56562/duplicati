@@ -2032,7 +2032,9 @@ namespace Duplicati.Library.Utility
             cts.CancelAfter(timeout);
             try
             {
-                await Task.Run(() => func(cts.Token), cts.Token).ConfigureAwait(false);
+                // Stop waiting when the timeout passes, even though a synchronous call cannot be
+                // stopped and keeps running; the caller must not reuse what that call is using
+                await Task.Run(() => func(cts.Token), cts.Token).WaitAsync(cts.Token).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
@@ -2055,7 +2057,9 @@ namespace Duplicati.Library.Utility
             cts.CancelAfter(timeout);
             try
             {
-                return await Task.Run(() => func(cts.Token), cts.Token).ConfigureAwait(false);
+                // Stop waiting when the timeout passes, even though a synchronous call cannot be
+                // stopped and keeps running; the caller must not reuse what that call is using
+                return await Task.Run(() => func(cts.Token), cts.Token).WaitAsync(cts.Token).ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
