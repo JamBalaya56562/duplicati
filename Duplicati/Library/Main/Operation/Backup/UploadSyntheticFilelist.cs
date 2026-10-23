@@ -89,7 +89,10 @@ namespace Duplicati.Library.Main.Operation.Backup
             FilesetVolumeWriter fsw = null;
             try
             {
-                var fileTime = await FilesetVolumeWriter.ProbeUnusedFilenameNameAsync(database, options, incompleteSet.Value, taskreader.ProgressToken).ConfigureAwait(false);
+                // The synthetic fileset has to be later than the interrupted one, which is the
+                // previous fileset its files are taken from when there is no complete one before.
+                // The interrupted fileset's time is free as a name when its dlist was renamed.
+                var fileTime = await FilesetVolumeWriter.ProbeUnusedFilenameNameAsync(database, options, incompleteSet.Value.AddSeconds(1), taskreader.ProgressToken).ConfigureAwait(false);
                 syntheticFilelistTime = fileTime;
                 fsw = new FilesetVolumeWriter(options, fileTime);
                 fsw.VolumeID = await database.RegisterRemoteVolumeAsync(fsw.RemoteFilename, RemoteVolumeType.Files, RemoteVolumeState.Temporary, taskreader.ProgressToken).ConfigureAwait(false);
