@@ -89,9 +89,9 @@ namespace Duplicati.Library.Main.Operation.Backup
             FilesetVolumeWriter fsw = null;
             try
             {
-                // The synthetic fileset has to be later than the interrupted one, which is the
-                // previous fileset its files are taken from when there is no complete one before.
-                // The interrupted fileset's time is free as a name when its dlist was renamed.
+                // Start one second after the interrupted fileset, so the two filesets never have the
+                // same time. They would when the interrupted dlist was renamed, as that leaves the
+                // interrupted fileset's time free as a name.
                 var fileTime = await FilesetVolumeWriter.ProbeUnusedFilenameNameAsync(database, options, incompleteSet.Value.AddSeconds(1), taskreader.ProgressToken).ConfigureAwait(false);
                 syntheticFilelistTime = fileTime;
                 fsw = new FilesetVolumeWriter(options, fileTime);
