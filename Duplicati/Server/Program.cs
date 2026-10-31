@@ -257,6 +257,12 @@ namespace Duplicati.Server
             ISchedulerService scheduler = null;
             try
             {
+                // Opening the database can create or upgrade it, which a second server must not do
+                // while the first one uses it. The data folder is made first, locked down, as the
+                // instance lock would otherwise create it with the default permissions.
+                DataFolderManager.PrepareSecureDataFolder(applicationSettings.DataFolder, createIfMissing: true);
+                CreateApplicationInstance(applicationSettings.DataFolder, writeToConsoleOnException);
+
                 var connection = GetDatabaseConnection(applicationSettings, commandlineOptions, silentConsole, true);
 
                 if (!connection.ApplicationSettings.FixedInvalidBackupId)
@@ -275,8 +281,6 @@ namespace Duplicati.Server
                 var renewalResult = CheckAndRenewCertificate(connection);
                 if (renewalResult.RenewalFailedReason != null)
                     RegisterRenewalFailedNotification(connection, renewalResult.RenewalFailedReason);
-
-                CreateApplicationInstance(applicationSettings.DataFolder, writeToConsoleOnException);
 
                 applicationSettings.StartOrStopUsageReporter = () => StartOrStopUsageReporter(connection);
                 // Bit messy, but the callback needs the connection, and the connection needs the callback
