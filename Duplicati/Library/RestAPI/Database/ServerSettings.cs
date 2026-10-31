@@ -885,9 +885,11 @@ namespace Duplicati.Server.Database
             {
                 var id = settings[CONST.TIMEZONE_OPTION];
 
-                // All times are stored in UTC in the database, prior to introducing the timezone option
+                // Without the option, schedules follow the time zone of the machine, which the UI also
+                // shows as the server time zone. UTC would move them by an hour whenever daylight
+                // saving starts or ends, and nothing sets the option on a new install.
                 if (string.IsNullOrEmpty(id))
-                    return TimeZoneInfo.Utc;
+                    return TimeZoneInfo.Local;
 
                 var tzi = TimeZoneHelper.GetTimeZoneById(id);
                 if (tzi != null)
