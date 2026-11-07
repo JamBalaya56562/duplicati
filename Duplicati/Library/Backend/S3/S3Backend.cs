@@ -565,6 +565,8 @@ namespace Duplicati.Library.Backend
                     new CommandLineArgument(S3_LOCK_MODE_OPTION, CommandLineArgument.ArgumentType.Enumeration, Strings.S3Backend.DescriptionLockModeShort, Strings.S3Backend.DescriptionLockModeLong, nameof(Amazon.S3.ObjectLockRetentionMode.Governance), null, typeof(Amazon.S3.ObjectLockRetentionMode).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Select(x => x.Name).ToArray()),
                     .. PointInTimeOptionsHelper.GetOptions(),
                     new CommandLineArgument(S3_AUTHENTICATION_REGION_OPTION, CommandLineArgument.ArgumentType.String, Strings.S3Backend.S3AuthenticationRegionDescriptionShort, Strings.S3Backend.S3AuthenticationRegionDescriptionLong),
+                    new CommandLineArgument(S3AwsClient.S3_SERVER_SIDE_ENCRYPTION_OPTION, CommandLineArgument.ArgumentType.Enumeration, Strings.S3Backend.S3ServerSideEncryptionDescriptionShort, Strings.S3Backend.S3ServerSideEncryptionDescriptionLong(S3AwsClient.S3_SERVER_SIDE_ENCRYPTION_KMS_KEY_ID_OPTION), "none", null, ["none", S3AwsClient.SSE_S3, S3AwsClient.SSE_KMS]),
+                    new CommandLineArgument(S3AwsClient.S3_SERVER_SIDE_ENCRYPTION_KMS_KEY_ID_OPTION, CommandLineArgument.ArgumentType.String, Strings.S3Backend.S3ServerSideEncryptionKmsKeyIdDescriptionShort, Strings.S3Backend.S3ServerSideEncryptionKmsKeyIdDescriptionLong(S3AwsClient.S3_SERVER_SIDE_ENCRYPTION_OPTION)),
                     .. TimeoutOptionsHelper.GetOptions(),
                     .. exts
                 ];
