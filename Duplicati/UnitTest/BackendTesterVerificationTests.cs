@@ -163,5 +163,21 @@ namespace Duplicati.UnitTest
 
             Assert.IsEmpty(problems, "A rename that took effect must not report anything.");
         }
+
+        /// <summary>
+        /// The CloudStack (OpenStack Swift) live test listed an uploaded file only after the
+        /// 3 re-checks, which wait 7 seconds in all, had run out. The re-checks must wait long
+        /// enough for such a listing to catch up before a missing file fails the test.
+        /// </summary>
+        [Test]
+        public void TheDefaultReChecksWaitLongEnoughForALaggingListing()
+        {
+            var total = TimeSpan.Zero;
+            for (var attempt = 1; attempt <= Program.DefaultVerificationRetries; attempt++)
+                total += Program.GetVerificationDelay(attempt);
+
+            Assert.GreaterOrEqual(total, TimeSpan.FromSeconds(30),
+                "The re-checks of the file listing give up too soon");
+        }
     }
 }

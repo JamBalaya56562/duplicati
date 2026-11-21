@@ -159,7 +159,7 @@ namespace Duplicati.CommandLine.BackendTester
             if (options.ContainsKey("failure-retries"))
                 retries = int.Parse(options["failure-retries"]);
 
-            var verificationRetries = 3;
+            var verificationRetries = DefaultVerificationRetries;
             if (options.ContainsKey("verification-retries"))
                 verificationRetries = int.Parse(options["verification-retries"]);
 
@@ -376,7 +376,7 @@ namespace Duplicati.CommandLine.BackendTester
                         if (listProblems.Count == 0 || attempt >= verificationRetries)
                             break;
 
-                        var delay = Utility.GetRetryDelay(TimeSpan.FromSeconds(1), attempt + 1, true);
+                        var delay = GetVerificationDelay(attempt + 1);
                         Console.WriteLine($"{LogTimeStamp}File listing does not match yet ({listProblems.Count} problem(s)), re-checking in {delay.TotalMilliseconds} ms");
                         Thread.Sleep(delay);
                     }
@@ -663,6 +663,21 @@ namespace Duplicati.CommandLine.BackendTester
             }, retries);
 
         /// <summary>
+        /// The number of times a remote file listing that does not match is read again, unless
+        /// --verification-retries is given. An OpenStack Swift container was seen to list an
+        /// uploaded file only after more than 7 seconds, which is the wait of 3 re-checks.
+        /// </summary>
+        internal const int DefaultVerificationRetries = 5;
+
+        /// <summary>
+        /// Gets the wait before a remote file listing is read again
+        /// </summary>
+        /// <param name="attempt">The number of the re-check, starting at 1</param>
+        /// <returns>The wait</returns>
+        internal static TimeSpan GetVerificationDelay(int attempt)
+            => Utility.GetRetryDelay(TimeSpan.FromSeconds(1), attempt, true);
+
+        /// <summary>
         /// Reads the remote folder until it reports no files, or the attempts run out.
         /// A listing can lag behind the operations that were just performed, so a folder
         /// that still looks occupied is read again before that is treated as a problem.
@@ -681,7 +696,7 @@ namespace Duplicati.CommandLine.BackendTester
                 if (leftovers.Count == 0 || attempt >= verificationRetries)
                     return leftovers;
 
-                var delay = Utility.GetRetryDelay(TimeSpan.FromSeconds(1), attempt + 1, true);
+                var delay = GetVerificationDelay(attempt + 1);
                 Console.WriteLine($"{LogTimeStamp}Remote folder is not empty yet ({leftovers.Count} file(s)), re-checking in {delay.TotalMilliseconds} ms");
                 Thread.Sleep(delay);
             }
@@ -871,7 +886,7 @@ namespace Duplicati.CommandLine.BackendTester
             new CommandLineArgument("wait-after-upload", CommandLineArgument.ArgumentType.Timespan, "Wait after all uploads", "A value that indicates how long to wait after all files are uploaded, to account for the backends eventual consistency", "0s"),
             new CommandLineArgument("wait-after-delete", CommandLineArgument.ArgumentType.Timespan, "Wait after all deletes", "A value that indicates how long to wait after each delete operation, to account for the backends eventual consistency", "0s"),
             new CommandLineArgument("failure-retries", CommandLineArgument.ArgumentType.Integer, "The number of retries for each operation", "An integer that indicates how many times an operation should be retried before giving up", "0"),
-            new CommandLineArgument("verification-retries", CommandLineArgument.ArgumentType.Integer, "The number of re-checks of the remote file listing", "An integer that indicates how many times the remote file listing is re-checked before a mismatch is reported as a problem, to account for the backends eventual consistency", "3"),
+            new CommandLineArgument("verification-retries", CommandLineArgument.ArgumentType.Integer, "The number of re-checks of the remote file listing", "An integer that indicates how many times the remote file listing is re-checked before a mismatch is reported as a problem, to account for the backends eventual consistency", DefaultVerificationRetries.ToString()),
         ];
     }
 }
