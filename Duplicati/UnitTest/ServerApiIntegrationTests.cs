@@ -2671,6 +2671,39 @@ public partial class ServerApiIntegrationTests : BasicSetupHelper
     }
 
     /// <summary>
+    /// A browser can send a refresh and never get the answer, for example when the computer
+    /// goes to sleep, and then send the same refresh token again. The server has already moved
+    /// the token family one step on, so it accepts a token that is one step behind for a short
+    /// while instead of logging the user out (issue #5508). A token two steps behind is still
+    /// treated as a re-used token.
+    /// </summary>
+    [Test]
+    [Category("Integration")]
+    public async Task ARefreshTokenOneStepBehindIsAccepted_Async()
+    {
+        await WithAuthenticatedServerAsync(async httpClient =>
+        {
+            using var client = new HttpClient(new HttpClientHandler { UseCookies = false }) { BaseAddress = httpClient.BaseAddress };
+
+            var login = await client.PostAsJsonAsync("/api/v1/auth/login", new { password = "integration-test-password", rememberMe = true }, JsonOptions).ConfigureAwait(false);
+            login.EnsureSuccessStatusCode();
+            var cookie = login.Headers.GetValues("Set-Cookie").Single(c => c.StartsWith("RefreshToken_", StringComparison.Ordinal) && !c.Contains("expires=Thu, 01 Jan 1970", StringComparison.OrdinalIgnoreCase)).Split(';')[0];
+            var nonce = (await login.Content.ReadFromJsonAsync<AccessTokenOutputDto>(JsonOptions).ConfigureAwait(false))!.RefreshNonce;
+
+            async Task<HttpStatusCode> RefreshAsync()
+            {
+                using var refresh = new HttpRequestMessage(HttpMethod.Post, "/api/v1/auth/refresh") { Content = JsonContent.Create(new { nonce }) };
+                refresh.Headers.Add("Cookie", cookie);
+                return (await client.SendAsync(refresh).ConfigureAwait(false)).StatusCode;
+            }
+
+            Assert.That(await RefreshAsync().ConfigureAwait(false), Is.EqualTo(HttpStatusCode.OK), "The first refresh should be accepted");
+            Assert.That(await RefreshAsync().ConfigureAwait(false), Is.EqualTo(HttpStatusCode.OK), "The same token again, one step behind, should be accepted");
+            Assert.That(await RefreshAsync().ConfigureAwait(false), Is.EqualTo(HttpStatusCode.Unauthorized), "The same token two steps behind should be rejected");
+        }).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// The server opened, created or upgraded its database before it checked that no other
     /// server was running. Two servers started at the same time, such as from two startup
     /// entries, then upgraded the same database at once, and the one that failed copied its
