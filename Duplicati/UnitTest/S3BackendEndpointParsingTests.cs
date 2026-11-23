@@ -79,4 +79,37 @@ public class S3BackendEndpointParsingTests
             Assert.That(ex!.HelpID, Is.EqualTo("S3NoPathInEndpoint"));
         }
     }
+
+    [TestCase("s3.us-east-1.lyvecloud.seagate.com")]
+    [TestCase("s3.us-west-1.lyvecloud.seagate.com")]
+    [TestCase("s3.ap-southeast-1.lyvecloud.seagate.com")]
+    [TestCase("s3.eu-west-1.lyvecloud.seagate.com")]
+    [TestCase("s3.us-central-2.lyvecloud.seagate.com")]
+    [Category("Backend")]
+    public void SeagateLyveRegionsAreKnownProviders(string endpoint)
+    {
+        // #5637 asked for Seagate Lyve Cloud in the provider list
+        Assert.That(S3.KNOWN_S3_PROVIDERS.Values, Does.Contain(endpoint));
+    }
+
+    [Test]
+    [Category("Backend")]
+    public void EveryKnownProviderIsAcceptedAsTheServerName()
+    {
+        // The destination editor puts the chosen provider's value in s3-server-name as it is.
+        // Values such as ".r2.cloudflarestorage.com" are suffixes that the editor completes
+        // with the account name, so they are not server names on their own.
+        foreach (var endpoint in S3.KNOWN_S3_PROVIDERS.Values)
+        {
+            if (string.IsNullOrEmpty(endpoint) || endpoint.StartsWith('.'))
+                continue;
+            foreach (var client in SupportedClients)
+            {
+                Assert.DoesNotThrow(() =>
+                {
+                    using var backend = new S3("s3://test-bucket/", CreateOptions(endpoint, client));
+                }, $"Expected the known provider '{endpoint}' to be accepted for s3-client '{client}'");
+            }
+        }
+    }
 }
