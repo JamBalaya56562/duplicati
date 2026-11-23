@@ -25,6 +25,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Duplicati.Library.Main;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
 namespace Duplicati.UnitTest
@@ -94,6 +95,50 @@ namespace Duplicati.UnitTest
             {
                 Directory.SetCurrentDirectory(originalCurrentDirectory);
             }
+        }
+
+        /// <summary>
+        /// The tool was to be checked after the move from .NET Framework (#4539). Each command
+        /// is run against a local folder, in the order a user would try them.
+        /// </summary>
+        [Test]
+        [Category("BackendTool")]
+        public void EveryCommandWorksAgainstALocalFolder()
+        {
+            var folder = Path.Combine(TARGETFOLDER, "tool");
+            var backendURL = "file://" + folder;
+            var upload = Path.Combine(DATAFOLDER, "file.bin");
+            var content = new byte[64 * 1024];
+            new Random(4539).NextBytes(content);
+            File.WriteAllBytes(upload, content);
+
+            Assert.AreEqual(0, CommandLine.BackendTool.Program.Main(new[] { "CREATEFOLDER", backendURL }));
+            Assert.IsTrue(Directory.Exists(folder));
+
+            Assert.AreEqual(0, CommandLine.BackendTool.Program.Main(new[] { "PUT", backendURL, upload }));
+            Assert.IsTrue(File.Exists(Path.Combine(folder, "file.bin")));
+
+            var originalOut = Console.Out;
+            using var listing = new StringWriter();
+            Console.SetOut(listing);
+            try
+            {
+                Assert.AreEqual(0, CommandLine.BackendTool.Program.Main(new[] { "LIST", backendURL }));
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+            }
+            StringAssert.Contains("file.bin\tFile", listing.ToString());
+
+            var downloadFolder = Path.Combine(RESTOREFOLDER, "tool");
+            Directory.CreateDirectory(downloadFolder);
+            var download = Path.Combine(downloadFolder, "file.bin");
+            Assert.AreEqual(0, CommandLine.BackendTool.Program.Main(new[] { "GET", backendURL, download }));
+            CollectionAssert.AreEqual(content, File.ReadAllBytes(download));
+
+            Assert.AreEqual(0, CommandLine.BackendTool.Program.Main(new[] { "DELETE", backendURL, "file.bin" }));
+            CollectionAssert.IsEmpty(Directory.GetFiles(folder));
         }
     }
 }
