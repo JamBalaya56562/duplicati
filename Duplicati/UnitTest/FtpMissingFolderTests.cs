@@ -72,6 +72,27 @@ namespace Duplicati.UnitTest
             await backend.TestAsync(false, CancellationToken.None);
         }
 
+        /// <summary>
+        /// A server that stops answering in the middle of a listing, as one that is rebooted does,
+        /// used to keep the backup waiting forever (#3509). The listing now has a timeout.
+        /// </summary>
+        [Test]
+        public void AListingThatGetsNoAnswerTimesOut()
+        {
+            using var server = new ScriptedFtpServer(existingFolders: ["/", "/backup"], listRefusal: null, stallListing: true);
+            var options = Options();
+            options["list-timeout"] = "2s";
+            using var backend = new FTP($"ftp://127.0.0.1:{server.Port}/backup", options);
+
+            // Shorter than the read timeouts of the FTP client itself, which are 15 seconds
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            Assert.ThrowsAsync<TimeoutException>(async () =>
+            {
+                await foreach (var _ in backend.ListAsync(CancellationToken.None)) { }
+            });
+            Assert.That(elapsed.Elapsed, Is.LessThan(TimeSpan.FromSeconds(10)));
+        }
+
         private static Dictionary<string, string?> Options() => new()
         {
             ["auth-username"] = "tester",
@@ -88,14 +109,16 @@ namespace Duplicati.UnitTest
             private readonly TcpListener _listener = new(IPAddress.Loopback, 0);
             private readonly HashSet<string> _folders;
             private readonly string? _listRefusal;
+            private readonly bool _stallListing;
             private readonly CancellationTokenSource _cts = new();
 
             public int Port => ((IPEndPoint)_listener.LocalEndpoint).Port;
 
-            public ScriptedFtpServer(string[] existingFolders, string? listRefusal)
+            public ScriptedFtpServer(string[] existingFolders, string? listRefusal, bool stallListing = false)
             {
                 _folders = new HashSet<string>(existingFolders);
                 _listRefusal = listRefusal;
+                _stallListing = stallListing;
                 _listener.Start();
                 _ = AcceptAsync();
             }
@@ -187,7 +210,12 @@ namespace Duplicati.UnitTest
                                 await writer.WriteLineAsync("150 Opening data connection").ConfigureAwait(false);
                                 if (passive != null)
                                 {
-                                    using (var data = await passive.AcceptTcpClientAsync(_cts.Token).ConfigureAwait(false)) { }
+                                    using (var data = await passive.AcceptTcpClientAsync(_cts.Token).ConfigureAwait(false))
+                                    {
+                                        // Keep the data connection open and send nothing
+                                        if (_stallListing)
+                                            await Task.Delay(Timeout.Infinite, _cts.Token).ConfigureAwait(false);
+                                    }
                                     passive.Stop();
                                     passive = null;
                                 }
