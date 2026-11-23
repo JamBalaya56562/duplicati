@@ -210,6 +210,19 @@ namespace Duplicati.UnitTest
 
         [Test]
         [Category("Filter")]
+        public static void TemporaryFilesGroupExcludesTmpFilesByName()
+        {
+            // Programs such as Chrome write .tmp files without the Temporary attribute, so the
+            // attribute based exclusion keeps them. The filter group excludes them by name (#1838).
+            var folder = Path.Combine(Path.GetPathRoot(Path.GetTempPath()) ?? Util.DirectorySeparatorString, "Users", "me", "AppData", "Local", "Google", "Chrome", "User Data", "Default", "JumpListIcons");
+            IFilter temporaryFiles = new FilterExpression("{TemporaryFiles}");
+
+            Assert.IsTrue(temporaryFiles.Matches(Path.Combine(folder, "88BA.tmp"), out _, out _));
+            Assert.IsFalse(temporaryFiles.Matches(Path.Combine(folder, "keep.txt"), out _, out _));
+        }
+
+        [Test]
+        [Category("Filter")]
         public static void ControlDirectoryFilterUsesApplicationDataFolder()
         {
             var root = Path.GetPathRoot(Path.GetTempPath()) ?? Path.DirectorySeparatorChar.ToString();
