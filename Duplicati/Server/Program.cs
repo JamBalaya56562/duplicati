@@ -862,7 +862,8 @@ namespace Duplicati.Server
             CheckTempDirFreeSpace(connection, commandlineOptions);
 
             // Emit warnings if the application has been updated
-            if (connection.ApplicationSettings.LastConfigIssueCheckVersion != UpdaterManager.SelfVersion.Version)
+            var checkNewVersion = connection.ApplicationSettings.LastConfigIssueCheckVersion != UpdaterManager.SelfVersion.Version;
+            if (checkNewVersion)
             {
                 var updateNotifications = connection.GetNotifications().Where(x => x.Action.StartsWith("config:issue:")).ToList();
                 foreach (var n in updateNotifications)
@@ -908,6 +909,48 @@ namespace Duplicati.Server
 
                 connection.ApplicationSettings.LastConfigIssueCheckVersion = UpdaterManager.SelfVersion.Version;
             }
+
+            EmitPreloadLegacyLocationWarning(connection, applicationSettings.DataFolder, PreloadSettingsLoader.GetIgnoredLegacyPreloadFiles(), checkNewVersion);
+        }
+
+        /// <summary>
+        /// The notification action for a preload settings file in a location that is no longer read
+        /// </summary>
+        public const string NOTIFICATION_PRELOAD_LEGACY_LOCATION = "config:issue:preload-legacy-location";
+
+        /// <summary>
+        /// Warns about preload settings files in a location that is no longer read, as they were before 2.3.0.107,
+        /// and removes the warning when the files are gone
+        /// </summary>
+        /// <param name="connection">The connection</param>
+        /// <param name="dataFolder">The data folder, where the preload settings are read from</param>
+        /// <param name="ignoredFiles">The preload settings files that are not read</param>
+        /// <param name="emit"><c>true</c> to show the warning; like the other configuration warnings, it is shown once for each version</param>
+        public static void EmitPreloadLegacyLocationWarning(Connection connection, string dataFolder, IReadOnlyList<string> ignoredFiles, bool emit)
+        {
+            if (ignoredFiles.Count == 0)
+            {
+                foreach (var n in connection.GetNotifications().Where(x => x.Action == NOTIFICATION_PRELOAD_LEGACY_LOCATION).ToList())
+                    connection.DismissNotification(n.ID);
+                return;
+            }
+
+            if (!emit)
+                return;
+
+            connection.RegisterNotification(
+                Serialization.NotificationType.Warning,
+                "Preload settings file is not read",
+                $"The preload settings file {string.Join(", ", ignoredFiles)} is in a location that is no longer read, because other users can change files there. " +
+                $"Move the file to {System.IO.Path.Combine(dataFolder, "preload.json")} to use it, or delete it.",
+                null,
+                null,
+                NOTIFICATION_PRELOAD_LEGACY_LOCATION,
+                null,
+                "PreloadLegacyLocation",
+                null,
+                (self, all) => all.FirstOrDefault(x => x.Action == NOTIFICATION_PRELOAD_LEGACY_LOCATION) ?? self
+            );
         }
 
         /// <summary>

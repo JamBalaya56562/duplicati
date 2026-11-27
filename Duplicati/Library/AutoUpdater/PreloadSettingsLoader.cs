@@ -111,6 +111,54 @@ public static class PreloadSettingsLoader
     .ToArray();
 
     /// <summary>
+    /// The shared locations that were searched for preload settings before 2.3.0.107.
+    /// They are no longer read, because a user other than the one running Duplicati can write there.
+    /// </summary>
+    private static readonly string[] LegacyPreloadPaths = new string[]
+    {
+        // macOS reports CommonApplicationData as /usr/share
+        OperatingSystem.IsMacOS()
+            ? ""
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Duplicati", FILE_NAME),
+
+        OperatingSystem.IsMacOS() || OperatingSystem.IsLinux()
+            ? Path.Combine("/usr/local/share", "Duplicati", FILE_NAME)
+            : "",
+    }
+    .Where(x => Path.IsPathRooted(x))
+    .Distinct()
+    .ToArray();
+
+    /// <summary>
+    /// Gets the preload settings files that exist in a location that is no longer read
+    /// </summary>
+    /// <returns>The full paths of the files</returns>
+    public static IReadOnlyList<string> GetIgnoredLegacyPreloadFiles()
+        => FindIgnoredLegacyFiles(LegacyPreloadPaths, GetSearchPaths(DataFolderManager.PORTABLE_MODE, PreloadSettingsFile, PreloadPaths, PortablePreloadPaths).paths, File.Exists);
+
+    /// <summary>
+    /// Finds the legacy preload settings files that exist and are not searched
+    /// </summary>
+    /// <param name="legacyPaths">The legacy locations</param>
+    /// <param name="searchedPaths">The paths that are searched</param>
+    /// <param name="exists">Checks if a file exists</param>
+    /// <returns>The legacy files that are not read</returns>
+    internal static IReadOnlyList<string> FindIgnoredLegacyFiles(IEnumerable<string> legacyPaths, IEnumerable<string> searchedPaths, Func<string, bool> exists)
+    {
+        // The data folder can be the legacy folder, such as for a Windows service
+        var searched = new HashSet<string>(
+            searchedPaths.Where(Path.IsPathRooted).Select(Path.GetFullPath),
+            OperatingSystem.IsLinux() ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+
+        return legacyPaths
+            .Where(Path.IsPathRooted)
+            .Select(Path.GetFullPath)
+            .Where(path => !searched.Contains(path) && exists(path))
+            .Distinct()
+            .ToArray();
+    }
+
+    /// <summary>
     /// Configures the preload settings for the given executable
     /// </summary>
     /// <param name="arguments">The source commandline arguments</param>
