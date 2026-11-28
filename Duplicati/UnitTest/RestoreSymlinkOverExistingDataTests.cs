@@ -192,6 +192,34 @@ public class RestoreSymlinkOverExistingDataTests : BasicSetupHelper
     }
 
     /// <summary>
+    /// With --overwrite, a read-only file in place of a link is overwritten by the link too.
+    /// On Windows the file could not be deleted, so the link was not made and the restore
+    /// warned that it could not apply the metadata.
+    /// </summary>
+    [Test]
+    [Category("RestoreHandler")]
+    public async Task AReadOnlyFileInPlaceOfALinkIsReplacedWithOverwrite()
+    {
+        await MakeLinksAndBackupAsync();
+        File.Delete(FileLink);
+        File.WriteAllText(FileLink, "mine");
+        File.SetAttributes(FileLink, File.GetAttributes(FileLink) | FileAttributes.ReadOnly);
+
+        try
+        {
+            var warnings = await RestoreAsync(overwrite: true);
+
+            Assert.That(new FileInfo(FileLink).LinkTarget, Is.Not.Null, "the link should be restored");
+            Assert.That(warnings, Is.Empty);
+        }
+        finally
+        {
+            if (File.Exists(FileLink) && new FileInfo(FileLink).LinkTarget == null)
+                File.SetAttributes(FileLink, File.GetAttributes(FileLink) & ~FileAttributes.ReadOnly);
+        }
+    }
+
+    /// <summary>
     /// Green before and after: an empty folder loses nothing, so the link takes its place
     /// </summary>
     [Test]

@@ -217,7 +217,17 @@ public class FileRestoreDestinationProvider(string mountedPath, bool allowRestor
                     }
 
                     if (isFile)
+                    {
+                        // On Windows a read-only file cannot be deleted, so --overwrite could
+                        // not put the link in its place
+                        if (!isLink && OperatingSystem.IsWindows())
+                        {
+                            var attributes = SystemIO.IO_OS.GetFileAttributes(targetpath);
+                            if (attributes.HasFlag(FileAttributes.ReadOnly))
+                                SystemIO.IO_OS.SetFileAttributes(targetpath, attributes & ~FileAttributes.ReadOnly);
+                        }
                         SystemIO.IO_OS.FileDelete(targetpath);
+                    }
                     else
                         SystemIO.IO_OS.DirectoryDelete(targetpath, true);
                 }
