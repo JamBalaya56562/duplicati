@@ -1,0 +1,52 @@
+name: Probe bats
+
+# Fork-only probe: the bats tests pass on the script, and fail when the script is broken
+on:
+  push:
+    branches: [probe/bats-entrypoint]
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    name: bats (${{ matrix.case }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [unchanged, no-quoting, chown-fails, no-uid-check, always-create-group]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install bats
+        run: |
+          if ! command -v bats >/dev/null; then sudo apt-get update; sudo apt-get install -y bats; fi
+          bats --version
+          awk -W version 2>&1 | head -1 || true
+      - name: Break the script
+        env:
+          CASE: ${{ matrix.case }}
+        run: |
+          f=ReleaseBuilder/Resources/Docker/run-as-user.sh
+          case "$CASE" in
+            no-quoting) sed -i 's/exec su duplicati -c "$(printf "%q " "$@")"/exec su duplicati -c "$*"/' "$f" ;;
+            chown-fails) sed -i 's| /opt/duplicati /data \|\| true| /opt/duplicati /data|' "$f" ;;
+            no-uid-check) sed -i 's/if \[\[ -n "$UID" \&\& -n "$GID" \]\]; then/if [[ -n "$GID" ]]; then/; s/exec "$@"/exec "$@" never-here/' "$f" ;;
+            always-create-group) sed -i 's/if ! getent group "$GID" >\/dev\/null; then/if true; then/' "$f" ;;
+          esac
+          git diff --stat
+          git diff
+      - name: Run the tests
+        env:
+          CASE: ${{ matrix.case }}
+        run: |
+          set +e
+          bats --print-output-on-failure shell-tests
+          rc=$?
+          echo "bats exit $rc"
+          if [ "$CASE" = unchanged ]; then exit $rc; fi
+          if [ $rc -eq 0 ]; then echo "The broken script passed the tests"; exit 1; fi
+          exit 0
