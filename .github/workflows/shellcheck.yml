@@ -7,6 +7,8 @@ on:
   pull_request:
     paths:
       - "**.sh"
+      # The package scripts that have no extension are all here
+      - "ReleaseBuilder/Resources/**"
       - ".github/workflows/shellcheck.yml"
   workflow_dispatch:
 
@@ -35,5 +37,14 @@ jobs:
       # Errors and warnings fail the job. Style notes (info) are not checked,
       # as fixing them in the existing scripts can change how scripts that
       # ship with Duplicati behave.
+      # Scripts are found by the .sh extension or by a shell on the first line,
+      # as the packages need some of them under fixed names without an extension
+      # (preinst, postinstall, start-stop-status). Templates are left out, as they
+      # are only valid shell after the build has filled them in.
       - name: Check shell scripts
-        run: git ls-files -z '*.sh' | xargs -0 shellcheck --severity=warning
+        run: |
+          git ls-files -z -- ':!:*.template' \
+            | xargs -0 awk 'FNR == 1 { if (FILENAME ~ /\.sh$/ || /^#!\/(usr\/)?bin\/(env[ \t]+)?(ba|da|k)?sh([ \t\r]|$)/) print FILENAME; nextfile }' \
+            > "$RUNNER_TEMP/scripts.txt"
+          echo "Checking $(wc -l < "$RUNNER_TEMP/scripts.txt") scripts"
+          xargs -d '\n' shellcheck --severity=warning < "$RUNNER_TEMP/scripts.txt"

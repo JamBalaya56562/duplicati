@@ -18,6 +18,8 @@
 #   echo "PKGROOT ${PKGROOT} does not exist"
 # fi
 
+# DSM sets this from the choice in the uninstall wizard (WIZARD_UIFILES/uninstall_uifile)
+# shellcheck disable=SC2154
 if [ "${pkgwizard_purge_on_uninstall}" = "true" ]; then
     echo "Purging all application data as per user request."
 

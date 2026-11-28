@@ -6,6 +6,6 @@ set -e
 USER=$(stat -f%Su /dev/console)
 
 # Load the LaunchAgent for the user; tolerate an agent that is already loaded (upgrade while running)
-launchctl bootstrap gui/$(id -u "$USER") "/Library/LaunchAgents/com.duplicati.app.launchagent.plist" || true
-launchctl enable gui/$(id -u "$USER")/com.duplicati.app.launchagent || true
+launchctl bootstrap "gui/$(id -u "$USER")" "/Library/LaunchAgents/com.duplicati.app.launchagent.plist" || true
+launchctl enable "gui/$(id -u "$USER")/com.duplicati.app.launchagent" || true
 exit 0

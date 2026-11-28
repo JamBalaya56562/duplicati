@@ -4,7 +4,6 @@ PACKAGE="Duplicati"
 DAEMON_BIN="${SYNOPKG_PKGDEST}/duplicati-server"
 PID_FILE="${SYNOPKG_PKGVAR}/duplicati.pid"
 LOG_FILE="${SYNOPKG_PKGVAR}/duplicati.log"
-AUTHKEY_FILE="${SYNOPKG_PKGVAR}/preauth.key"
 DATA_DIR="${SYNOPKG_PKGVAR}/data"
 DB_ENC_KEY="${SYNOPKG_PKGVAR}/db_enc_key"
 
@@ -34,17 +33,17 @@ generate_random_password() {
 }
 
 ensure_nginx_snippet() {
-    local PREAUTH_KEY="$1"
+    # $1 is the pre-auth key
     if [ ! -f "${NGINX_TEMPLATE}" ]; then
         return 0
     fi
 
-    if [ -z "${PREAUTH_KEY}" ]; then
+    if [ -z "${1}" ]; then
         return 0
     fi
 
     mkdir -p "${NGINX_SNIPPET_DIR}"
-    sed "s/__DUPLICATI_AUTHKEY__/${PREAUTH_KEY}/g" "${NGINX_TEMPLATE}" >"${NGINX_SNIPPET_FILE}.tmp" && \
+    sed "s/__DUPLICATI_AUTHKEY__/${1}/g" "${NGINX_TEMPLATE}" >"${NGINX_SNIPPET_FILE}.tmp" && \
         mv "${NGINX_SNIPPET_FILE}.tmp" "${NGINX_SNIPPET_FILE}"
 
     chown duplicati:duplicati "${NGINX_SNIPPET_FILE}" 2>/dev/null || true
@@ -115,7 +114,7 @@ stop_daemon() {
         echo "Stopping ${PACKAGE} (pid=${PID}) ..."
         kill "${PID}" 2>/dev/null || true
         # Give it a few seconds to exit gracefully
-        for i in 1 2 3 4 5 6 7 8 9 10; do
+        for _ in 1 2 3 4 5 6 7 8 9 10; do
             if ! kill -0 "${PID}" 2>/dev/null; then
                 break
             fi
