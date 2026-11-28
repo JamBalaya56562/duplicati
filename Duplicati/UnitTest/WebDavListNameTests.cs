@@ -92,6 +92,10 @@ public class WebDavListNameTests
     // The same folders given by the full url
     [TestCase("webdav://host/dav/Duplicati/%23Photo/", "http://host/dav/Duplicati/%23Photo/")]
     [TestCase("webdav://host/remote.php/dav/files/user/My%20Folder/", "http://host/remote.php/dav/files/user/My%20Folder/")]
+    // The folder of issue #2556 on webdav.yandex.ru, whose answer escapes the brackets, with the brackets
+    // written as they are and escaped in the url
+    [TestCase("webdav://webdav.yandex.ru/[BACKUP]/ttt/", "/%5BBACKUP%5D/ttt/")]
+    [TestCase("webdav://webdav.yandex.ru/%5BBACKUP%5D/ttt/", "/%5BBACKUP%5D/ttt/")]
     public async Task TheListedNameIsTheFileNameAsync(string url, string folderHref)
         => Assert.That(await ListedFileNamesAsync(url, folderHref), Is.EqualTo(new[] { FileName }));
 }
