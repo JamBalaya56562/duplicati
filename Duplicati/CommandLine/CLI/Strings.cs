@@ -60,7 +60,7 @@ namespace Duplicati.CommandLine.Strings
         public static string AutoUpdateOptionShort { get { return LC.L(@"Toggle automatic updates"); } }
         public static string AutoUpdateOptionLong { get { return LC.L(@"Set this option if you prefer to have the commandline version automatically update"); } }
         public static string PortableModeOptionShort { get { return LC.L(@"Use portable mode"); } }
-        public static string PortableModeOptionLong { get { return LC.L(@"If this option is set, the configuration files will be stored in a data subfolder of the Duplicati installation folder. This is useful for running from a USB stick or other portable media."); } }
+        public static string PortableModeOptionLong { get { return LC.L(@"If this option is set, the configuration files will be stored in a data subfolder of the {AppName} installation folder. This is useful for running from a USB stick or other portable media."); } }
         public static string DataFolderOptionShort { get { return LC.L(@"Data folder"); } }
         public static string DataFolderOptionLong { get { return LC.L(@"The folder where data is stored. This is the folder where the database and other files are stored."); } }
         public static string AllowedBackendModulesShort { get { return LC.L(@"Allowed backends"); } }

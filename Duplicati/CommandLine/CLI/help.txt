@@ -31,9 +31,9 @@ https://duplicati.com/                 Version: %VERSION%
 # =============================================================================
 > duplicati.commandline.exe help changelog
 
-Show the last changes to Duplicati
+Show the last changes to %APP_NAME%
 ==================================
-  Duplicati updates automatically when a newer version is available. The following command will show a list of versions and changes.
+  %APP_NAME% updates automatically when a newer version is available. The following command will show a list of versions and changes.
 
   "%APP_PATH%" changelog
 
@@ -41,9 +41,9 @@ Show the last changes to Duplicati
 > duplicati.commandline.exe help system-info
 > duplicati.commandline.exe help systeminfo
 
-Show system information as seen by Duplicati
+Show system information as seen by %APP_NAME%
 ============================================
-  Issue the following command to see a variety of system information relevant to Duplicati.
+  Issue the following command to see a variety of system information relevant to %APP_NAME%.
 
   "%APP_PATH%" system-info
 
@@ -71,7 +71,7 @@ Restore a specific file
 
 Make a backup to Google Drive
 =============================
-  Google Drive does not use a username and password. Instead it needs an AuthID, which is a token that allows Duplicati to access the Google Drive account. To get an AuthID, open %GOOGLEDRIVE_AUTHID_URL% in a browser, log in with the Google account that should store the backup, and copy the AuthID that is shown. The following command will make an encrypted backup to the folder "Backups/MyComputer" in Google Drive. Use "%CLI_EXE% help googledrive" to see all options for Google Drive.
+  Google Drive does not use a username and password. Instead it needs an AuthID, which is a token that allows %APP_NAME% to access the Google Drive account. To get an AuthID, open %GOOGLEDRIVE_AUTHID_URL% in a browser, log in with the Google account that should store the backup, and copy the AuthID that is shown. The following command will make an encrypted backup to the folder "Backups/MyComputer" in Google Drive. Use "%CLI_EXE% help googledrive" to see all options for Google Drive.
 
   "%APP_PATH%" backup googledrive://Backups/MyComputer "%EXAMPLE_SOURCE_PATH%" --authid="<AuthID>"
 
@@ -497,7 +497,7 @@ Usage: %CLI_EXE% read-lock-info <storage-URL> [<options>]
 > duplicati.commandline.exe help debug
 > duplicati.commandline.exe help logging
 
-Duplicati provides information for debugging and logging purposes. By default, all debugging and logging is turned off.
+%APP_NAME% provides information for debugging and logging purposes. By default, all debugging and logging is turned off.
 
   --debug-output
     Error messages are more verbose.
@@ -515,7 +515,7 @@ Duplicati provides information for debugging and logging purposes. By default, a
 > duplicati.commandline.exe help encryption
 > duplicati.commandline.exe help compression
 
-Duplicati offers various options for the used compression and encryption modules.
+%APP_NAME% offers various options for the used compression and encryption modules.
 
   --encryption-module = %ENCRYPTIONMODULES%
     The encryption module that is used to encrypt backups. Default is %DEFAULTENCRYPTIONMODULE%.
@@ -531,7 +531,7 @@ Duplicati offers various options for the used compression and encryption modules
 # =============================================================================
 > duplicati.commandline.exe help gpg
 
-Duplicati is shipped with an interface to GNU Privacy Guard. It requires that the gpg executable is available on the system. On Windows it is assumed that this is in the default installation folder under program files, under Linux and OSX it is assumed that the program is available via the PATH environment variable. It is possible to supply the path to GPG using the --gpg-program-path switch.
+%APP_NAME% is shipped with an interface to GNU Privacy Guard. It requires that the gpg executable is available on the system. On Windows it is assumed that this is in the default installation folder under program files, under Linux and OSX it is assumed that the program is available via the PATH environment variable. It is possible to supply the path to GPG using the --gpg-program-path switch.
 
 Options:
 %MODULEOPTIONS%
@@ -540,7 +540,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help file
 
-Duplicati can use the local file system to store backups. The following target URL formats can be used:
+%APP_NAME% can use the local file system to store backups. The following target URL formats can be used:
 
   file://hostname/folder%20for%20backup
   file://\\server\folder%20for%20backup (UNC path)
@@ -556,7 +556,7 @@ Options:
 > duplicati.commandline.exe help tahoe
 > duplicati.commandline.exe help tahoelafs
 
-Duplicati can use the TahoeLAFS to store backups. The following target URL format is used:
+%APP_NAME% can use the TahoeLAFS to store backups. The following target URL format is used:
   tahoe://hostname:port/uri/$DIRCAP
 
 Options:
@@ -565,7 +565,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help ftp
 
-Duplicati can use FTP servers to store backups. The following target URL formats can be used:
+%APP_NAME% can use FTP servers to store backups. The following target URL formats can be used:
   ftp://hostname/folder
 
 Options:
@@ -575,7 +575,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help ssh
 
-Duplicati can use SSH servers to store backups. The following target URL formats can be used:
+%APP_NAME% can use SSH servers to store backups. The following target URL formats can be used:
   ssh://hostname/folder
 
 Options:
@@ -585,7 +585,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help webdav
 
-Duplicati can use WebDAV servers to store backups. The following target URL formats can be used:
+%APP_NAME% can use WebDAV servers to store backups. The following target URL formats can be used:
   webdav://hostname/folder"
 
 Options:
@@ -595,7 +595,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help s3
 
-Duplicati can use S3-compatible servers to store backups. The following target URL format is used:
+%APP_NAME% can use S3-compatible servers to store backups. The following target URL format is used:
   s3://bucketname/prefix
 
 Options:
@@ -605,7 +605,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help azure
 
-Duplicati can use Azure blob storage to store backups. The following target URL format is used:
+%APP_NAME% can use Azure blob storage to store backups. The following target URL format is used:
   azure://bucketname
 
 Options:
@@ -615,7 +615,7 @@ Options:
 # =============================================================================
 > duplicati.commandline.exe help onedrive
 
-Duplicati can use Microsoft Onedrive to store backups. The following target URL format is used:
+%APP_NAME% can use Microsoft Onedrive to store backups. The following target URL format is used:
   onedrive://folder/subfolder
 
 Options:
@@ -625,7 +625,7 @@ Options:
 > duplicati.commandline.exe help date
 > duplicati.commandline.exe help time
 
-Duplicati supports absolute and relative dates and times:
+%APP_NAME% supports absolute and relative dates and times:
 
   now --> The current time
 
@@ -660,7 +660,7 @@ For entering decimal values you must use the English notation, with a period as 
 > duplicati.commandline.exe help filter
 > duplicati.commandline.exe help filters
 
-Duplicati can apply globbing and regex filter rules to backup and restore specific files only. Globbing filters can be used in file names. To specify a regex filter put the filter in [brackets].
+%APP_NAME% can apply globbing and regex filter rules to backup and restore specific files only. Globbing filters can be used in file names. To specify a regex filter put the filter in [brackets].
   Globbing: *.txt
   Regex: [.*test\.txt]
 
@@ -671,7 +671,7 @@ Environment variables are expanded in filter values, source paths, and the resto
   --exclude=<filter>
     Adds an exclude filter
 
-Duplicati also has several built-in groups of filters, which include commonly excluded files and folders for different operating systems. These can be specified by putting the name of the group in {curly brackets}.
+%APP_NAME% also has several built-in groups of filters, which include commonly excluded files and folders for different operating systems. These can be specified by putting the name of the group in {curly brackets}.
   %FILTER_GROUPS_SHORT%
 For more details about these groups, including exactly what files they cover, see 'filter-groups'.
 
@@ -682,7 +682,7 @@ Inside scripts and the commandline --parameters-file, where multiple filters are
 > duplicati.commandline.exe help filter-group
 > duplicati.commandline.exe help filter-groups
 
-Duplicati has several built-in groups of filters, which include commonly excluded files and folders for different operating systems. These sets can be specified via the --include/--exclude parameter by putting their name in {curly brackets}.
+%APP_NAME% has several built-in groups of filters, which include commonly excluded files and folders for different operating systems. These sets can be specified via the --include/--exclude parameter by putting their name in {curly brackets}.
 
 %FILTER_GROUPS_LONG%
 
@@ -691,7 +691,7 @@ Duplicati has several built-in groups of filters, which include commonly exclude
 > duplicati.commandline.exe help email
 > duplicati.commandline.exe help send-mail
 
-Duplicati can send email notifications after each operation. Use the send-mail command to test this:
+%APP_NAME% can send email notifications after each operation. Use the send-mail command to test this:
 
   "%APP_PATH%" send-mail --send-mail-to=<email-address>
 
@@ -743,7 +743,7 @@ Duplicati can send email notifications after each operation. Use the send-mail c
 > duplicati.commandline.exe help option
 > duplicati.commandline.exe help options
 
-Duplicati offers more options than listed in the other topics. Those additional options should only be used with care. For normal operation none of them should ever be required. Here is a complete list of options supported by Duplicati:
+%APP_NAME% offers more options than listed in the other topics. Those additional options should only be used with care. For normal operation none of them should ever be required. Here is a complete list of options supported by %APP_NAME%:
 
 %MAINOPTIONS%
 
@@ -753,7 +753,7 @@ Duplicati offers more options than listed in the other topics. Those additional 
 > duplicati.commandline.exe help statuscodes
 > duplicati.commandline.exe help errorlevel
 
-Duplicati reports the following return/exit codes:
+%APP_NAME% reports the following return/exit codes:
   0 - Success
   1 - Successful operation, but no files were changed
   2 - Successful operation, but with warning(s)
@@ -767,16 +767,16 @@ Duplicati reports the following return/exit codes:
 > duplicati.commandline.exe help secrets
 > duplicati.commandline.exe help secret-provider
 
-Duplicati supports reading secrets from an external secret provider.
+%APP_NAME% supports reading secrets from an external secret provider.
 
 The setup is done by adding an option:
   --secret-provider=<config>
 
-This setup will make Duplicati replace all values starting with a $-symbol, using the secret provider.
+This setup will make %APP_NAME% replace all values starting with a $-symbol, using the secret provider.
 As an example, if the setting is:
   --passphrase=$backup-passhrase
 
-Duplicati will use the secret provider to fetch the secret for the key "backup-passphrase", and replace the value before starting the operation. If the value is not found the operation will fail.
+%APP_NAME% will use the secret provider to fetch the secret for the key "backup-passphrase", and replace the value before starting the operation. If the value is not found the operation will fail.
 Replacing can also be done inside the backend urls, such that a backend url could be:
   s3://?aws-access-key-id=$awsid&aws-secret-access-key=$awskey
 
