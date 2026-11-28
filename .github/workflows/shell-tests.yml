@@ -1,0 +1,37 @@
+name: Shell script tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths:
+      - "shell-tests/**"
+      - "ReleaseBuilder/Resources/Docker/run-as-user.sh"
+      - ".github/workflows/shell-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    name: Shell script tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install bats
+        run: |
+          if ! command -v bats >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y bats
+          fi
+          bats --version
+
+      - name: Run the tests
+        run: bats --print-output-on-failure shell-tests
