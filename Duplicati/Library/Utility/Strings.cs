@@ -95,7 +95,7 @@ namespace Duplicati.Library.Utility.Strings
         public static string DescriptionAcceptHashLong { get { return LC.L(@"If your server certificate is reported as invalid (e.g. with self-signed certificates), you can supply the certificate hash (SHA1) to approve it anyway. The hash value must be entered in hex format without spaces or colons. You can enter multiple hashes separated by commas."); } }
         public static string DescriptionAcceptHashShort { get { return LC.L(@"Optionally accept a known SSL certificate"); } }
         public static string DescriptionUseSSLLong { get { return LC.L(@"Use this option to communicate using Secure Socket Layer (SSL) over http (https)."); } }
-        public static string DescriptionUseSSLShort { get { return LC.L(@"Instruct Duplicati to use an SSL (https) connection"); } }
+        public static string DescriptionUseSSLShort { get { return LC.L(@"Instruct {AppName} to use an SSL (https) connection"); } }
         public static string DescriptionIgnoreRevocationFailureLong { get { return LC.L(@"Use this option to ignore certificate revocation check failures, such as when the revocation server is offline or the revocation status is unknown."); } }
         public static string DescriptionIgnoreRevocationFailureShort { get { return LC.L(@"Ignore certificate revocation check failures"); } }
     }
@@ -114,7 +114,7 @@ namespace Duplicati.Library.Utility.Strings
         public static string AuthidLong(string url) { return LC.L(@"The authorization token retrieved from {0}", url); }
         public static string AuthidShort { get { return LC.L(@"The authorization code"); } }
         public static string MissingAuthID(string url) { return LC.L(@"You need an AuthID to use this destination. You can get it from: {0}", url); }
-        public static string OauthurlLong { get { return LC.L(@"Duplicati uses an external server to support the OAuth authentication flow. If you have set up your own Duplicati OAuth server, you can supply the refresh URL."); } }
+        public static string OauthurlLong { get { return LC.L(@"{AppName} uses an external server to support the OAuth authentication flow. If you have set up your own Duplicati OAuth server, you can supply the refresh URL."); } }
         public static string OauthurlShort { get { return LC.L(@"Alternate OAuth URL"); } }
 
     }

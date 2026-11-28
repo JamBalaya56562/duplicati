@@ -28,7 +28,7 @@ namespace Duplicati.Library.Parity.Strings
         public static string DisplayName { get { return LC.L(@"PAR2 parity, external"); } }
         public static string Description { get { return LC.L(@"The PAR2 parity module creates error-correction data using the PAR2 standard, allowing damaged remote volumes to be repaired. It requires that the ""par2"" (par2cmdline) executable is available on the system. On Linux and macOS it can be installed via the package manager; the path can be supplied using the option --{0}.", "par2-program-path"); } }
         public static string Par2programpathShort { get { return LC.L(@"The path to the par2 program"); } }
-        public static string Par2programpathLong { get { return LC.L(@"The path to the par2 (par2cmdline) program. If not supplied, Duplicati will search for ""par2"" on the system path."); } }
+        public static string Par2programpathLong { get { return LC.L(@"The path to the par2 (par2cmdline) program. If not supplied, {AppName} will search for ""par2"" on the system path."); } }
         public static string Par2extraoptionsShort { get { return LC.L(@"Extra options for the par2 program"); } }
         public static string Par2extraoptionsLong { get { return LC.L(@"Use this option to supply extra commandline options to the par2 program when creating parity data."); } }
         public static string Par2redundancylevelShort { get { return LC.L(@"The parity redundancy level in percent"); } }

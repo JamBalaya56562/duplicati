@@ -53,7 +53,7 @@ namespace Duplicati.Library.Encryption.Strings
         public static string PinentryHint(string message, string decryptionswitchesoption) { return LC.L(@"{0}
 GPG could not ask for the passphrase of the private key. If that is also the passphrase of the backup, set --{1} to ""--pinentry-mode loopback"", so GPG uses it.", message, decryptionswitchesoption); }
         public static string GPGExecuteError(string program, string args, string message) { return LC.L(@"Failed to execute GPG with ""{0} {1}"": {2}", program, args, message); }
-        public static string GpgprogrampathLong { get { return LC.L(@"The path to the GNU Privacy Guard program. If not supplied, Duplicati will search for ""gpg2"" and ""gpg"" on the system."); } }
+        public static string GpgprogrampathLong { get { return LC.L(@"The path to the GNU Privacy Guard program. If not supplied, {AppName} will search for ""gpg2"" and ""gpg"" on the system."); } }
         public static string GpgprogrampathShort { get { return LC.L(@"The path to GnuPG"); } }
         public static string GpgencryptionenablearmorLong { get { return LC.L(@"Use this option to supply the --armor option to GPG. The files will be larger but can be sent as pure text files."); } }
         public static string GpgencryptionenablearmorShort { get { return LC.L(@"Use GPG Armor"); } }

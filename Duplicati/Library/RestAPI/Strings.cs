@@ -44,7 +44,7 @@ Error message: {0}", message); }
         public static string LoglevelCommandDescription { get { return LC.L(@"Determine the amount of information written in the log file"); } }
         public static string LogConsoleDescription { get { return LC.L(@"Output log information to the console"); } }
         public static string PortablemodeCommandDescription { get { return LC.L(@"Activate portable mode where the database is placed below the program executable"); } }
-        public static string SeriousError(string message) { return LC.L(@"A serious error occurred in Duplicati: {0}", message); }
+        public static string SeriousError(string message) { return LC.L(@"A serious error occurred in {AppName}: {0}", message); }
         public static string TearDownError(string message) { return LC.L(@"An error occurred on server tear down: {0}", message); }
         public static string StartupFailure(System.Exception error) { return LC.L(@"Unable to start up. Perhaps another process is already running?
 Error message: {0}", error); }
@@ -66,7 +66,7 @@ Error message: {0}", error); }
         public static string DisableupdatecheckLong { get { return LC.L(@"Use this option to disable the automatic update check. Manual update checks can still be performed."); } }
         public static string LogretentionLong { get { return LC.L(@"Set the time after which log data will be purged from the database."); } }
         public static string LogretentionShort { get { return LC.L(@"Clean up old log data"); } }
-        public static string ServerdatafolderLong(string envname) { return LC.L(@"Duplicati needs to store a small database with all settings. Use this option to choose where the settings are stored. This option can also be set with the environment variable {0}.", envname); }
+        public static string ServerdatafolderLong(string envname) { return LC.L(@"{AppName} needs to store a small database with all settings. Use this option to choose where the settings are stored. This option can also be set with the environment variable {0}.", envname); }
         public static string ServerdatafolderShort { get { return LC.L(@"Set the folder where settings are stored"); } }
         public static string AllowInsecureDatafolderLong { get { return LC.L(@"Allow the data folder to be placed in a shared location without restricting the permissions to SYSTEM and Administrators. This bypasses the security check that prevents using a world-readable folder for the database and configuration. Only use this option if you understand the risks and have restricted the permissions manually."); } }
         public static string AllowInsecureDatafolderShort { get { return LC.L(@"Allow the data folder to be in a shared location without restricted permissions"); } }
@@ -163,7 +163,7 @@ Error message: {0}", error); }
         public static string MinTimeBetweenScheduledRunsShort { get { return LC.L("Minimum time between scheduled runs"); } }
         public static string RunSkippedOnAcPowerLong { get { return LC.L("Use this option together with --disable-on-battery to run a scheduled backup that was skipped on battery power as soon as the system is no longer detected to be running on battery power. The skipped backup runs once, with its settings at that time, and only if it is still scheduled and enabled. Without this option, a skipped backup waits for its next scheduled run."); } }
         public static string RunSkippedOnAcPowerShort { get { return LC.L("Run skipped backups when on AC power"); } }
-        public static string SkipMissedScheduledBackupsLong { get { return LC.L("By default, a scheduled backup whose start time passed while Duplicati was not running, or while the machine was off or asleep, is started as soon as Duplicati notices it. Use this option to skip such a missed run and wait for the next scheduled time instead. A run counts as missed when its scheduled time is more than 10 minutes in the past. Manual and command line backups are not affected."); } }
+        public static string SkipMissedScheduledBackupsLong { get { return LC.L("By default, a scheduled backup whose start time passed while {AppName} was not running, or while the machine was off or asleep, is started as soon as Duplicati notices it. Use this option to skip such a missed run and wait for the next scheduled time instead. A run counts as missed when its scheduled time is more than 10 minutes in the past. Manual and command line backups are not affected."); } }
         public static string SkipMissedScheduledBackupsShort { get { return LC.L("Skip missed scheduled backups"); } }
     }
     internal static class Scheduler

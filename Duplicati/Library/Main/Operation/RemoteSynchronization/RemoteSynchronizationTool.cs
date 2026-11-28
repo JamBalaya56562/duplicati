@@ -105,7 +105,7 @@ public static class RemoteSynchronizationTool
     {
         public static string RootCommandDescription => LC.L(@"Remote Synchronization Tool
 
-This tool makes one Duplicati destination a mirror of another. Only the backup
+This tool makes one {AppName} destination a mirror of another. Only the backup
 volumes are mirrored (the dblock, dindex and dlist files, and their parity
 files); other files and all sub-folders are left alone on both sides. To mirror
 the volumes of a single backup in a shared folder, give its prefix with

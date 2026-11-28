@@ -113,7 +113,12 @@ public class AppNameInStringsTests
     [TestCase("Duplicati.Library.Backend.Storj", 1)]
     [TestCase("Duplicati.Library.Backend.TahoeLAFS", 1)]
     [TestCase("Duplicati.Library.Backend.Duplicati", 1)]
-    public void TheBackendStringsShowTheNameOfTheBuild(string assemblyName, int expected)
+    [TestCase("Duplicati.Library.Encryption", 1)]
+    [TestCase("Duplicati.Library.Parity", 1)]
+    [TestCase("Duplicati.Library.Modules.Builtin", 2)]
+    [TestCase("Duplicati.Library.RestAPI", 3)]
+    [TestCase("Duplicati.Library.Utility", 2)]
+    public void TheLibraryStringsShowTheNameOfTheBuild(string assemblyName, int expected)
     {
         using var _ = LocalizationService.TemporaryContext(new CultureInfo("en-US"));
         var strings = ReadStrings(Assembly.Load(assemblyName), IsStringsType);
@@ -123,6 +128,21 @@ public class AppNameInStringsTests
             Assert.That(value, Does.Not.Contain(LocalizationService.AppNamePlaceholder), member);
 
         Assert.That(strings.Count(x => x.Value.Contains(Name)), Is.EqualTo(expected), "strings that name the application");
+    }
+
+    [Test]
+    public void NamesOfOtherThingsStay()
+    {
+        using var _ = LocalizationService.TemporaryContext(new CultureInfo("en-US"));
+        // The help of the mirror tool is in a class of its own inside the backup engine
+        var main = ReadStrings(typeof(Library.Main.Controller).Assembly, IsStringsType);
+        Assert.That(main.Single(x => x.Member == "Strings.get_RootCommandDescription").Value, Does.Contain($"one {Name} destination a mirror"));
+
+        // The default event log name and the OAuth server software keep their names
+        var server = ReadStrings(Assembly.Load("Duplicati.Library.RestAPI"), IsStringsType);
+        Assert.That(server.Single(x => x.Member.EndsWith(".get_LogwindowseventlogLong", StringComparison.Ordinal)).Value, Does.Contain("\"Duplicati 2\""));
+        var utility = ReadStrings(Assembly.Load("Duplicati.Library.Utility"), IsStringsType);
+        Assert.That(utility.Single(x => x.Member.EndsWith(".get_OauthurlLong", StringComparison.Ordinal)).Value, Does.StartWith($"{Name} uses an external server").And.Contain("your own Duplicati OAuth server"));
     }
 
     [Test]
