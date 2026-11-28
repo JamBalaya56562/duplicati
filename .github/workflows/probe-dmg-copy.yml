@@ -1,0 +1,114 @@
+name: Probe dmg copy
+
+# Fork-only probe (#8047 macOS red): a copy of an image that diskimages-helper keeps
+# locked is readable and intact, and the dmg tests pass with the copy
+on:
+  push:
+    branches: [probe/dmg-lock]
+
+permissions:
+  contents: read
+
+jobs:
+  mechanism:
+    name: copy of a locked image
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - name: Lock an image like the helper does and copy it
+        run: |
+          set +e
+          d=$(mktemp -d)
+          mkdir -p "$d/src/Duplicati.app/Contents/MacOS"
+          echo marker-42 > "$d/src/Duplicati.app/Contents/MacOS/duplicati"
+          hdiutil create -srcfolder "$d/src" -volname "Duplicati Test" -format UDZO "$d/created.dmg"
+          echo "create exit $?"
+          # Hold an exclusive lock on the image, as diskimages-helper did (lsof showed 5u)
+          perl -e 'use Fcntl qw(:flock); open(my $h, "+<", shift) or die; flock($h, LOCK_EX) or die; print "HELD\n"; sleep 60' "$d/created.dmg" &
+          sleep 2
+          check() { perl -e 'use Fcntl qw(:flock); open(my $h, "<", shift) or die "open $!"; if (flock($h, LOCK_SH | LOCK_NB)) { print "shared lock OK\n" } else { print "shared lock FAILED: $!\n" }' "$1"; }
+          echo "original: $(check "$d/created.dmg")"
+          /bin/cp "$d/created.dmg" "$d/update.dmg"
+          echo "cp exit $?"
+          echo "copy: $(check "$d/update.dmg")"
+          ls -li "$d"
+          cmp "$d/created.dmg" "$d/update.dmg" && echo "cmp same"
+          hdiutil imageinfo "$d/update.dmg" | grep -E "Format:|Checksum Value"
+          hdiutil verify "$d/update.dmg" 2>&1 | tail -1
+          mnt=$(mktemp -d)
+          hdiutil attach -readonly -nobrowse -mountpoint "$mnt" "$d/update.dmg" > /dev/null && echo "marker: $(cat "$mnt/Duplicati.app/Contents/MacOS/duplicati")"
+          hdiutil detach "$mnt" > /dev/null
+          kill %1 2>/dev/null
+          exit 0
+
+  natural:
+    name: hdiutil and cp loop ${{ matrix.n }}
+    runs-on: macos-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        n: [1, 2, 3, 4, 5, 6]
+    steps:
+      - name: Create, copy and check
+        run: |
+          set +e
+          LOG="$RUNNER_TEMP/loop.log"
+          : > "$LOG"
+          check() { perl -e 'use Fcntl qw(:flock); open(my $h, "<", shift) or die "open $!"; exit(flock($h, LOCK_SH | LOCK_NB) ? 0 : 1)' "$1"; }
+          for i in $(seq 1 300); do
+            d=$(mktemp -d)
+            mkdir -p "$d/src/Duplicati.app/Contents/MacOS"
+            echo "marker-$i" > "$d/src/Duplicati.app/Contents/MacOS/duplicati"
+            if ! hdiutil create -srcfolder "$d/src" -volname "Duplicati Test" -format UDZO "$d/created.dmg" > "$d/out.txt" 2>&1; then
+              echo "iter $i create failed: $(tr '\n' ' ' < "$d/out.txt")" >> "$LOG"; rm -rf "$d"; continue
+            fi
+            /bin/cp "$d/created.dmg" "$d/update.dmg"; cpexit=$?
+            check "$d/created.dmg"; orig=$?
+            check "$d/update.dmg"; copy=$?
+            if [ $orig -ne 0 ] || [ $copy -ne 0 ] || [ $cpexit -ne 0 ]; then
+              {
+                echo "iter $i: cp=$cpexit original-locked=$orig copy-locked=$copy"
+                sudo -n /usr/sbin/lsof "$d/created.dmg" "$d/update.dmg"
+                hdiutil verify "$d/update.dmg" 2>&1 | tail -1
+                mnt=$(mktemp -d)
+                hdiutil attach -readonly -nobrowse -mountpoint "$mnt" "$d/update.dmg" > /dev/null && echo "marker: $(cat "$mnt/Duplicati.app/Contents/MacOS/duplicati")"
+                hdiutil detach "$mnt" > /dev/null
+              } >> "$LOG" 2>&1
+            fi
+            rm -rf "$d"
+          done
+          echo "done" >> "$LOG"
+      - name: Report
+        if: always()
+        run: |
+          cat "$RUNNER_TEMP/loop.log"
+          echo "== original locked: $(grep -c 'original-locked=1' "$RUNNER_TEMP/loop.log" || true)"
+          echo "== copy locked: $(grep -c 'copy-locked=1' "$RUNNER_TEMP/loop.log" || true)"
+
+  tests:
+    name: dmg tests with the copy
+    runs-on: macos-latest
+    timeout-minutes: 120
+    env:
+      DUPLICATI__AES_V3_ITERATIONS: 10000
+    steps:
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+      - uses: actions/checkout@v7
+      - name: Build
+        run: dotnet build Duplicati/UnitTest/Duplicati.UnitTest.csproj
+      - name: Run the dmg tests 40 times under load
+        run: |
+          set +e
+          for n in $(seq "$(sysctl -n hw.ncpu)"); do (yes > /dev/null &) ; done
+          fails=0
+          for i in $(seq 1 40); do
+            dotnet test --no-build --verbosity minimal --filter "FullyQualifiedName~UpdateInstallTests" Duplicati/UnitTest/Duplicati.UnitTest.csproj > "$RUNNER_TEMP/run.txt" 2>&1
+            rc=$?
+            echo "run $i exit $rc $(grep -E 'Passed!|Failed!' "$RUNNER_TEMP/run.txt" | tail -1)"
+            if [ $rc -ne 0 ]; then fails=$((fails+1)); grep -A6 -E '^ *Failed ' "$RUNNER_TEMP/run.txt" | head -30; fi
+          done
+          echo "== failed runs: $fails"
+          exit $fails
