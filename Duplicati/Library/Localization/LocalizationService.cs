@@ -57,6 +57,35 @@ namespace Duplicati.Library.Localization
         }
 
         /// <summary>
+        /// The placeholder that a translated string uses for the name of the application
+        /// </summary>
+        public const string AppNamePlaceholder = "{AppName}";
+
+        /// <summary>
+        /// The name of the application, which replaces <see cref="AppNamePlaceholder"/> in translated strings.
+        /// The executables set it when they start, so builds with another name show that name.
+        /// </summary>
+        public static string AppName { get; set; } = "Duplicati";
+
+        /// <summary>
+        /// Replaces the application name placeholder in a string
+        /// </summary>
+        /// <param name="message">The string with the placeholder</param>
+        /// <param name="forFormat"><c>true</c> if the string is used as a format string afterwards, so braces in the name are escaped</param>
+        /// <returns>The string with the application name</returns>
+        internal static string ApplyAppName(string message, bool forFormat)
+        {
+            if (message == null || !message.Contains(AppNamePlaceholder, StringComparison.Ordinal))
+                return message;
+
+            var name = AppName ?? string.Empty;
+            if (forFormat)
+                name = name.Replace("{", "{{").Replace("}", "}}");
+
+            return message.Replace(AppNamePlaceholder, name, StringComparison.Ordinal);
+        }
+
+        /// <summary>
         /// A non-translating service
         /// </summary>
         private static readonly ILocalizationService InvariantService = new MockLocalizationService();

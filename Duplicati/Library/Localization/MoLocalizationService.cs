@@ -44,7 +44,7 @@ namespace Duplicati.Library.Localization
         /// <summary>
         /// The catalog containing the translations
         /// </summary>
-        private readonly ICatalog catalog = new Catalog();
+        private readonly Catalog catalog = new Catalog();
 
         /// <summary>
         /// The environment variable used to locate MO files
@@ -149,6 +149,14 @@ namespace Duplicati.Library.Localization
             => message?.Replace("\r\n", "\n");
 
         /// <summary>
+        /// Translates a format string and puts the application name in it, before the arguments are applied
+        /// </summary>
+        /// <param name="message">The format string to translate</param>
+        /// <returns>The translated format string</returns>
+        private string Translate(string message)
+            => LocalizationService.ApplyAppName(catalog.GetString(PreFormat(message)), true);
+
+        /// <summary>
         /// Localizes the string similar to how string.Format works
         /// </summary>
         /// <param name="message">The string to localize</param>
@@ -157,13 +165,13 @@ namespace Duplicati.Library.Localization
         {
             try
             {
-                return catalog.GetString(PreFormat(message));
+                return LocalizationService.ApplyAppName(catalog.GetString(PreFormat(message)), false);
             }
             catch (Exception ex)
             {
                 Log.WriteWarningMessage(LOGTAG, "StringTranslationError", ex, "Failed to translate string: {0}", message);
             }
-            return message;
+            return LocalizationService.ApplyAppName(message, false);
         }
 
         /// <summary>
@@ -176,14 +184,14 @@ namespace Duplicati.Library.Localization
         {
             try
             {
-                return catalog.GetString(PreFormat(message), arg0);
+                return string.Format(catalog.FormatProvider, Translate(message), arg0);
             }
             catch (Exception ex)
             {
                 Log.WriteWarningMessage(LOGTAG, "StringTranslationError", ex, "Failed to translate string: {0}", message);
             }
 
-            return string.Format(PreFormat(message), arg0);
+            return string.Format(LocalizationService.ApplyAppName(PreFormat(message), true), arg0);
         }
 
         /// <summary>
@@ -197,14 +205,14 @@ namespace Duplicati.Library.Localization
         {
             try
             {
-                return catalog.GetString(PreFormat(message), arg0, arg1);
+                return string.Format(catalog.FormatProvider, Translate(message), arg0, arg1);
             }
             catch (Exception ex)
             {
                 Log.WriteWarningMessage(LOGTAG, "StringTranslationError", ex, "Failed to translate string: {0}", message);
             }
 
-            return string.Format(PreFormat(message), arg0, arg1);
+            return string.Format(LocalizationService.ApplyAppName(PreFormat(message), true), arg0, arg1);
         }
 
         /// <summary>
@@ -219,14 +227,14 @@ namespace Duplicati.Library.Localization
         {
             try
             {
-                return catalog.GetString(PreFormat(message), arg0, arg1, arg2);
+                return string.Format(catalog.FormatProvider, Translate(message), arg0, arg1, arg2);
             }
             catch (Exception ex)
             {
                 Log.WriteWarningMessage(LOGTAG, "StringTranslationError", ex, "Failed to translate string: {0}", message);
             }
 
-            return string.Format(PreFormat(message), arg0, arg1, arg2);
+            return string.Format(LocalizationService.ApplyAppName(PreFormat(message), true), arg0, arg1, arg2);
         }
 
         /// <summary>
@@ -238,14 +246,14 @@ namespace Duplicati.Library.Localization
         {
             try
             {
-                return catalog.GetString(PreFormat(message), args);
+                return string.Format(catalog.FormatProvider, Translate(message), args);
             }
             catch (Exception ex)
             {
                 Log.WriteWarningMessage(LOGTAG, "StringTranslationError", ex, "Failed to translate string: {0}", message);
             }
 
-            return string.Format(PreFormat(message), args);
+            return string.Format(LocalizationService.ApplyAppName(PreFormat(message), true), args);
         }
 
         private static IEnumerable<CultureInfo> m_supportedcultures = null;

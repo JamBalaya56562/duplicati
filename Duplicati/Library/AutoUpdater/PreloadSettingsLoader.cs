@@ -126,12 +126,21 @@ public static class PreloadSettingsLoader
     /// <param name="dbsettings">The database settings</param>
     public static void ConfigurePreloadSettings(ref string[] arguments, PackageHelper.NamedExecutable executable, out Dictionary<string, string?> dbsettings)
     {
+        ConfigureApplicationName();
+
         var (env, args, db) = GetExecutableMergedSettings(executable, DataFolderManager.PORTABLE_MODE);
 
         dbsettings = db;
         ApplyEnvironmentVariables(env);
         ApplyCommandLineArguments(ref arguments, args);
     }
+
+    /// <summary>
+    /// Gives the translated strings the name of the application, so a build with another name shows that name.
+    /// Every executable calls <see cref="ConfigurePreloadSettings(ref string[], PackageHelper.NamedExecutable)"/> first, so this is the one place it is set.
+    /// </summary>
+    internal static void ConfigureApplicationName()
+        => Localization.LocalizationService.AppName = AutoUpdateSettings.AppName;
 
     /// <summary>
     /// A path that is searched for preload settings

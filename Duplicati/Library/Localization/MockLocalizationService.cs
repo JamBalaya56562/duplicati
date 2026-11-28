@@ -37,7 +37,7 @@ namespace Duplicati.Library.Localization
         /// <returns>The localized string</returns>
         public string Localize(string message)
         {
-            return string.Format(message);
+            return string.Format(LocalizationService.ApplyAppName(message, true));
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Duplicati.Library.Localization
         /// <returns>The localized string</returns>
         public string Localize(string message, object arg0)
         {
-            return string.Format(message, arg0);
+            return string.Format(LocalizationService.ApplyAppName(message, true), arg0);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Duplicati.Library.Localization
         /// <returns>The localized string</returns>
         public string Localize(string message, object arg0, object arg1)
         {
-            return string.Format(message, arg0, arg1);
+            return string.Format(LocalizationService.ApplyAppName(message, true), arg0, arg1);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Duplicati.Library.Localization
         /// <returns>The localized string</returns>
         public string Localize(string message, object arg0, object arg1, object arg2)
         {
-            return string.Format(message, arg0, arg1, arg2);
+            return string.Format(LocalizationService.ApplyAppName(message, true), arg0, arg1, arg2);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Duplicati.Library.Localization
         /// <param name="args">The arguments</param>
         public string Localize(string message, params object[] args)
         {
-            return string.Format(message, args);
+            return string.Format(LocalizationService.ApplyAppName(message, true), args);
         }
     }
 }
