@@ -146,6 +146,12 @@ namespace Duplicati.GUI.TrayIcon
             application.SetMenu(menuItems);
             application.Configure();
 
+            // An installer asks the Restart Manager to close the programs that use the files it
+            // replaces. The tray icon has no visible window, and the end of the session is not
+            // seen by Avalonia then, so without this the old version keeps running after an update
+            if (OperatingSystem.IsWindows())
+                Microsoft.Win32.SystemEvents.SessionEnded += OnSessionEnded;
+
             try
             {
                 lifetime.Start(args);
@@ -154,8 +160,19 @@ namespace Duplicati.GUI.TrayIcon
             {
                 //Ignoring exception that can happen while Avalonia is finalizing on shutdown.
             }
+            finally
+            {
+                if (OperatingSystem.IsWindows())
+                    Microsoft.Win32.SystemEvents.SessionEnded -= OnSessionEnded;
+            }
 
         }
+
+        /// <summary>
+        /// Exits the tray icon, and the server it hosts, when Windows ends the session for it
+        /// </summary>
+        private void OnSessionEnded(object? sender, Microsoft.Win32.SessionEndedEventArgs e)
+            => InvokeExit();
 
         private async void CheckForAppInitialized(IClassicDesktopStyleApplicationLifetime lifetime)
         {
