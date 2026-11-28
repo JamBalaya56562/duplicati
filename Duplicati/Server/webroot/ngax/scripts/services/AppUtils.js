@@ -16,6 +16,18 @@ backupApp.service('AppUtils', function($rootScope, $timeout, $cookies, AppServic
     setMomentLocale();
     $rootScope.$on('ui_language_changed', setMomentLocale);
 
+    // Formats a count with the digit grouping of the chosen language, such as 168,338
+    this.formatCount = function(val) {
+        var n = Number(val || 0);
+        var lang = $cookies.get('ui-locale');
+        try {
+            return n.toLocaleString(lang ? lang.replace('_', '-') : undefined);
+        } catch (e) {
+            // An unknown language name falls back to the language of the browser
+            return n.toLocaleString();
+        }
+    };
+
     this.formatSizeString = function(val) {
         var formatSizes = ['TB', 'GB', 'MB', 'KB'];
         val = parseInt(val || 0);

@@ -31,7 +31,7 @@ backupApp.controller('StateController', function($scope, $timeout, ServerStatus,
 
             if ($scope.state.lastPgEvent.Phase == 'Backup_ProcessingFiles' || $scope.state.lastPgEvent.Phase == 'Restore_DownloadingRemoteFiles') {
                 if ($scope.state.lastPgEvent.StillCounting) {
-                    text = gettextCatalog.getString('Counting ({{files}} files found, {{size}})', { files: $scope.state.lastPgEvent.TotalFileCount, size: AppUtils.formatSizeString($scope.state.lastPgEvent.TotalFileSize) });
+                    text = gettextCatalog.getString('Counting ({{files}} files found, {{size}})', { files: AppUtils.formatCount($scope.state.lastPgEvent.TotalFileCount), size: AppUtils.formatSizeString($scope.state.lastPgEvent.TotalFileSize) });
                     pg = 0;
                 } else {
                     var unaccountedbytes = ($scope.state.lastPgEvent.CurrentFilecomplete) ? 0 : $scope.state.lastPgEvent.CurrentFileoffset;
@@ -52,7 +52,7 @@ backupApp.controller('StateController', function($scope, $timeout, ServerStatus,
                     var restoring_text = $scope.state.lastPgEvent.Phase == 'Restore_DownloadingRemoteFiles' ? 'Restoring: ' : '';
 
                     // Finally construct the whole text
-                    text = gettextCatalog.getString(restoring_text + '{{files}} files ({{size}}) to go {{speed_txt}}', { files: filesleft, size: AppUtils.formatSizeString(sizeleft), speed_txt: speed_txt});
+                    text = gettextCatalog.getString(restoring_text + '{{files}} files ({{size}}) to go {{speed_txt}}', { files: AppUtils.formatCount(filesleft), size: AppUtils.formatSizeString(sizeleft), speed_txt: speed_txt});
                 }
             }
             else if ($scope.state.lastPgEvent.Phase == 'Backup_Finalize' || $scope.state.lastPgEvent.Phase == 'Backup_WaitForUpload')
@@ -79,7 +79,7 @@ backupApp.controller('StateController', function($scope, $timeout, ServerStatus,
                     pg = $scope.state.lastPgEvent.OverallProgress > 0 ? $scope.state.lastPgEvent.OverallProgress : 0;
 
                     var speed_txt = ($scope.state.lastPgEvent.BackendSpeed < 0) ? "" : " at "+AppUtils.formatSizeString($scope.state.lastPgEvent.BackendSpeed)+"/s";
-                    text = gettextCatalog.getString('Synchronizing remote destination: {{files}} files ({{size}}) to go{{speed_txt}}', { files: filesleft, size: AppUtils.formatSizeString(sizeleft), speed_txt: speed_txt});
+                    text = gettextCatalog.getString('Synchronizing remote destination: {{files}} files ({{size}}) to go{{speed_txt}}', { files: AppUtils.formatCount(filesleft), size: AppUtils.formatSizeString(sizeleft), speed_txt: speed_txt});
                 }
             }
             else if ($scope.state.lastPgEvent.OverallProgress > 0) {
