@@ -105,6 +105,12 @@ namespace Duplicati.Library.Compression.ZipCompression
         private readonly (Stream Stream, ParsedZipOptions Options, CompressionLibrary Library) m_creationParams;
 
         /// <summary>
+        /// The archive as the warnings name it: the file at the destination if the caller passed
+        /// its name, as the compression module only gets a temporary file
+        /// </summary>
+        private readonly string m_archiveName = "the archive";
+
+        /// <summary>
         /// Default constructor, used to read file extension and supported commands
         /// </summary>
         public FileArchiveZip() { m_archive = null!; }
@@ -137,6 +143,8 @@ namespace Duplicati.Library.Compression.ZipCompression
                 compressionLibrary = tmpcplib;
 
             var unittestMode = Utility.Utility.ParseBoolOption(options.AsReadOnly(), "unittest-mode");
+            if (options.TryGetValue(ICompression.ARCHIVE_NAME_OPTION, out var archiveName) && !string.IsNullOrWhiteSpace(archiveName))
+                m_archiveName = $"the archive {archiveName}";
             var parsedOptions = new ParsedZipOptions(compressionLevel, compressionType, unittestMode);
 
             var userCompressionLibrary = compressionLibrary;
@@ -162,8 +170,7 @@ namespace Duplicati.Library.Compression.ZipCompression
                 // Only reading gets here. Older versions wrote archives with more than 65535
                 // entries with a wrong entry count, which the built-in library refuses and
                 // SharpCompress reads (#6251)
-                var archiveName = options.TryGetValue(ICompression.ARCHIVE_NAME_OPTION, out var name) && !string.IsNullOrWhiteSpace(name) ? $"the archive {name}" : "the archive";
-                Log.WriteWarningMessage(LOGTAG, "system-io-compression-error", ex, "The built-in ZIP library could not read {0}, reading it with SharpCompress instead. Archives written by older versions can cause this.", archiveName);
+                Log.WriteWarningMessage(LOGTAG, "system-io-compression-error", ex, "The built-in ZIP library could not read {0}, reading it with SharpCompress instead. Archives written by older versions can cause this.", m_archiveName);
             }
 
             m_archive = archive ?? new SharpCompressZipArchive(stream, mode, parsedOptions);
@@ -248,7 +255,7 @@ namespace Duplicati.Library.Compression.ZipCompression
             {
                 if (m_creationParams.Library == CompressionLibrary.Auto && m_archive is not SharpCompressZipArchive && m_creationParams.Stream.CanSeek)
                 {
-                    Log.WriteWarningMessage(LOGTAG, "CompressionReadErrorFallback", ex, "Failed to open file with built-in ZIP archive, falling back to SharpCompress");
+                    Log.WriteWarningMessage(LOGTAG, "CompressionReadErrorFallback", ex, "The built-in ZIP library could not read {0} in {1}, reading it with SharpCompress instead. Archives written with another --zip-compression-method than the current one can cause this.", file, m_archiveName);
 
                     try
                     {

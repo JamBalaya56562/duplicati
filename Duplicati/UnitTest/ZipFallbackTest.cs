@@ -101,6 +101,38 @@ namespace Duplicati.UnitTest
 
         }
 
+        /// <summary>
+        /// The warning for an entry the built-in library cannot read names the entry and the
+        /// file at the destination, so the user can tell which volume it was
+        /// </summary>
+        [Test]
+        [Category("Targeted")]
+        public async Task TheLzmaFallbackWarningNamesTheEntryAndTheRemoteFileAsync()
+        {
+            var testopts = TestOptions;
+            testopts["zip-compression-method"] = "lzma";
+            testopts["zip-compression-library"] = "SharpCompress";
+            testopts["blocksize"] = "50kb";
+
+            File.WriteAllBytes(Path.Combine(DATAFOLDER, "a"), new byte[1024 * 1024]);
+            using (var c = new Library.Main.Controller("file://" + TARGETFOLDER, testopts, null))
+                TestUtils.AssertResults(await c.BackupAsync(new string[] { DATAFOLDER }));
+
+            var remoteFiles = Directory.GetFiles(TARGETFOLDER).Select(Path.GetFileName).ToList();
+            testopts.Remove("zip-compression-method");
+            testopts["zip-compression-library"] = "Auto";
+
+            using (var c = new Library.Main.Controller("file://" + TARGETFOLDER, testopts.Expand(new { restore_path = RESTOREFOLDER }), null))
+            {
+                var r = await c.RestoreAsync(null);
+                Assert.AreEqual(0, r.Errors.Count());
+                var warning = r.Warnings.Single();
+                var dblock = remoteFiles.Single(x => x!.Contains(".dblock.", StringComparison.Ordinal));
+                Assert.That(warning, Does.Contain($"in the archive {dblock}"));
+                Assert.That(warning, Does.Contain("--zip-compression-method"));
+            }
+        }
+
         [Test]
         [Category("Targeted")]
         [TestCase("zip-sc")]
