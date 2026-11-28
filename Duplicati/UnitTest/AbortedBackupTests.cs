@@ -186,6 +186,81 @@ namespace Duplicati.UnitTest
         }
 
         /// <summary>
+        /// The next backup after "Stop now" on a backup whose uploads are stuck. Before, the stop
+        /// aborted the thread of the backup, the database was not closed, and the next backup
+        /// failed with "database is locked" until Duplicati was restarted (issue #3445). The
+        /// next backup now runs while the abandoned upload has still not returned.
+        /// </summary>
+        [TestCase(false)]
+        [TestCase(true)]
+        [Category("Targeted")]
+        public async Task ABackupAfterAnAbortedBackupWithStalledUploadsRunsAsync(bool uploadIgnoresCancellation)
+        {
+            var rng = new Random(42);
+            var data = new byte[64 * 1024];
+            for (var i = 0; i < 40; i++)
+            {
+                rng.NextBytes(data);
+                File.WriteAllBytes(Path.Combine(this.DATAFOLDER, $"file{i}"), data);
+            }
+
+            Library.DynamicLoader.BackendLoader.AddBackend(new StallingBackend());
+            StallingBackend.IgnoreCancellation = uploadIgnoresCancellation;
+            StallingBackend.Release.Reset();
+            StallingBackend.StalledPuts = 0;
+            StallingBackend.PutsInFlight = 0;
+            StallingBackend.Stall = true;
+
+            var options = new Dictionary<string, string>(this.TestOptions)
+            {
+                ["dblock-size"] = "100kb",
+                ["blocksize"] = "4kb",
+                ["asynchronous-upload-limit"] = "2",
+                ["number-of-retries"] = "0",
+                ["snapshot-policy"] = "off",
+            };
+            var url = StallingBackend.Key + "://" + this.TARGETFOLDER;
+
+            try
+            {
+                using (var c = new Controller(url, options, null))
+                {
+                    var backupTask = Task.Run(async () => await c.BackupAsync(new[] { this.DATAFOLDER }));
+
+                    var sw = System.Diagnostics.Stopwatch.StartNew();
+                    while (StallingBackend.StalledPuts < 2 && sw.Elapsed < TimeSpan.FromMinutes(1) && !backupTask.IsCompleted)
+                        await Task.Delay(100);
+                    Assert.IsFalse(backupTask.IsCompleted, "The backup finished before its uploads stalled");
+
+                    await c.AbortAsync();
+                    var stopped = await Task.WhenAny(backupTask, Task.Delay(TimeSpan.FromMinutes(2))) == backupTask;
+                    Assert.IsTrue(stopped, "The abort did not make the backup return within two minutes");
+                    Assert.CatchAsync<OperationCanceledException>(async () => await backupTask);
+                }
+
+                // The uploads of the next backup go through, while an upload that ignores the
+                // cancellation of the first backup is still stuck
+                StallingBackend.Stall = false;
+                if (uploadIgnoresCancellation)
+                    Assert.That(StallingBackend.PutsInFlight, Is.GreaterThan(0), "The abandoned upload should still be running");
+
+                using (var c = new Controller(url, options, null))
+                {
+                    TestUtils.AssertResults(await c.BackupAsync(new[] { this.DATAFOLDER }));
+                    Assert.That((await c.ListAsync()).Filesets.Count(), Is.GreaterThanOrEqualTo(1));
+                }
+            }
+            finally
+            {
+                StallingBackend.Stall = false;
+                StallingBackend.Release.Set();
+                var drain = System.Diagnostics.Stopwatch.StartNew();
+                while (StallingBackend.PutsInFlight > 0 && drain.Elapsed < TimeSpan.FromSeconds(30))
+                    await Task.Delay(50);
+            }
+        }
+
+        /// <summary>
         /// "Stop now" while blocks are being stored. The block splitter hands each block to a
         /// block processor and waits for its answer. A processor that was stopped between taking
         /// a block and answering for it left the splitter waiting for an answer that never came,
