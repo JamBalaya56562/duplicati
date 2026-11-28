@@ -57,9 +57,15 @@ public class AppNameInStringsTests
     /// Reads every string of the Strings classes in the assembly, calling the ones that take arguments with "x"
     /// </summary>
     private static List<(string Member, string Value)> ReadStrings(Assembly assembly, string ns)
+        => ReadStrings(assembly, t => t.Namespace == ns);
+
+    /// <summary>
+    /// Reads every string of the classes the filter picks, calling the ones that take arguments with "x"
+    /// </summary>
+    private static List<(string Member, string Value)> ReadStrings(Assembly assembly, Func<Type, bool> filter)
     {
         var result = new List<(string, string)>();
-        foreach (var type in assembly.GetTypes().Where(t => t.Namespace == ns))
+        foreach (var type in assembly.GetTypes().Where(filter))
         {
             foreach (var m in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
             {
@@ -89,6 +95,44 @@ public class AppNameInStringsTests
             Assert.That(value, Does.Not.Contain(LocalizationService.AppNamePlaceholder), member);
 
         Assert.That(strings.Count(x => x.Value.Contains(Name)), Is.GreaterThan(0), "no string names the application");
+    }
+
+    /// <summary>
+    /// The backends keep their strings in a Strings namespace, or in a class named Strings
+    /// </summary>
+    private static bool IsStringsType(Type t)
+        => (t.Namespace?.EndsWith(".Strings", StringComparison.Ordinal) ?? false)
+            || t.Name == "Strings"
+            || t.DeclaringType?.Name == "Strings";
+
+    [TestCase("Duplicati.Library.Backend.AzureBlob", 1)]
+    [TestCase("Duplicati.Library.Backend.FTP", 1)]
+    [TestCase("Duplicati.Library.Backend.Internxt", 1)]
+    [TestCase("Duplicati.Library.Backend.Rclone", 1)]
+    [TestCase("Duplicati.Library.Backend.S3", 3)]
+    [TestCase("Duplicati.Library.Backend.Storj", 1)]
+    [TestCase("Duplicati.Library.Backend.TahoeLAFS", 1)]
+    [TestCase("Duplicati.Library.Backend.Duplicati", 1)]
+    public void TheBackendStringsShowTheNameOfTheBuild(string assemblyName, int expected)
+    {
+        using var _ = LocalizationService.TemporaryContext(new CultureInfo("en-US"));
+        var strings = ReadStrings(Assembly.Load(assemblyName), IsStringsType);
+        Assert.That(strings, Is.Not.Empty);
+
+        foreach (var (member, value) in strings)
+            Assert.That(value, Does.Not.Contain(LocalizationService.AppNamePlaceholder), member);
+
+        Assert.That(strings.Count(x => x.Value.Contains(Name)), Is.EqualTo(expected), "strings that name the application");
+    }
+
+    [Test]
+    public void TheDuplicatiStorageKeepsItsName()
+    {
+        // "Duplicati Storage" is the name of a service, not of the application, so it stays
+        using var _ = LocalizationService.TemporaryContext(new CultureInfo("en-US"));
+        var strings = ReadStrings(Assembly.Load("Duplicati.Library.Backend.Duplicati"), IsStringsType);
+        Assert.That(strings.Single(x => x.Member == "DuplicatiBackend.get_DisplayName").Value, Is.EqualTo("Duplicati Storage Backend"));
+        Assert.That(strings.Single(x => x.Member == "DuplicatiBackend.ErrorUnsupportedBackend").Value, Does.Contain($"this version of {Name} cannot use. Update {Name} to use"));
     }
 
     [Test]

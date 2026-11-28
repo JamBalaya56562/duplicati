@@ -45,7 +45,7 @@ internal static class InternxtBackend
     public static string TwoFactorRequired => LC.L(@"The Internxt account is protected by two-factor authentication. Supply the current code with the two-factor code option, or the authenticator secret with the two-factor secret option.");
     public static string TwoFactorSecretInvalid => LC.L(@"The two-factor secret is not a valid base32 authenticator key.");
     public static string LoginRejected => LC.L(@"Internxt rejected the login. Check the password and, if the account uses two-factor authentication, the code.");
-    public static string PlanWithoutApiAccess(string message) => LC.L(@"The Internxt plan on this account does not include CLI/API access, so Duplicati cannot use it. The server said: {0}", message);
+    public static string PlanWithoutApiAccess(string message) => LC.L(@"The Internxt plan on this account does not include CLI/API access, so {AppName} cannot use it. The server said: {0}", message);
     public static string MnemonicDecryptFailed => LC.L(@"The account key could not be decrypted with this password. The password is wrong or the account key is corrupt.");
     public static string UnsupportedFileVersion(string name) => LC.L(@"The file ""{0}"" is stored in a format this backend cannot read", name);
     public static string ShardHashMismatch(string name) => LC.L(@"The downloaded data for ""{0}"" does not match the hash stored on the server", name);

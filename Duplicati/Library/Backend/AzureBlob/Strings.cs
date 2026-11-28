@@ -44,7 +44,7 @@ internal static class AzureBlobBackend
     public static string RehydratePriorityDescriptionShort => LC.L(@"The priority for bringing archived blobs back");
     public static string RehydratePriorityDescriptionLong => LC.L(@"The rehydration priority the unfreeze command asks for. Standard can take up to 15 hours, High is faster for blobs under 10 GB and costs more.");
     public static string ArchiveClassesDescriptionShort => LC.L(@"The storage classes that are considered archive classes");
-    public static string ArchiveClassesDescriptionLong => LC.L(@"Use this option to specify what storage classes are considered archive storage classes. With this option it is possible to allow lifecycle policies to move data to cheaper storage classes and prevent Duplicati from accessing archived data.");
+    public static string ArchiveClassesDescriptionLong => LC.L(@"Use this option to specify what storage classes are considered archive storage classes. With this option it is possible to allow lifecycle policies to move data to cheaper storage classes and prevent {AppName} from accessing archived data.");
     public static string InternalRetriesDescriptionShort => LC.L(@"The number of retries for Azure operations");
     public static string InternalRetriesDescriptionLong => LC.L(@"Use this option to specify the number of retries for Azure blob operations. Set to 0 to disable retries.");
     public static string ImmutabilityPolicyModeDescriptionShort => LC.L(@"The immutability policy mode");

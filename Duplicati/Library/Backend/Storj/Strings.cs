@@ -32,7 +32,7 @@ namespace Duplicati.Library.Backend.Strings
         public static string StorjSatelliteDescriptionShort => LC.L(@"Satellite");
         public static string StorjAPIKeyDescriptionLong => LC.L(@"Supply the API key which grants access to a specific project on your chosen satellite. Head over to the dashboard of your satellite to create one if you do not already have an API key.");
         public static string StorjAPIKeyDescriptionShort => LC.L(@"API key");
-        public static string StorjSecretDescriptionLong => LC.L(@"Supply the encryption passphrase used to encrypt your data before sending it to the Storj network. This passphrase can be the only secret to provide - for Storj you do not necessary need any additional encryption (from Duplicati) in place.");
+        public static string StorjSecretDescriptionLong => LC.L(@"Supply the encryption passphrase used to encrypt your data before sending it to the Storj network. This passphrase can be the only secret to provide - for Storj you do not necessary need any additional encryption (from {AppName}) in place.");
         public static string StorjSecretDescriptionShort => LC.L(@"Encryption passphrase");
         public static string StorjSharedAccessDescriptionLong => LC.L(@"Supply the access grant which contains all information in one encrypted string. You may use it instead of a satellite, API key and secret.");
         public static string StorjSharedAccessDescriptionShort => LC.L(@"Access grant");
